@@ -10,15 +10,21 @@ import Session from './session.js';
 import Ticket from './ticket.js';
 import UserBonus from './user-bonus.js';
 import Hall from './hall.js';
+import SeatPriceCategory from './seat-price-category.js';
+import UserBonusHistory from './user-bonus-history.js';
+import UserPaymentMethod from './user-payment-methods.js';
 
 const { DB_USER, DB_PWD, DB_HOST, DB_PORT, DB_NAME } = process.env;
 
 export const models = {
     User,
     TokenSchema,
+    UserBonusHistory,
+    UserPaymentMethod,
     Movie,
     Hall,
     Promotion,
+    SeatPriceCategory,
     Seat,
     Session,
     Ticket,

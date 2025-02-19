@@ -1,5 +1,18 @@
 import { models } from './index.js';
-const { User, TokenSchema, Movie, Promotion, Seat, Session, Ticket, UserBonus, Hall } = models;
+const {
+    User,
+    TokenSchema,
+    Movie,
+    Promotion,
+    Seat,
+    Session,
+    Ticket,
+    UserBonus,
+    Hall,
+    SeatPriceCategory,
+    UserBonusHistory,
+    UserPaymentMethod,
+} = models;
 
 export default function () {
     User.hasOne(TokenSchema, { foreignKey: 'userId' });
@@ -8,6 +21,8 @@ export default function () {
     // User модель
     User.hasMany(Ticket, { foreignKey: 'userId' });
     User.hasOne(UserBonus, { foreignKey: 'userId' });
+    User.hasMany(UserBonusHistory, { foreignKey: 'userId' });
+    User.hasMany(UserPaymentMethod, { foreignKey: 'userId' });
 
     // Hall Model
     Hall.hasMany(Seat, { foreignKey: 'hallId' });
@@ -20,6 +35,8 @@ export default function () {
     // Seat model
     Seat.belongsTo(Hall, { foreignKey: 'hallId' });
     Seat.hasMany(Ticket, { foreignKey: 'seatId' });
+    Seat.belongsTo(SeatPriceCategory, { foreignKey: 'priceCategoryId' });
+    
 
     // Ticket model
     Ticket.belongsTo(Session, { foreignKey: 'sessionId' });
@@ -36,4 +53,12 @@ export default function () {
 
     // UserBonus model
     UserBonus.belongsTo(User, { foreignKey: 'userId' });
+
+    // UserBonusHistory Model
+    UserBonusHistory.belongsTo(User, { foreignKey: 'userId' });
+
+    // UserPaymentMethod Model
+    UserPaymentMethod.belongsTo(User, { foreignKey: 'userId' });
+
+    SeatPriceCategory.hasMany(Seat, { foreignKey: 'priceCategoryId' });
 }
