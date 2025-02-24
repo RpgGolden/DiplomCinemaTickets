@@ -17,10 +17,37 @@ export default class Promotion extends Model {
                     type: DataTypes.TEXT,
                 },
                 discountPercentage: {
-                    type: DataTypes.FLOAT,
+                    type: DataTypes.INTEGER,
+                    allowNull: false,
+                    validate: {
+                        min: 0,
+                        max: 100,
+                        isNumeric: true,
+                    },
                 },
                 conditions: {
                     type: DataTypes.TEXT,
+                },
+                startDate: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                    validate: {
+                        isDate: true,
+                    },
+                },
+                endDate: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
+                    validate: {
+                        isDate: true,
+                    },
+                },
+                status: {
+                    type: DataTypes.BOOLEAN,
+                    defaultValue: false,
+                    validate: {
+                        isBoolean: true,
+                    }
                 },
             },
             {

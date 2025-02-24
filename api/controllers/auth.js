@@ -12,22 +12,21 @@ import 'dotenv/config';
 export default {
     async register(req, res) {
         try {
-            const { name, surname, patronymic, login, password } = req.body;
+            const { name, surname, patronymic, email, password } = req.body;
 
-            if (!name || !surname || !patronymic || !login || !password) {
-                throw new AppErrorMissing('No name, surname, login or password');
+            if (!name || !surname || !patronymic || !email || !password) {
+                throw new AppErrorMissing('No name, surname, email or password');
             }
 
             // Проверяем, существует ли пользователь с таким же логином
-            const existingUser = await User.findOne({ where: { login } });
+            const existingUser = await User.findOne({ where: { email } });
             if (existingUser) {
                 throw new AppErrorAlreadyExists('User already exists');
             }
 
             const hashedPassword = await bcrypt.hash(password, 10);
 
-            const user = await User.create({ name, surname, patronymic, login, password: hashedPassword });
-
+            const user = await User.create({ name, surname, patronymic, email, password: hashedPassword });
 
             // Генерируем и сохраняем JWT-токены
             const { accessToken, refreshToken } = jwtUtils.generate({ id: user.id });
@@ -42,14 +41,14 @@ export default {
     },
 
     async login(req, res) {
-        const { login, password } = req.body;
+        const { email, password } = req.body;
 
-        if (!login || !password) {
+        if (!email || !password) {
             throw new AppErrorMissing('No login or password');
         }
 
         // Поиск пользователя по логину в базе данных
-        const user = await User.findOne({ where: { login } });
+        const user = await User.findOne({ where: { email } });
         if (!user) {
             throw new AppErrorMissing('User not found');
         }

@@ -5,7 +5,7 @@ export default class AuthDto {
     name;
     surname;
     patronymic;
-    login;
+    email;
     role;
 
     constructor(model) {
@@ -13,7 +13,7 @@ export default class AuthDto {
         this.name = model.name;
         this.surname = model.surname;
         this.patronymic = model.patronymic;
-        this.login = model.login;
+        this.email = model.login;
         this.role = rolesMap[model.role];
     }
 }

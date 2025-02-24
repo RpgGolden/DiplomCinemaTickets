@@ -32,7 +32,7 @@ export default class User extends Model {
                         is: /^[А-Я][а-я]*$/,
                     },
                 },
-                login: {
+                email: {
                     type: DataTypes.STRING,
                     allowNull: false,
                     validate: {
@@ -55,7 +55,7 @@ export default class User extends Model {
                     validate: {
                         isIn: [Object.values(EnumRoles)],
                     },
-                    defaultValue: EnumRoles.DRIVER,
+                    defaultValue: EnumRoles.ADMINISTRATOR,
                 },
             },
             {
