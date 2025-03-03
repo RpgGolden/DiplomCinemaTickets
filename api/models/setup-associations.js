@@ -50,6 +50,17 @@ export default function () {
     Promotion.belongsToMany(User, { through: 'UserPromotions', foreignKey: 'promotionId', onDelete: 'CASCADE' });
     User.belongsToMany(Promotion, { through: 'UserPromotions', foreignKey: 'userId', onDelete: 'CASCADE' });
 
+    // Придумать что с этим деалть
+    Promotion.belongsToMany(Movie, { through: 'MoviePromotions', foreignKey: 'promotionId' });
+    Movie.belongsToMany(Promotion, { through: 'MoviePromotions', foreignKey: 'movieId' });
+
+    Promotion.belongsToMany(Session, { through: 'PromotionSessions', foreignKey: 'promotionId' });
+    Session.belongsToMany(Promotion, { through: 'PromotionSessions', foreignKey: 'sessionId' });
+
+    Promotion.hasMany(Ticket, { foreignKey: 'promotionId' });
+    Ticket.belongsTo(Promotion, { foreignKey: 'promotionId' });
+    /// /////////////////////////////
+    
     // UserBonus model
     UserBonus.belongsTo(User, { foreignKey: 'userId', onDelete: 'CASCADE' });
 
