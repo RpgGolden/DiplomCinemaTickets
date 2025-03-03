@@ -17,6 +17,13 @@ export default class Seat extends Model {
                         key: 'id',
                     },
                 },
+                seatPriceCategoryId: {
+                    type: DataTypes.INTEGER,
+                    references: {
+                        model: 'seat_price_categories',
+                        key: 'id',
+                    },
+                },
                 rowNumber: {
                     type: DataTypes.INTEGER,
                     allowNull: false,

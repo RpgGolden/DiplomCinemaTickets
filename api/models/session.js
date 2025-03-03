@@ -10,15 +10,12 @@ export default class Session extends Model {
                     allowNull: false,
                     primaryKey: true,
                 },
-                movieTitle: {
-                    type: DataTypes.STRING,
-                    allowNull: false,
-                },
-                description: {
-                    type: DataTypes.TEXT,
-                },
-                actors: {
-                    type: DataTypes.ARRAY(DataTypes.STRING),
+                movieId: {
+                    type: DataTypes.INTEGER,
+                    references: {
+                        model: 'movies',
+                        key: 'id',
+                    },
                 },
                 hallId: {
                     type: DataTypes.INTEGER,
@@ -30,10 +27,6 @@ export default class Session extends Model {
                 sessionTime: {
                     type: DataTypes.DATE,
                     allowNull: false,
-                },
-                createdAt: {
-                    type: DataTypes.DATE,
-                    defaultValue: DataTypes.NOW,
                 },
             },
             {

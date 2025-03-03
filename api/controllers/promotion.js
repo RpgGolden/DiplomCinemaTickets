@@ -3,7 +3,6 @@ import Promotion from '../models/promotion.js';
 import 'dotenv/config';
 import path from 'path';
 import removeTimeZone from '../utils/removetimezone.js';
-import { Op } from 'sequelize';
 import PromotionDto from '../dtos/promotion-dto.js';
 export default {
     async createPromotion(req, res) {
