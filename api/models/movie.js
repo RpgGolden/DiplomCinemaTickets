@@ -13,6 +13,12 @@ export default class Movie extends Model {
                     type: DataTypes.STRING,
                     allowNull: false,
                 },
+                image: {
+                    type: DataTypes.STRING,
+                },
+                trailerVideo: {
+                    type: DataTypes.STRING,
+                },
                 duration: {
                     type: DataTypes.INTEGER,
                 },

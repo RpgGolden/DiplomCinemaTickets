@@ -4,6 +4,7 @@ import HallDto from '../dtos/hall-dto.js';
 import SeatPriceCategory from '../models/seat-price-category.js';
 import Session from '../models/session.js';
 import Movie from '../models/movie.js';
+import removeTimeZone from '../utils/removetimezone.js';
 
 export default {
     async createHall(req, res) {
@@ -71,7 +72,12 @@ export default {
                     order: [['sessionTime', 'ASC']],
                 });
 
-                const hallDto = new HallDto(hall, seats, sessions);
+                const sessionsWithFormattedTime = sessions.map(session => ({
+                    ...session.toJSON(),
+                    sessionTime: removeTimeZone(session.sessionTime),
+                }));
+
+                const hallDto = new HallDto(hall, seats, sessionsWithFormattedTime);
                 res.json(hallDto);
             }
         } catch (error) {
@@ -104,7 +110,12 @@ export default {
                 order: [['sessionTime', 'ASC']],
             });
 
-            const hallDto = new HallDto(hall, seats, sessions);
+            const sessionsWithFormattedTime = sessions.map(session => ({
+                ...session.toJSON(),
+                sessionTime: removeTimeZone(new Date(session.sessionTime)),
+            }));
+
+            const hallDto = new HallDto(hall, seats, sessionsWithFormattedTime);
             res.json(hallDto);
         } catch (error) {
             console.error(error);
@@ -151,6 +162,10 @@ export default {
         try {
             const { hallId, sessionTime } = req.body;
 
+            // Форматируем время сессии, добавляя 3 часа
+            const sessionTimeObj = new Date(sessionTime);
+            const formattedSessionTime = new Date(sessionTimeObj.setHours(sessionTimeObj.getHours() + 3));
+
             // Проверяем, существует ли фильм, и создаем его, если не существует
             let movie = await Movie.findOne({ where: { title: 'Sample Movie' } });
             if (!movie) {
@@ -166,11 +181,11 @@ export default {
                 });
             }
 
-            // Создаем новую сессию
+            // Создаем новую сессию с отформатированным временем
             const newSession = await Session.create({
                 movieId: movie.id,
                 hallId,
-                sessionTime,
+                sessionTime: formattedSessionTime,
             });
 
             // Получаем все места для указанного зала, которые не привязаны к сессии

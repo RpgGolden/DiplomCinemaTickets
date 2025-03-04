@@ -4,7 +4,8 @@ export default class HallDto {
     seats;
     sessions; // Новое поле для хранения информации о сессиях
 
-    constructor(hall, seats, sessions) {
+    constructor(hall, seats, sessions = []) {
+        // Устанавливаем sessions в пустой массив по умолчанию
         this.id = hall.id;
         this.name = hall.name;
         this.seats = seats.map(seat => ({
