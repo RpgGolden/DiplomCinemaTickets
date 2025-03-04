@@ -13,7 +13,7 @@ const {
     UserBonusHistory,
     UserPaymentMethod,
 } = models;
-
+// Промежуточная таблица.
 export default function () {
     User.hasOne(TokenSchema, { foreignKey: 'userId', onDelete: 'CASCADE' });
     TokenSchema.belongsTo(User, { foreignKey: 'userId', onDelete: 'CASCADE' });
@@ -31,12 +31,18 @@ export default function () {
     // Session Model
     Session.belongsTo(Hall, { foreignKey: 'hallId', onDelete: 'CASCADE' });
     Session.hasMany(Ticket, { foreignKey: 'sessionId', onDelete: 'CASCADE' });
-
+    // Каждое место имеет 1 сессию, а каждая сессия OneToMany (сессия к местам)
     // Seat model
+    Seat.belongsTo(SeatPriceCategory, { foreignKey: 'seatPriceCategoryId', onDelete: 'CASCADE' });
     Seat.belongsTo(Hall, { foreignKey: 'hallId', onDelete: 'CASCADE' });
     Seat.hasMany(Ticket, { foreignKey: 'seatId', onDelete: 'CASCADE' });
-    Seat.belongsTo(SeatPriceCategory, { foreignKey: 'seatPriceCategoryId', onDelete: 'CASCADE' });
 
+    // Сессии и места для уникальности залов
+
+    Session.hasMany(Seat, { foreignKey: 'sessionId', onDelete: 'CASCADE' });
+    Seat.belongsTo(Session, { foreignKey: 'sessionId', onDelete: 'CASCADE' });
+
+    
     // Ticket model
     Ticket.belongsTo(Session, { foreignKey: 'sessionId', onDelete: 'CASCADE' });
     Ticket.belongsTo(Seat, { foreignKey: 'seatId', onDelete: 'CASCADE' });
@@ -60,7 +66,7 @@ export default function () {
     Promotion.hasMany(Ticket, { foreignKey: 'promotionId' });
     Ticket.belongsTo(Promotion, { foreignKey: 'promotionId' });
     /// /////////////////////////////
-    
+
     // UserBonus model
     UserBonus.belongsTo(User, { foreignKey: 'userId', onDelete: 'CASCADE' });
 

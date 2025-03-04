@@ -38,4 +38,13 @@ router
         asyncRoute(checkRole([roles.ADMINISTRATOR, roles.COOK])),
         asyncRoute(hallController.deleteHall)
     );
+
+router
+    .route('/createSession')
+    .post(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.COOK])),
+        asyncRoute(hallController.createSessionWithSeats)
+    );
+
 export default router;

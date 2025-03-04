@@ -13,8 +13,14 @@ export default class Movie extends Model {
                     type: DataTypes.STRING,
                     allowNull: false,
                 },
+                duration: {
+                    type: DataTypes.INTEGER,
+                },
                 director: {
                     type: DataTypes.STRING,
+                },
+                releaseDate: {
+                    type: DataTypes.DATE,
                 },
                 description: {
                     type: DataTypes.TEXT,
