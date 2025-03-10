@@ -8,7 +8,7 @@ export default {
     async createPromotion(req, res) {
         try {
             const { description, discountPercentage, conditions, startDate, endDate } = req.body;
-            const image = req.file ? path.posix.join('uploads', req.file.filename) : null;
+            const image = req.file ? path.posix.join('uploads', 'promotions', req.file.filename) : null;
             if (!description || !discountPercentage || !conditions) {
                 throw new AppErrorMissing('Не все данные заполнены');
             }
@@ -53,7 +53,7 @@ export default {
         try {
             const { id } = req.params;
             const { description, discountPercentage, conditions, startDate, endDate, status } = req.body;
-            const image = req.file ? path.posix.join('uploads', req.file.filename) : null;
+            const image = req.file ? path.posix.join('uploads', 'promotions', req.file.filename) : null;
 
             const promotion = await Promotion.findOne({ where: { id } });
 

@@ -13,8 +13,8 @@ export default class Movie extends Model {
                     type: DataTypes.STRING,
                     allowNull: false,
                 },
-                image: {
-                    type: DataTypes.STRING,
+                images: {
+                    type: DataTypes.ARRAY(DataTypes.STRING),
                 },
                 trailerVideo: {
                     type: DataTypes.STRING,
@@ -26,7 +26,7 @@ export default class Movie extends Model {
                     type: DataTypes.STRING,
                 },
                 releaseDate: {
-                    type: DataTypes.DATE,
+                    type: DataTypes.DATEONLY,
                 },
                 description: {
                     type: DataTypes.TEXT,

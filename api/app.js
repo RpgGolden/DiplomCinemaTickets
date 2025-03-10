@@ -8,6 +8,8 @@ import { fileURLToPath } from 'url';
 import promotionRoute from './routes/promotion.js';
 import 'dotenv/config';
 import hallRoute from './routes/hall.js';
+import movieRoute from './routes/movie.js';
+import sessionRoute from './routes/session.js';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -31,6 +33,8 @@ app.use(corsMiddleware);
 app.use('/auth', authRoute);
 app.use('/promotion', promotionRoute);
 app.use('/hall', hallRoute);
+app.use('/movie', movieRoute);
+app.use('/session', sessionRoute);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.listen(PORT, () => console.log(`Listen on :${PORT}`));
