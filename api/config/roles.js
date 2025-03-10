@@ -1,7 +1,7 @@
 import { mapObjectKeys } from '../utils/map.js';
 
 const roles = {
-    DRIVER: 1,
+    CLIENT: 1,
     ADMINISTRATOR: 2,
 };
 

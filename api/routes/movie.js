@@ -10,7 +10,7 @@ const router = Router();
 
 router.route('/createMovie').post(
     authenticateToken,
-    asyncRoute(checkRole([roles.ADMINISTRATOR, roles.COOK])),
+    asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
     upload.array('images'), // Используем array для загрузки нескольких изображений
     asyncRoute(movieController.createMovie)
 );
@@ -19,7 +19,7 @@ router.route('/getMovie/:id').get(asyncRoute(movieController.getMovie));
 
 router.route('/updateMovie/:id').patch(
     authenticateToken,
-    asyncRoute(checkRole([roles.ADMINISTRATOR, roles.COOK])),
+    asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
     upload.array('images'), // Используем array для загрузки нескольких изображений
     asyncRoute(movieController.updateMovie)
 );
@@ -30,7 +30,7 @@ router
     .route('/deleteMovie/:id')
     .delete(
         authenticateToken,
-        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.COOK])),
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
         asyncRoute(movieController.deleteMovie)
     );
 

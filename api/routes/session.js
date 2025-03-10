@@ -11,7 +11,7 @@ router
     .route('/createSession')
     .post(
         authenticateToken,
-        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.COOK])),
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
         asyncRoute(sessionController.createSessionWithSeats)
     );
 
