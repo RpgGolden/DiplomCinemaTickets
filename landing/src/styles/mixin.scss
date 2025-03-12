@@ -1,0 +1,50 @@
+@mixin flex-center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin flex-between{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@mixin flex-start{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+@mixin flex-end{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+@mixin hover-opacity{
+    transition: all 0.1s ease;
+    cursor: pointer;
+    &:hover{
+        opacity: 0.6;
+    }
+    &:active{
+        opacity: 0.4;
+    }
+}
+
+@mixin hover-button{
+    transition: all 0.1s ease;
+    cursor: pointer;
+    border: 1px solid var(--text-color);
+    background-color: transparent;
+    color: var(--text-color);
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    &:hover{
+       background-color: var(--text-color);
+       color: #fff;
+    }
+   
+}
+

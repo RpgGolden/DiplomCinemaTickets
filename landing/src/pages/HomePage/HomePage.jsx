@@ -1,11 +1,20 @@
 import { useContext } from "react";
 import DataContext from "../../context";
-
+import Header from "../../components/Header/Header";
+import Layout from "../../components/Layout/Layout";
+import styles from "./HomePage.module.scss";
 function HomePage() {
     const context = useContext(DataContext);
     console.log("context", context)
     return ( 
-        <p>Page: {context.valueBasic}</p>
+       <main>
+        <Header/>
+        <Layout>
+            <div className={styles.container}>
+                <h1>HomePage</h1>
+            </div>
+        </Layout>
+       </main>
      );
 }
 
