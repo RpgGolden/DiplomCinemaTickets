@@ -1,0 +1,50 @@
+.cardFilms{
+   display: flex;
+   flex-wrap: wrap;
+   gap: 20px;
+   justify-content: center;
+   align-items: center;
+    .card{
+        width: 350px;
+        height: 400px;
+        background-color: var(--background-color);
+        border-radius: 10px;
+        overflow: hidden;
+        cursor: pointer;
+        &:hover{
+            img{
+                transform: scale(1.05);
+            }
+        }
+        img{
+            width:  450px;
+            height: 300px;
+            object-fit: cover;
+            transition: all 0.3s ease;
+
+        }
+        .cardContent{
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 0px 0px 10px 10px;
+            position: relative;
+            top: -4px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+            h1{
+                font-size: 24px;
+                font-weight: 700;
+                color: var(--text-color);
+                text-align: center;
+                margin-bottom: 10px; // Добавлено для отступа между заголовком и описанием
+            }
+            p{
+                font-size: 16px;
+                font-weight: 400;
+                color: var(--text-color);
+                text-align: center;
+                margin-top: 10px; // Добавлено для отступа сверху
+            }
+        }
+      
+    }
+}
