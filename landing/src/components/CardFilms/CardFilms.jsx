@@ -9,6 +9,10 @@ function CardFilms(props) {
                 <div className={styles.cardContent}>
                     <h1>{item.title}</h1>
                     <p>{item.description}</p>
+                    <div className={styles.buttons}>
+                        <button>Подробнее</button>
+                        <button>Сеансы</button>
+                    </div>
                 </div>
             </div>
            ))}

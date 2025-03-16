@@ -14,8 +14,8 @@ function Header() {
             </div> */}
             <nav className={styles.nav}>
                     <ul className={styles.list}>
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/about">About</a></li>
+                        <li>Главная</li>
+                        <li>Каталог</li>
                     </ul>
                 </nav>
             <div className={styles.navButContainer}>
