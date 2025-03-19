@@ -7,20 +7,20 @@ import SliderPromo from "../../components/SliderPromo/SliderPromo";
 import FilmsProk from "../../modules/Films/FilmsProk";
 import Footer from "../../components/Footer/Footer";
 import InfiniteSlider from "../../components/SliderAutho/InfiniteSlider";
+import arrow from "./../../assets/img/green_triangle.svg";
 function HomePage() {
     const context = useContext(DataContext);
     console.log("context", context)
     return ( 
        <main>
         <Header/>
+        <SliderPromo/>
+
         <Layout>
             <div className={styles.container}>
                 <div className={styles.sliderPromo}>
-                    <h1 className={styles.title}>Акции</h1>
-                    <SliderPromo/>
                 </div>
                 <div className={styles.filmsProk}>
-                    <h1 className={styles.с}>Фильмы в прокате</h1>
                     <FilmsProk/>
                 </div>
                 <div className={styles.infiniteSlider}>
@@ -29,6 +29,14 @@ function HomePage() {
                 </div>
             </div>
         </Layout>
+                <div className={styles.soonFilms}>
+                    <div className={styles.soonFilmsContainertitle}>
+                        <h1 className={styles.soonFilmsTitle}>Скоро в кино</h1>
+                        <img src={arrow} alt="arrow" />
+                    </div>
+                    <FilmsProk/>
+                </div>
+        
         <Footer/>
        </main>
      );

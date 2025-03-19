@@ -9,5 +9,26 @@
         font-weight: 700;
         color: var(--primary-color);
         margin: 50px 0;
+        
     }
 }
+.soonFilms{
+    padding-top: 25px;
+    margin-top: 50px;
+    background-color: var(--color-gray);
+    border-radius: 10px;
+    .soonFilmsTitle{
+        font-size: 128px;
+    }
+    .soonFilmsContainertitle{
+        display: flex;
+        color: var(--primary-color);
+        justify-content: center;
+        align-items: center;
+        margin: 25px 0;
+        img{
+            margin-left: 50px;
+            padding-top: 25px;
+        }
+    }
+  }
