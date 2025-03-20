@@ -33,7 +33,7 @@ export default function () {
     Session.hasMany(Ticket, { foreignKey: 'sessionId', onDelete: 'CASCADE' });
     // Каждое место имеет 1 сессию, а каждая сессия OneToMany (сессия к местам)
     // Seat model
-    Seat.belongsTo(SeatPriceCategory, { foreignKey: 'seatPriceCategoryId', onDelete: 'CASCADE' });
+    Seat.belongsTo(SeatPriceCategory, { foreignKey: 'seatPriceCategoryId' });
     Seat.belongsTo(Hall, { foreignKey: 'hallId', onDelete: 'CASCADE' });
     Seat.hasMany(Ticket, { foreignKey: 'seatId', onDelete: 'CASCADE' });
 
@@ -76,5 +76,5 @@ export default function () {
     // UserPaymentMethod Model
     UserPaymentMethod.belongsTo(User, { foreignKey: 'userId', onDelete: 'CASCADE' });
 
-    SeatPriceCategory.hasMany(Seat, { foreignKey: 'seatPriceCategoryId', onDelete: 'CASCADE' });
+    SeatPriceCategory.hasMany(Seat, { foreignKey: 'seatPriceCategoryId' });
 }

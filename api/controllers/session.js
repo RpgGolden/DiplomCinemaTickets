@@ -3,6 +3,8 @@ import Session from '../models/session.js';
 import Movie from '../models/movie.js';
 import { AppErrorNotExist } from '../utils/errors.js';
 import Hall from '../models/hall.js';
+import SessionDto from '../dtos/session-dto.js';
+import SeatPriceCategory from '../models/seat-price-category.js';
 
 export default {
     async createSessionWithSeats(req, res) {
@@ -70,6 +72,114 @@ export default {
             res.json(newSession);
         } catch (error) {
             console.error('Ошибка при создании сессии с местами:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+    async getSession(req, res) {
+        try {
+            const { id } = req.params;
+            const session = await Session.findByPk(id, {
+                include: [
+                    {
+                        model: Hall,
+                        attributes: ['id', 'name'],
+                    },
+                    {
+                        model: Movie,
+                        attributes: ['id', 'title'],
+                    },
+                    {
+                        model: Seat,
+                        attributes: ['id', 'rowNumber', 'seatNumber', 'isAvailable'],
+                        include: [
+                            {
+                                model: SeatPriceCategory,
+                                attributes: ['id', 'categoryName', 'price'], // Include category name and price
+                            },
+                        ],
+                    },
+                ],
+            });
+            if (!session) {
+                throw new AppErrorNotExist('Session not found');
+            }
+            const sessionDto = new SessionDto(session);
+            res.json(sessionDto);
+        } catch (error) {
+            console.error('Ошибка при получении сессии:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+
+    async getAllSessions(req, res) {
+        try {
+            const sessions = await Session.findAll({
+                include: [
+                    {
+                        model: Hall,
+                        attributes: ['id', 'name'],
+                    },
+                    {
+                        model: Movie,
+                        attributes: ['id', 'title'],
+                    },
+                    {
+                        model: Seat,
+                        attributes: ['id', 'rowNumber', 'seatNumber', 'isAvailable'],
+                        include: [
+                            {
+                                model: SeatPriceCategory,
+                                attributes: ['id', 'categoryName', 'price'], // Include category name and price
+                            },
+                        ],
+                    },
+                ],
+            });
+            const sessionDtos = sessions.map(session => new SessionDto(session));
+            res.json(sessionDtos);
+        } catch (error) {
+            console.error('Ошибка при получении всех сессий:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+
+    async changeStatusSession(req, res) {
+        try {
+            const { id } = req.params;
+            const session = await Session.findByPk(id);
+            if (!session) {
+                throw new AppErrorNotExist('Session not found');
+            }
+            await session.update({ isActive: !session.isActive });
+            res.json(session);
+        } catch (error) {
+            console.error('Ошибка при деактивации сессии:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+
+    async updateSessionSeatCategory(req, res) {
+        try {
+            const { id } = req.params; // Получаем ID сессии из параметров
+            const { seatPriceCategoryId } = req.body; // Получаем новую категорию мест из тела запроса
+
+            const session = await Session.findByPk(id);
+            if (!session) {
+                throw new AppErrorNotExist('Session not found');
+            }
+            const seatPriceCategory = await SeatPriceCategory.findByPk(seatPriceCategoryId);
+            if (!seatPriceCategory) {
+                throw new AppErrorNotExist('Seat price category not found');
+            }
+            // Обновляем места, устанавливая новую категорию мест
+            await Seat.update(
+                { seatPriceCategoryId }, // Устанавливаем новую категорию мест
+                { where: { sessionId: session.id } } // Обновляем места, связанные с этой сессией
+            );
+
+            res.json({ message: 'Seat category updated successfully' }); // Возвращаем успешное сообщение
+        } catch (error) {
+            console.error('Ошибка при обновлении категории мест сессии:', error);
             res.status(500).json({ error: 'Internal Server Error' });
         }
     },

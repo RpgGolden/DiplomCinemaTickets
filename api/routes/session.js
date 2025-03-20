@@ -15,4 +15,36 @@ router
         asyncRoute(sessionController.createSessionWithSeats)
     );
 
+router
+    .route('/getAllSession')
+    .get(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
+        asyncRoute(sessionController.getAllSessions)
+    );
+
+router
+    .route('/getSession/:id')
+    .get(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
+        asyncRoute(sessionController.getSession)
+    );
+
+router
+    .route('/updateSession/:id')
+    .patch(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
+        asyncRoute(sessionController.changeStatusSession)
+    );
+
+router
+    .route('/changeSeatCategory/:id')
+    .patch(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
+        asyncRoute(sessionController.updateSessionSeatCategory)
+    );
+
 export default router;

@@ -28,6 +28,16 @@ export default class Session extends Model {
                     type: DataTypes.DATE,
                     allowNull: false,
                 },
+                isActive: {
+                    type: DataTypes.BOOLEAN,
+                    allowNull: false,
+                    defaultValue: true,
+                },
+                repeatDaily: {
+                    type: DataTypes.BOOLEAN,
+                    allowNull: false,
+                    defaultValue: false,
+                },
             },
             {
                 sequelize,
