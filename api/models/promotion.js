@@ -47,7 +47,15 @@ export default class Promotion extends Model {
                     defaultValue: false,
                     validate: {
                         isBoolean: true,
-                    }
+                    },
+                },
+                ticketOffer: {
+                    type: DataTypes.STRING,
+                    allowNull: true,
+                },
+                ticketCount: {
+                    type: DataTypes.INTEGER,
+                    allowNull: true,
                 },
             },
             {

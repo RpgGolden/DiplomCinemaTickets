@@ -10,7 +10,7 @@ export default {
         const { hallName, rowNumber, seatNumber, categoryName, price } = req.body;
 
         try {
-            const hall = await Hall.create({ name: hallName });
+            const hall = await Hall.create({ name: hallName, rowCount: rowNumber, seatCount: seatNumber });
 
             // Проверка на существование категории
             let seatPriceCategory = await SeatPriceCategory.findOne({

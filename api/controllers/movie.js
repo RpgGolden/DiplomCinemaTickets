@@ -26,7 +26,7 @@ export default {
                 ageRating,
                 actors,
             });
-            console.log(movie);
+
             const movieDto = new MovieDto(movie, process.env.HOST);
             return res.json(movieDto);
         } catch (error) {

@@ -14,6 +14,14 @@ export default class Hall extends Model {
                     type: DataTypes.STRING,
                     allowNull: false,
                 },
+                rowCount: {
+                    type: DataTypes.INTEGER,
+                    allowNull: false,
+                },
+                seatCount: {
+                    type: DataTypes.INTEGER,
+                    allowNull: false,
+                },
             },
             {
                 sequelize,

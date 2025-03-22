@@ -1,6 +1,8 @@
 export default class HallDto {
     id;
     name;
+    rowCount;
+    seatCount;
     seats;
     sessions; // Новое поле для хранения информации о сессиях
 
@@ -8,6 +10,8 @@ export default class HallDto {
         // Устанавливаем sessions в пустой массив по умолчанию
         this.id = hall.id;
         this.name = hall.name;
+        this.rowCount = hall.rowCount;
+        this.seatCount = hall.seatCount;
         this.seats = seats.map(seat => ({
             id: seat.id,
             rowNumber: seat.rowNumber,

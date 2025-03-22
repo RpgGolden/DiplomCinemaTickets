@@ -1,13 +1,11 @@
-import passport from 'passport';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import AuthDto from '../dtos/auth-dto.js';
 import { AppErrorAlreadyExists, AppErrorMissing } from '../utils/errors.js';
 import User from '../models/user.js';
-import TokenModel from '../models/token-model.js';
 import jwtUtils from '../utils/jwt.js';
 
 import 'dotenv/config';
+import UserPaymentMethod from '../models/user-payment-methods.js';
 
 export default {
     async register(req, res) {
@@ -59,13 +57,16 @@ export default {
             throw new AppErrorMissing('Wrong password');
         }
 
+        // Получаем метод оплаты пользователя, если он существует
+        const userPaymentMethod = await UserPaymentMethod.findAll({ where: { userId: user.id } });
+
         // Генерация access и refresh токенов
         const { accessToken, refreshToken } = jwtUtils.generate({ id: user.id });
         await jwtUtils.saveToken(user.id, refreshToken);
 
-        // Возврат ответа с токенами и информацией о пользователе
+        // Возврат ответа с токенами, информацией о пользователе и методом оплаты
         const authDto = new AuthDto(user);
-        return res.json({ ...authDto, accessToken, refreshToken });
+        return res.json({ ...authDto, accessToken, refreshToken, userPaymentMethod: userPaymentMethod || null });
     },
 
     async logout(req, res) {
