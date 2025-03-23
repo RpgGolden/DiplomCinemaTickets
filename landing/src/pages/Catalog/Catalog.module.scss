@@ -1,0 +1,43 @@
+.catalog{
+    .catalogContainer{
+        min-height: calc(100vh - 269px);
+        width: 100%;
+        .catalogHeader{
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin: 25px 0px;
+            h1{
+                font-size: 32px;
+            }
+        }
+        .catalogSearch{
+            position: relative;
+            width: 300px;
+            input{
+                height: 50px;
+                border: 1px solid #333;
+                border-radius: 5px;
+                padding: 0px 40px 0px 10px;
+                box-sizing: border-box;
+                width: 300px;
+                font-size: 18px;
+                outline: none;
+            }
+            svg{
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #333;
+            }
+        }
+        .catalogFilms{
+            margin-top: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+       
+    }
+}

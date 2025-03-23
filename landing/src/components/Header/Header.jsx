@@ -1,8 +1,9 @@
 import { DoorOpen, Instagram, Twitter, Facebook } from 'lucide-react';
 import styles from './Header.module.scss';
 import logo from './../../assets/img/logo.svg';
-
+import { useNavigate } from 'react-router-dom';
 function Header() {
+    const navigate = useNavigate();
     return ( 
         <header className={styles.header}>
             <div className={styles.logo}>
@@ -14,8 +15,8 @@ function Header() {
             </div> */}
             <nav className={styles.nav}>
                     <ul className={styles.list}>
-                        <li>Главная</li>
-                        <li>Каталог</li>
+                        <li onClick={() => navigate('/')}>Главная</li>
+                        <li onClick={() => navigate('/catalog')}>Каталог</li>
                     </ul>
                 </nav>
             <div className={styles.navButContainer}>
@@ -30,7 +31,7 @@ function Header() {
                         <Facebook />
                     </span>
                 </div>
-                <button className={styles.button}>  
+                <button className={styles.button} onClick={() => navigate('/login')}>  
                     <DoorOpen />Вход
                 </button>
             </div>

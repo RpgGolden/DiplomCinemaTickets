@@ -36,11 +36,13 @@
             li{
                 text-decoration: none;
                 color: var(--text-color);
-                a{
-                    text-decoration: none;
-                    color: var(--text-color);
-                    font-size: 1.2rem;
-                    @include hover-opacity;
+                cursor: pointer;
+                text-decoration: none;
+                color: var(--text-color);
+                font-size: 1.2rem;
+                transition: all 0.3s ease;
+                &:hover{
+                    color: var(--primary-color);
                 }
             }
         }
