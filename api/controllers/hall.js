@@ -10,13 +10,24 @@ export default {
         const { hallName, rowNumber, seatNumber, categoryName, price } = req.body;
 
         try {
-            const hall = await Hall.create({ name: hallName });
+            const hall = await Hall.create({ name: hallName, rowCount: rowNumber, seatCount: seatNumber });
 
-            const seatPriceCategory = await SeatPriceCategory.create({
-                categoryName,
-                price,
+            // Проверка на существование категории
+            let seatPriceCategory = await SeatPriceCategory.findOne({
+                where: {
+                    categoryName,
+                    price,
+                },
             });
-            await seatPriceCategory.reload();
+
+            // Если нет категории, создаем новую
+            if (!seatPriceCategory) {
+                seatPriceCategory = await SeatPriceCategory.create({
+                    categoryName,
+                    price,
+                });
+            }
+
             const seatPromises = [];
             for (let row = 1; row <= rowNumber; row++) {
                 for (let seat = 1; seat <= seatNumber; seat++) {
@@ -136,7 +147,6 @@ export default {
             const hall = await Hall.findByPk(id, {
                 include: {
                     model: Seat,
-                    include: [SeatPriceCategory],
                 },
             });
 
@@ -144,22 +154,13 @@ export default {
                 return res.status(404).json({ error: 'Hall not found' });
             }
 
-            const seatPriceCategoryIds = new Set();
-            hall.Seats.forEach(seat => {
-                if (seat.SeatPriceCategory) {
-                    seatPriceCategoryIds.add(seat.SeatPriceCategory.id);
-                }
-            });
+            // Удаляем все места, связанные с залом
+            await Seat.destroy({ where: { hallId: hall.id } });
 
+            // Удаляем зал
             await hall.destroy({ force: true });
 
-            await SeatPriceCategory.destroy({
-                where: {
-                    id: Array.from(seatPriceCategoryIds),
-                },
-            });
-
-            res.json({ message: 'Hall and associated seat categories deleted successfully' });
+            res.json({ message: 'Hall and associated seats deleted successfully' });
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Internal Server Error' });

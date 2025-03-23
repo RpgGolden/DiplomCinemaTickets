@@ -28,6 +28,24 @@ export default class Session extends Model {
                     type: DataTypes.DATE,
                     allowNull: false,
                 },
+                isActive: {
+                    type: DataTypes.BOOLEAN,
+                    allowNull: false,
+                    defaultValue: true,
+                },
+                repeatDaily: {
+                    type: DataTypes.BOOLEAN,
+                    allowNull: false,
+                    defaultValue: false,
+                },
+                originalSessionId: {
+                    type: DataTypes.INTEGER,
+                    allowNull: true, // Это поле может быть пустым для оригинальной сессии
+                    references: {
+                        model: 'sessions',
+                        key: 'id',
+                    },
+                },
             },
             {
                 sequelize,
