@@ -10,22 +10,20 @@ import { useEffect, useState } from "react";
 function Catalog() {
     const [search, setSearch] = useState("");
     
-    // Создаем несколько дубликатов массива testData
-    const dublicateFilms = [testData]; // Добавлено для создания дубликатов
-    const startData = testData
-    const [films, setFilms] = useState(dublicateFilms);
+    // Создаем копию testData без вложенных массивов
+    const startData = [...testData]; 
+    const [films, setFilms] = useState(startData);
     
     const handleSearch = (e) => {
         setSearch(e.target.value);
     }
 
     useEffect(() => {
-        if (search === "") {
+        if (search.trim() === "") {
             setFilms(startData);
         } else {
-            const filteredFilms = (dublicateFilms.map((el) => {
-                    return el.filter((item) => item.title.toLowerCase().includes(search.toLowerCase()));
-                })
+            const filteredFilms = startData.filter((item) => 
+                item.title.toLowerCase().includes(search.toLowerCase())
             );
             setFilms(filteredFilms);
         }
@@ -40,7 +38,12 @@ function Catalog() {
                 </div>
                 <Layout>
                     <div className={styles.catalogSearch}>
-                        <input type="text" placeholder="Поиск" onChange={handleSearch}/>
+                        <input 
+                            type="text" 
+                            placeholder="Поиск" 
+                            value={search} 
+                            onChange={handleSearch}
+                        />
                         <Search />
                     </div>
                     <div className={styles.catalogFilms}>
