@@ -25,8 +25,8 @@ export const models = {
     Hall,
     Promotion,
     SeatPriceCategory,
-    Seat,
     Session,
+    Seat,
     Ticket,
     UserBonus,
 };
