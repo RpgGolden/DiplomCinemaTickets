@@ -4,7 +4,7 @@ import TokenSchema from './token-model.js';
 
 import 'dotenv/config';
 import Movie from './movie.js';
-import Promotion from './promotion.js';
+import News from './news.js';
 import Seat from './seat.js';
 import Session from './session.js';
 import Ticket from './ticket.js';
@@ -23,7 +23,7 @@ export const models = {
     UserPaymentMethod,
     Movie,
     Hall,
-    Promotion,
+    News,
     SeatPriceCategory,
     Session,
     Seat,

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import promotionController from '../controllers/promotion.js';
+import newsController from '../controllers/news.js';
 import { asyncRoute } from '../utils/errors.js';
 import checkRole from '../middlewares/checkRoles.js';
 import { authenticateToken } from '../middlewares/checkToken.js';
@@ -9,32 +9,32 @@ import upload from '../utils/multerConfig.js';
 const router = Router();
 
 router
-    .route('/createPromotion')
+    .route('/createNews')
     .post(
         authenticateToken,
         asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
         upload.single('image'),
-        asyncRoute(promotionController.createPromotion)
+        asyncRoute(newsController.createNews)
     );
 
-router.route('/getPromotion/:id').get(asyncRoute(promotionController.getPromotion));
+router.route('/getNews/:id').get(asyncRoute(newsController.getNews));
 
 router
-    .route('/updatePromotion/:id')
+    .route('/updateNews/:id')
     .patch(
         authenticateToken,
         asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
         upload.single('image'),
-        asyncRoute(promotionController.updatePromotion)
+        asyncRoute(newsController.updateNews)
     );
 
-router.route('/getAllPromotion').get(asyncRoute(promotionController.getAllPromotions));
+router.route('/getAllNews').get(asyncRoute(newsController.getAllNews));
 router
-    .route('/deletePromotion/:name')
+    .route('/deleteNews/:id')
     .delete(
         authenticateToken,
         asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
-        asyncRoute(promotionController.deletePromotion)
+        asyncRoute(newsController.deleteNews)
     );
 
 export default router;

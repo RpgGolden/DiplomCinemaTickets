@@ -5,7 +5,7 @@ import dbUtils from './utils/db.js';
 import authRoute from './routes/auth.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import promotionRoute from './routes/promotion.js';
+import newsRoute from './routes/news.js';
 import 'dotenv/config';
 import ticketsRoute from './routes/ticket.js';
 import hallRoute from './routes/hall.js';
@@ -34,7 +34,7 @@ app.use(cookieParser());
 app.use(corsMiddleware);
 
 app.use('/auth', authRoute);
-app.use('/promotion', promotionRoute);
+app.use('/news', newsRoute);
 app.use('/hall', hallRoute);
 app.use('/movie', movieRoute);
 app.use('/session', sessionRoute);
