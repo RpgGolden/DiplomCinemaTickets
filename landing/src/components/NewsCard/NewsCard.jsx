@@ -3,7 +3,6 @@ import DataContext from "../../context";
 import styles from "./NewsCard.module.scss";
 
 function NewsCard(props) {
-    console.log(props.data)
     const { openModalNews } = useContext(DataContext);
     return ( 
         <div className={styles.newsCard}>
