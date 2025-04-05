@@ -1,41 +1,49 @@
 import { Router } from 'express';
-import ticketsController from '../controllers/ticket.js';
 import { asyncRoute } from '../utils/errors.js';
 import checkRole from '../middlewares/checkRoles.js';
 import { authenticateToken } from '../middlewares/checkToken.js';
 import roles from '../config/roles.js';
+import userBonusController from '../controllers/user-bonus.js';
 
 const router = Router();
 
 router
-    .route('/bookingTickets')
-    .post(
-        authenticateToken,
-        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
-        asyncRoute(ticketsController.createTicket)
-    );
-
-router
-    .route('/cancelTicket/:id')
-    .delete(
-        authenticateToken,
-        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
-        asyncRoute(ticketsController.cancelTicket)
-    );
-
-router
-    .route('/getAllTickets')
+    .route('/getBonusHistory')
     .get(
         authenticateToken,
         asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
-        asyncRoute(ticketsController.getAllTickets)
+        asyncRoute(userBonusController.getBonusHistory)
     );
 
 router
-    .route('/getTicket/:id')
+    .route('/getUserBonus')
     .get(
         authenticateToken,
         asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
-        asyncRoute(ticketsController.getTicket)
+        asyncRoute(userBonusController.getUserBonus)
     );
+
+router
+    .route('/getBonusHistoryById/:id')
+    .get(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
+        asyncRoute(userBonusController.getBonusHistoryById)
+    );
+router
+    .route('/getAllBonusHistories')
+    .get(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
+        asyncRoute(userBonusController.getAllBonusHistories)
+    );
+
+router
+    .route('/getAllUserBonusesHistoryByUserId')
+    .get(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
+        asyncRoute(userBonusController.getAllUserBonusesHistoryByUserId)
+    );
+
 export default router;

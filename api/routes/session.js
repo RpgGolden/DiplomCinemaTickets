@@ -55,4 +55,12 @@ router
         asyncRoute(sessionController.deleteSession)
     );
 
+router
+    .route('/createSessionSeatCategory')
+    .post(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
+        asyncRoute(sessionController.createSessionSeatCategory)
+    );
+
 export default router;

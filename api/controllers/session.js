@@ -253,4 +253,18 @@ export default {
             res.status(500).json({ error: 'Internal Server Error' });
         }
     },
+
+    async createSessionSeatCategory(req, res) {
+        try {
+            const { categoryName, price } = req.body;
+
+            // Создаем новую категорию мест
+            const seatPriceCategory = await SeatPriceCategory.create({ categoryName, price });
+
+            res.json(seatPriceCategory); // Возвращаем созданную категорию мест в ответе
+        } catch (error) {
+            console.error('Ошибка при создании категории мест:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
 };

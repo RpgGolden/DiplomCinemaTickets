@@ -16,9 +16,9 @@ export default class Promotion extends Model {
                 description: {
                     type: DataTypes.TEXT,
                 },
-                discountPercentage: {
+                discountPercentage: {  
                     type: DataTypes.INTEGER,
-                    allowNull: false,
+                    allowNull: true,
                     validate: {
                         min: 0,
                         max: 100,
