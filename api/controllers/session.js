@@ -176,6 +176,15 @@ export default {
                 sessionTime: moment(sessionDto.sessionTime).tz('UTC').format('DD-MM-YYYY HH:mm'),
             };
 
+            if (sessionWithoutTZ.seats) {
+                sessionWithoutTZ.seats.sort((a, b) => {
+                    if (a.rowNumber === b.rowNumber) {
+                        return a.seatNumber - b.seatNumber;
+                    }
+                    return a.rowNumber - b.rowNumber;
+                });
+            }
+
             res.json(sessionWithoutTZ);
         } catch (error) {
             console.error('Ошибка при получении сессии:', error);
@@ -200,17 +209,29 @@ export default {
                         include: [
                             {
                                 model: SeatPriceCategory,
-                                attributes: ['id', 'categoryName', 'price'], 
+                                attributes: ['id', 'categoryName', 'price'],
                             },
                         ],
                     },
                 ],
             });
+
             const sessionDtos = sessions.map(session => {
                 const formattedSessionTime = moment(session.sessionTime).tz('UTC').format('DD-MM-YYYY HH:mm');
+
+                const sortedSeats = session.Seats
+                    ? session.Seats.sort((a, b) => {
+                          if (a.rowNumber === b.rowNumber) {
+                              return a.seatNumber - b.seatNumber; 
+                          }
+                          return a.rowNumber - b.rowNumber; 
+                      })
+                    : [];
+
                 return new SessionDto({
                     ...session.toJSON(),
                     sessionTime: formattedSessionTime,
+                    Seats: sortedSeats, 
                 });
             });
 
