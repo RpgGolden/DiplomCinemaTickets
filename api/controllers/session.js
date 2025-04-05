@@ -156,7 +156,6 @@ export default {
                     },
                     {
                         model: Movie,
-                        attributes: ['id', 'title'],
                     },
                     {
                         model: Seat,
@@ -191,7 +190,6 @@ export default {
                     },
                     {
                         model: Movie,
-                        attributes: ['id', 'title'],
                     },
                     {
                         model: Seat,
