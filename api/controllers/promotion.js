@@ -105,8 +105,8 @@ export default {
             const promotionDto = new PromotionDto(promotion, process.env.HOST);
             const promotionWithoutTZ = {
                 ...promotionDto,
-                startDate: moment(promotionDto.startDate).tz('UTC').format('YYYY-MM-DDTHH:mm'),
-                endDate: moment(promotionDto.endDate).tz('UTC').format('YYYY-MM-DDTHH:mm'),
+                startDate: moment(promotionDto.startDate).tz('UTC').format('YYYY-MM-DD HH:mm'),
+                endDate: moment(promotionDto.endDate).tz('UTC').format('YYYY-MM-DD HH:mm'),
             };
 
             res.json(promotionWithoutTZ);
@@ -126,8 +126,8 @@ export default {
                 const promotionDto = new PromotionDto(promotion, process.env.HOST);
                 return {
                     ...promotionDto,
-                    startDate: moment(promotionDto.startDate).tz('UTC').format('YYYY-MM-DDTHH:mm'),
-                    endDate: moment(promotionDto.endDate).tz('UTC').format('YYYY-MM-DDTHH:mm'),
+                    startDate: moment(promotionDto.startDate).tz('UTC').format('YYYY-MM-DD HH:mm'),
+                    endDate: moment(promotionDto.endDate).tz('UTC').format('YYYY-MM-DD HH:mm'),
                 };
             });
 

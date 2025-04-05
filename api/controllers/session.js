@@ -170,7 +170,6 @@ export default {
                     },
                 ],
             });
-
             const sessionDto = new SessionDto(session);
             const sessionWithoutTZ = {
                 ...sessionDto,
@@ -201,14 +200,14 @@ export default {
                         include: [
                             {
                                 model: SeatPriceCategory,
-                                attributes: ['id', 'categoryName', 'price'], // Include category name and price
+                                attributes: ['id', 'categoryName', 'price'], 
                             },
                         ],
                     },
                 ],
             });
             const sessionDtos = sessions.map(session => {
-                const formattedSessionTime = moment(session.sessionTime).tz('UTC').format('DD-MM-YYYY HH:mm'); // Format session time
+                const formattedSessionTime = moment(session.sessionTime).tz('UTC').format('DD-MM-YYYY HH:mm');
                 return new SessionDto({
                     ...session.toJSON(),
                     sessionTime: formattedSessionTime,
