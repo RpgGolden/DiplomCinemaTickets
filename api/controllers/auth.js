@@ -67,7 +67,9 @@ export default {
             if (!userId || !methodType) {
                 throw new AppErrorMissing('User ID and payment method type are required');
             }
-
+            if (methodType !== 'cards') {
+                throw new AppErrorMissing('Payment method type must be "cards"');
+            }
             // Проверяем, существует ли пользователь
             const user = await User.findByPk(userId);
 
