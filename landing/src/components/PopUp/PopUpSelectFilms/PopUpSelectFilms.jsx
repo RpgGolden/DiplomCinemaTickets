@@ -40,22 +40,31 @@ function PopUpSelectFilms({ selectedFilm, close, setSelectedFilm }) {
               <p>Режиссер: {selectedFilm?.director}</p>
               <p>Длительность: {selectedFilm?.duration} мин</p>
               <p>Описание: {selectedFilm?.description}</p>
-
               <h3>Выберите сеанс:</h3>
-              <ul className={styles.sessionList}>
-                {selectedFilm?.sessions?.map((session) => (
-                  <li
-                    key={session.id}
-                    className={styles.sessionItem}
-                    onClick={() => handleSelectSession(session)}
-                  >
-                    {new Date(session.sessionTime).toLocaleString("ru-RU")} –{" "}
-                    {session.hall.name}
-                  </li>
-                ))}
-              </ul>
+                {
+                    selectedFilm?.sessions?.length > 0 ? (
+                        <div>
+                            <ul className={styles.sessionList}>
+                                {selectedFilm.sessions.map((session) => (
+                                    <li
+                                        key={session.id}
+                                        className={styles.sessionItem}
+                                        onClick={() => handleSelectSession(session)}
+                                    >
+                                        {new Date(session.sessionTime).toLocaleString("ru-RU")} –{" "}
+                                        {session.hall.name}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    ) : (
+                        <div className={styles.noSeanses}>
+                            <p>Извините, в настоящее время нет доступных сеансов</p>
+                        </div>
+                    )
+                }
             </div>
-          </div>
+        </div>
         </div>
       )}
 

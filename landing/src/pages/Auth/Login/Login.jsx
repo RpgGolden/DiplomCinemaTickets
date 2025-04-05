@@ -47,7 +47,6 @@ function Login() {
                     <div className={styles.inputGroup}>
                         <label htmlFor="email" className={styles.label}>Email</label>
                         <div className={styles.inputWrapper}>
-                            <Mail className={styles.icon} />
                             <input
                                 id="email"
                                 type="email"
@@ -63,7 +62,6 @@ function Login() {
                     <div className={styles.inputGroup}>
                         <label htmlFor="password" className={styles.label}>Пароль</label>
                         <div className={styles.inputWrapper}>
-                            <Lock className={styles.icon} />
                             <input
                                 id="password"
                                 type="password"
@@ -76,9 +74,9 @@ function Login() {
                         </div>
                         {errors.password && <p className={styles.error}>{errors.password}</p>}
                     </div>
-                    <div className={styles.bottomRow}>
+                    {/* <div className={styles.bottomRow}>
                         <a href="#" className={styles.forgotPassword}>Забыли пароль?</a>
-                    </div>
+                    </div> */}
                     <button type="submit" className={styles.loginButton} onClick={handleLogin}>
                         Войти
                     </button>

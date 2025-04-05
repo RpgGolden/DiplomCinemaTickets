@@ -2,7 +2,7 @@ import { DoorOpen, Instagram, Twitter, Facebook } from 'lucide-react';
 import styles from './Header.module.scss';
 import logo from './../../assets/img/logo.svg';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/UseAuth';
+import { useAuth } from '../../hooks/UseAuth';
 function Header() {
       const { isAuthenticated, role, logout } = useAuth();
 
@@ -10,7 +10,7 @@ function Header() {
 
     const clickBtn = ()=>{
         if(isAuthenticated){
-           alert("profile")
+            navigate('/profile');
         }else{
             navigate('/login');
         }

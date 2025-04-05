@@ -5,6 +5,7 @@ import Catalog from "./pages/Catalog/Catalog";
 import Login from "./pages/Auth/Login/Login";
 import Register from "./pages/Auth/Register/Register";
 import "./styles/app.scss";
+import Profile from "./pages/Profile/Profile";
 
 function App() {
     return (
@@ -16,6 +17,7 @@ function App() {
                         <Route path="/catalog" element={<Catalog />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
+                        <Route path="/profile" element={<Profile/>} />
                     </Routes>
                 </main>
             </BrowserRouter>

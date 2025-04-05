@@ -4,6 +4,7 @@ import { getOneSession, bookingTickets } from "../../../API/apiRequest"; // До
 import { useContext } from "react";
 import DataContext from "../../../context";
 import Loader from "../../Loader/Loader";
+import { Trash, Trash2 } from "lucide-react";
 
 function FilmBookings(props) {
   const [sessionInfo, setSessionInfo] = useState(null);
@@ -85,6 +86,11 @@ function FilmBookings(props) {
     });
   };
 
+  const handleRemoveSeat = (id) => {
+    // Удаляем место из массива выбранных мест
+    setSelectedSeats((prevSelectedSeats) => prevSelectedSeats.filter((seatId) => seatId !== id));
+  };
+
   return (
     <div className={styles.container}>
       <h2 className={styles.title}>Выберите места</h2>
@@ -138,11 +144,18 @@ function FilmBookings(props) {
       </div>
       <div className={styles.infoSelected}>
         <div className={styles.selection}>
-          <strong>Выбранные места:</strong>{" "}
-          {seats
-            .filter((seat) => selectedSeats.includes(seat.id))
-            .map((seat) => seat.number)
-            .join(", ")}
+          <strong>Выбранные места:</strong>
+          <div className={styles.selectedSeats}>
+            {seats
+              .filter((seat) => selectedSeats.includes(seat.id))
+              .map((seat) => (
+                <div key={seat.id} className={styles.seatTile}>
+                  <span>Ряд {seat.row}</span>
+                  <span>Место {seat.number}</span>
+                  <Trash2 className={styles.trashIcon} onClick={() => handleRemoveSeat(seat.id)}/>
+                </div>
+              ))}
+          </div>
         </div>
 
         {/* Подытог */}

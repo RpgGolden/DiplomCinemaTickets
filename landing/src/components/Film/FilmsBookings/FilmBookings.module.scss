@@ -141,3 +141,44 @@
     background-color: #aaa;
   }
 }
+.selectedSeats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.seatTile {
+  background-color: #f0f0f0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  position: relative;
+  transition: background-color 0.3s ease;
+  cursor: default;
+
+  &:hover {
+    .trashIcon {
+      opacity: 1;
+    }
+  }
+
+  .trashIcon {
+    opacity: 0.6;
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  // Когда наводим на иконку — красим весь .seatTile
+  .trashIcon:hover ~ &,
+  &:has(.trashIcon:hover) {
+    background-color: var(--light-red); // светло-красный
+  }
+}

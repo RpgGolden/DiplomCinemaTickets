@@ -59,7 +59,6 @@ function Register() {
                     <div className={styles.inputGroup}>
                         <label htmlFor="name" className={styles.label}>ФИО</label>
                         <div className={styles.inputWrapper}>
-                            <User className={styles.icon} />
                             <input
                                 id="name"
                                 type="text"
@@ -76,7 +75,6 @@ function Register() {
                     <div className={styles.inputGroup}>
                         <label htmlFor="email" className={styles.label}>Email</label>
                         <div className={styles.inputWrapper}>
-                            <Mail className={styles.icon} />
                             <input
                                 id="email"
                                 type="email"
@@ -93,7 +91,6 @@ function Register() {
                     <div className={styles.inputGroup}>
                         <label htmlFor="password" className={styles.label}>Пароль</label>
                         <div className={styles.inputWrapper}>
-                            <Lock className={styles.icon} />
                             <input
                                 id="password"
                                 type="password"
@@ -110,7 +107,6 @@ function Register() {
                     <div className={styles.inputGroup}>
                         <label htmlFor="confirmPassword" className={styles.label}>Повторите пароль</label>
                         <div className={styles.inputWrapper}>
-                            <Lock className={styles.icon} />
                             <input
                                 id="confirmPassword"
                                 type="password"

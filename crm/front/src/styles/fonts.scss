@@ -1,0 +1,11 @@
+@font-face {
+    font-family: 'suisseintl';
+    src: url('./../assets/fonts/Satoshi-Regular.woff') format('woff'),
+         url('./../assets/fonts/Satoshi-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
+*{
+    font-family: 'suisseintl', sans-serif;
+}

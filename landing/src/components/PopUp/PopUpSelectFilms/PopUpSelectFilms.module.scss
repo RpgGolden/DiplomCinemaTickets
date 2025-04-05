@@ -153,4 +153,13 @@
     width: 200px;
     margin-bottom: 20px;
   }
+  .noSeanses{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 10px;
+    background-color: var(--light-red);
+    border-radius: 5px;
+    font-size: 18px;
+  }
 }
