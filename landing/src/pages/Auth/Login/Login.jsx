@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Lock, Mail } from "lucide-react";
 import styles from "./Login.module.scss";
 import { useNavigate } from "react-router-dom";
+import { apiLogin } from "../../../API/apiRequest";
 
 function Login() {
     const [email, setEmail] = useState("");
@@ -23,7 +24,18 @@ function Login() {
     const handleLogin = (e) => {
         e.preventDefault();
         if (validateForm()) {
-            console.log("Вход с", email, password);
+            const data = {
+                email: email,
+                password: password
+            }
+            apiLogin(data).then((resp) => {
+                if (resp?.status === 200) {
+                    navigate("/");
+                }else{
+                    const newErrors = {password: 'Неправильный логин или пароль!'}
+                    setErrors(newErrors)
+                }
+            })
         }
     };
 
@@ -67,7 +79,7 @@ function Login() {
                     <div className={styles.bottomRow}>
                         <a href="#" className={styles.forgotPassword}>Забыли пароль?</a>
                     </div>
-                    <button type="submit" className={styles.loginButton} onClick={() => navigate('/')}>
+                    <button type="submit" className={styles.loginButton} onClick={handleLogin}>
                         Войти
                     </button>
                     <div className={styles.cent}>

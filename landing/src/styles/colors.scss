@@ -1,10 +1,10 @@
 :root {
-    --primary-color: #344e41;
-    --secondary-color: #3a5a40;
-    --accent-color: #588157;
-    --background-color: #fff;
-    --additional-color: #a3b18a;
-    --text-color: #333;
-    --color-gray: #f4f0f0;
-    --error-color: #c41212;
+    --primary-color: #8b0000;          /* Темный красный */
+    --secondary-color: #b22222;        /* Огонь-красный */
+    --accent-color: #dc143c;           /* Красный акцент для мест */
+    --background-color: #fff;          /* Белый фон */
+    --additional-color: #ff6347;       /* Томато, теплый красноватый оттенок */
+    --text-color: #2b2d42;             /* Тёмно-серый для текста */
+    --color-gray: #f4f0f0;             /* Светло-серый для фона */
+    --error-color: #c41212;            /* Ярко-красный для ошибок */
 }

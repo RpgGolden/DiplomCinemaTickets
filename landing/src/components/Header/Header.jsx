@@ -2,8 +2,19 @@ import { DoorOpen, Instagram, Twitter, Facebook } from 'lucide-react';
 import styles from './Header.module.scss';
 import logo from './../../assets/img/logo.svg';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/UseAuth';
 function Header() {
+      const { isAuthenticated, role, logout } = useAuth();
+
     const navigate = useNavigate();
+
+    const clickBtn = ()=>{
+        if(isAuthenticated){
+           alert("profile")
+        }else{
+            navigate('/login');
+        }
+    }
     return ( 
         <header className={styles.header}>
             <div className={styles.logo}>
@@ -31,8 +42,8 @@ function Header() {
                         <Facebook />
                     </span>
                 </div>
-                <button className={styles.button} onClick={() => navigate('/login')}>  
-                    <DoorOpen />Вход
+                <button className={styles.button} onClick={() => clickBtn()}>  
+                    {isAuthenticated ? "Профиль" : <><DoorOpen />"Вход"</>}
                 </button>
             </div>
             

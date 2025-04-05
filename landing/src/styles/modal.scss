@@ -9,7 +9,6 @@
     align-items: center;
     justify-content: center;
     z-index: 10000; // Убедимся, что выше всех
-
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
@@ -23,11 +22,9 @@
 .modal-content {
     background: white;
     padding: 20px;
-    border-radius: 10px;
-    width: 400px;
-    height: 400px;
+    width: 650px;
     position: relative;
-
+    box-sizing: border-box;
     transform: translateY(-20px);
     opacity: 0;
     transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;

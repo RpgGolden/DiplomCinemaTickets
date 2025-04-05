@@ -2,6 +2,7 @@ import { createContext, useState } from "react";
 import Modal from "react-modal";
 import PopUpSelectFilms from "./components/PopUp/PopUpSelectFilms/PopUpSelectFilms";
 import PopUpSelectNews from "./components/PopUp/PopUpSelectNews/PopUpSelectNews";
+import { getOneMovie, getOneSession } from "./API/apiRequest";
 
 Modal.setAppElement("#root");
 
@@ -12,8 +13,18 @@ export const DataProvider = ({ children }) => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [selectedNews, setSelectedNews] = useState(null);
     const openModal = (film) => {
-        setSelectedFilm(film);
-        setModalIsOpen(true);
+        getOneMovie(film.id).then((res) => {
+            if(res.status === 200){
+                console.log("selectedFilm", res.data)
+                setSelectedFilm(res.data);
+                setModalIsOpen(true);
+            }
+        })
+        getOneSession(film.id).then((res) => {
+            if(res.status === 200){
+                console.log("selectedFilm", res.data)
+            }
+        })
     };
 
     const openModalNews = (news) => {

@@ -4,8 +4,8 @@ import styles from "./Catalog.module.scss";
 import Layout from "../../components/Layout/Layout";
 import { Search } from "lucide-react";
 import { testData } from "../../utils/testData";
-import CardFilms from "../../components/CardFilms/CardFilms";
 import { useEffect, useState } from "react";
+import CardFilms from "../../components/Film/CardFilms/CardFilms";
 
 function Catalog() {
     const [search, setSearch] = useState("");

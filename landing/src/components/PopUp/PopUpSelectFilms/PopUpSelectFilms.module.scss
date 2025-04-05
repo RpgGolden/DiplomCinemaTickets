@@ -1,0 +1,8 @@
+@import "../../../styles/mixin.scss";
+
+.PopUpSelectFilms{
+    height: fit-content;
+    .buttonConfirm{
+        @include baseButton;
+    }
+}

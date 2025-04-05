@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Lock, Mail, User } from "lucide-react";
 import styles from "./Register.module.scss";
 import { useNavigate } from "react-router-dom";
+import { apiRegister } from "../../../API/apiRequest";
 
 function Register() {
     const [form, setForm] = useState({
@@ -34,7 +35,19 @@ function Register() {
     const handleRegister = (e) => {
         e.preventDefault();
         if (validateForm()) {
-            console.log("Регистрация с", form);
+            const data = {
+                name: form.name.split(" ")[1],
+                surname: form.name.split(" ")[0],
+                patronymic: form.name.split(" ")[2],
+                email: form.email,
+                password: form.password,
+            }
+            apiRegister(data).then((resp)=>{
+                if(resp?.status === 200){
+                    console.log(resp)
+                    navigate("/")
+                }
+            })
         }
     };
 
@@ -44,14 +57,14 @@ function Register() {
                 <h1 className={styles.title}>Регистрация</h1>
                 <form onSubmit={handleRegister} className={styles.form}>
                     <div className={styles.inputGroup}>
-                        <label htmlFor="name" className={styles.label}>Имя</label>
+                        <label htmlFor="name" className={styles.label}>ФИО</label>
                         <div className={styles.inputWrapper}>
                             <User className={styles.icon} />
                             <input
                                 id="name"
                                 type="text"
                                 name="name"
-                                placeholder="Введите имя"
+                                placeholder="Введите ФИО"
                                 value={form.name}
                                 onChange={handleChange}
                                 className={styles.input}
