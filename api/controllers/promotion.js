@@ -2,8 +2,8 @@ import { AppErrorAlreadyExists, AppErrorMissing } from '../utils/errors.js';
 import Promotion from '../models/promotion.js';
 import 'dotenv/config';
 import path from 'path';
-import removeTimeZone from '../utils/removetimezone.js';
 import PromotionDto from '../dtos/promotion-dto.js';
+import moment from 'moment-timezone';
 export default {
     async createPromotion(req, res) {
         try {
@@ -105,8 +105,8 @@ export default {
             const promotionDto = new PromotionDto(promotion, process.env.HOST);
             const promotionWithoutTZ = {
                 ...promotionDto,
-                startDate: removeTimeZone(promotionDto.startDate),
-                endDate: removeTimeZone(promotionDto.endDate),
+                startDate: moment(promotionDto.startDate).tz('UTC').format('YYYY-MM-DD HH:mm'),
+                endDate: moment(promotionDto.endDate).tz('UTC').format('YYYY-MM-DD HH:mm'),
             };
 
             res.json(promotionWithoutTZ);
@@ -126,8 +126,8 @@ export default {
                 const promotionDto = new PromotionDto(promotion, process.env.HOST);
                 return {
                     ...promotionDto,
-                    startDate: removeTimeZone(promotionDto.startDate),
-                    endDate: removeTimeZone(promotionDto.endDate),
+                    startDate: moment(promotionDto.startDate).tz('UTC').format('YYYY-MM-DD HH:mm'),
+                    endDate: moment(promotionDto.endDate).tz('UTC').format('YYYY-MM-DD HH:mm'),
                 };
             });
 

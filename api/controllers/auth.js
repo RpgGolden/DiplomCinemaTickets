@@ -6,6 +6,7 @@ import jwtUtils from '../utils/jwt.js';
 
 import 'dotenv/config';
 import UserPaymentMethod from '../models/user-payment-methods.js';
+import UserBonus from '../models/user-bonus.js';
 
 export default {
     async register(req, res) {
@@ -25,13 +26,87 @@ export default {
             const hashedPassword = await bcrypt.hash(password, 10);
 
             const user = await User.create({ name, surname, patronymic, email, password: hashedPassword });
+            await UserBonus.create({ userId: user.id });
+
+            // Создаем объект paymentMethods
+            const paymentMethods = {
+                cash: { userId: user.id, methodType: 'cash' },
+                bonus: { userId: user.id, methodType: 'bonus' },
+            };
+
+            // Сохраняем методы оплаты в базе данных
+            await UserPaymentMethod.bulkCreate(Object.values(paymentMethods));
 
             // Генерируем и сохраняем JWT-токены
             const { accessToken, refreshToken } = jwtUtils.generate({ id: user.id });
             await jwtUtils.saveToken(user.id, refreshToken);
 
-            const authDto = new AuthDto(user);
-            return res.json({ ...authDto, accessToken, refreshToken });
+            // Получаем пользователя с методами оплаты
+            const userData = await User.findByPk(user.id, { include: [{ model: UserPaymentMethod }] });
+
+            // Формируем ответ
+            const authDto = new AuthDto(userData);
+            return res.json({
+                ...authDto,
+                accessToken,
+                refreshToken,
+                paymentMethods: userData.UserPaymentMethods,
+            });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    },
+
+    async addPaymentMethod(req, res) {
+        try {
+            const { methodType, details } = req.body;
+
+            const userId = req.user.id;
+
+            if (!userId || !methodType) {
+                throw new AppErrorMissing('User ID and payment method type are required');
+            }
+            if (methodType !== 'cards') {
+                throw new AppErrorMissing('Payment method type must be "cards"');
+            }
+            // Проверяем, существует ли пользователь
+            const user = await User.findByPk(userId);
+
+            if (!user) {
+                throw new AppErrorAlreadyExists('User not found');
+            }
+
+            // Создаем новый метод оплаты
+            await UserPaymentMethod.create({ userId, methodType, details });
+
+            return res.status(201).json({ message: 'Payment method added successfully' });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    },
+
+    async updateProfile(req, res) {
+        try {
+            const { name, surname, patronymic } = req.body;
+            const userId = req.user.id;
+
+            if (!userId || !name || !surname || !patronymic) {
+                throw new AppErrorMissing('User ID, name, surname, and patronymic are required');
+            }
+
+            // Проверяем, существует ли пользователь
+            const user = await User.findByPk(userId);
+
+            if (!user) {
+                throw new AppErrorAlreadyExists('User not found');
+            }
+
+            // Обновляем информацию о пользователе
+            await user.update({ name, surname, patronymic });
+
+            return res.status(200).json({ message: 'Profile updated successfully' });
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Internal server error' });
@@ -45,8 +120,11 @@ export default {
             throw new AppErrorMissing('No login or password');
         }
 
-        // Поиск пользователя по логину в базе данных
-        const user = await User.findOne({ where: { email } });
+        const user = await User.findOne({
+            where: { email },
+            include: [{ model: UserPaymentMethod }],
+        });
+
         if (!user) {
             throw new AppErrorMissing('User not found');
         }
@@ -57,18 +135,14 @@ export default {
             throw new AppErrorMissing('Wrong password');
         }
 
-        // Получаем метод оплаты пользователя, если он существует
-        const userPaymentMethod = await UserPaymentMethod.findAll({ where: { userId: user.id } });
-
         // Генерация access и refresh токенов
         const { accessToken, refreshToken } = jwtUtils.generate({ id: user.id });
         await jwtUtils.saveToken(user.id, refreshToken);
 
-        // Возврат ответа с токенами, информацией о пользователе и методом оплаты
+        // Возврат ответа с токенами, информацией о пользователе и методами оплаты
         const authDto = new AuthDto(user);
-        return res.json({ ...authDto, accessToken, refreshToken, userPaymentMethod: userPaymentMethod || null });
+        return res.json({ ...authDto, accessToken, refreshToken, userPaymentMethod: user.UserPaymentMethods || null });
     },
-
     async logout(req, res) {
         const { refreshToken } = req.body;
 

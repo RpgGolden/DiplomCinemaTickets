@@ -4,10 +4,10 @@ export default class HallDto {
     rowCount;
     seatCount;
     seats;
-    sessions; // Новое поле для хранения информации о сессиях
+    sessions; // New field for storing session information
 
     constructor(hall, seats, sessions = []) {
-        // Устанавливаем sessions в пустой массив по умолчанию
+        // Set sessions to an empty array by default
         this.id = hall.id;
         this.name = hall.name;
         this.rowCount = hall.rowCount;
@@ -17,8 +17,8 @@ export default class HallDto {
             rowNumber: seat.rowNumber,
             seatNumber: seat.seatNumber,
             isAvailable: Boolean(seat.isAvailable),
-            categoryName: seat.SeatPriceCategory.categoryName,
-            price: seat.SeatPriceCategory.price,
+            categoryName: seat.SeatPriceCategory ? seat.SeatPriceCategory.categoryName : null,
+            price: seat.SeatPriceCategory ? seat.SeatPriceCategory.price : null,
             sessionId: seat.sessionId,
         }));
         this.sessions = sessions.map(session => ({

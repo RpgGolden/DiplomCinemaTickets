@@ -7,9 +7,12 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import promotionRoute from './routes/promotion.js';
 import 'dotenv/config';
+import ticketsRoute from './routes/ticket.js';
 import hallRoute from './routes/hall.js';
 import movieRoute from './routes/movie.js';
 import sessionRoute from './routes/session.js';
+import userBonusRoute from './routes/user-bonus.js';
+import profileRoute from './routes/profile.js';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -35,6 +38,9 @@ app.use('/promotion', promotionRoute);
 app.use('/hall', hallRoute);
 app.use('/movie', movieRoute);
 app.use('/session', sessionRoute);
+app.use('/tickets', ticketsRoute);
+app.use('/userBonus', userBonusRoute);
+app.use('/profile', profileRoute)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.listen(PORT, () => console.log(`Listen on :${PORT}`));
