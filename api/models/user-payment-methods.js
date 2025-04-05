@@ -18,7 +18,7 @@ export default class UserPaymentMethod extends Model {
                     },
                 },
                 methodType: {
-                    type: DataTypes.STRING,
+                    type: DataTypes.ENUM('cards', 'cash', 'bonus'),
                     allowNull: false,
                 },
                 details: {

@@ -1,12 +1,16 @@
 import nodemailer from 'nodemailer';
 import 'dotenv/config';
+
 async function sendTicketConfirmationEmail(
     clientEmail,
     clientName,
     ticketId,
     sessionTitle,
     seatNumber,
-    eventDate
+    seatRownumber,
+    eventDate,
+    seatPrice,
+    paymentMethod
 ) {
     try {
         const transporter = nodemailer.createTransport({
@@ -19,11 +23,22 @@ async function sendTicketConfirmationEmail(
             },
         });
 
+        const paymentMethodText =
+            paymentMethod === 'cash'
+                ? 'наличными'
+                : paymentMethod === 'bonus'
+                  ? 'бонусами'
+                  : paymentMethod === 'cards'
+                    ? 'картой'
+                    : 'неизвестно';
+
+        const earnedBonusPoints = Math.floor(seatPrice * 0.1); // Начисляем 5% от стоимости билета
+
         const mailOptions = {
             from: '"Kino Iskra" <r.orlov@keep-calm.ru>',
             to: clientEmail,
             subject: 'Подтверждение оформления билета',
-            text: `Ваш билет успешно оформлен!\n\nПараметры билета:\n- Имя клиента: ${clientName}\n- Номер билета: ${ticketId}\n- Название сессии: ${sessionTitle}\n- Номер места: ${seatNumber}\n- Дата мероприятия: ${eventDate}\n\nСпасибо за покупку!`,
+            text: `Ваш билет успешно оформлен!\n\nПараметры билета:\n- Имя клиента: ${clientName}\n- Номер билета: ${ticketId}\n- Название фильма: ${sessionTitle}\n- Номер ряда: ${seatRownumber}\n- Номер места: ${seatNumber}\n- Дата мероприятия: ${eventDate}\n- Способ оплаты: ${paymentMethodText}\n- Начисленные бонусы: ${earnedBonusPoints} баллов\n\nЦена билета: ${seatPrice} руб.\n\nСпасибо за покупку!`,
         };
 
         await transporter.sendMail(mailOptions);

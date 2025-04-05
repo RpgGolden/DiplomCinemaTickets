@@ -69,6 +69,7 @@ export default function () {
 
     // UserBonusHistory Model
     UserBonusHistory.belongsTo(User, { foreignKey: 'userId', onDelete: 'CASCADE' });
+    UserBonusHistory.belongsTo(Ticket, { foreignKey: 'ticketId', onDelete: 'CASCADE' });
 
     // UserPaymentMethod Model
     UserPaymentMethod.belongsTo(User, { foreignKey: 'userId', onDelete: 'CASCADE' });

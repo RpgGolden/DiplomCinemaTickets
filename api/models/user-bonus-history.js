@@ -17,9 +17,16 @@ export default class UserBonusHistory extends Model {
                         key: 'id',
                     },
                 },
-                changeAmount: {
+                amount: {
                     type: DataTypes.INTEGER,
                     allowNull: false,
+                },
+                ticketId: {
+                    type: DataTypes.INTEGER,
+                    references: {
+                        model: 'tickets',
+                        key: 'id',
+                    },
                 },
                 description: {
                     type: DataTypes.STRING,
