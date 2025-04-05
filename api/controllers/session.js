@@ -5,6 +5,7 @@ import { AppErrorNotExist } from '../utils/errors.js';
 import Hall from '../models/hall.js';
 import SessionDto from '../dtos/session-dto.js';
 import SeatPriceCategory from '../models/seat-price-category.js';
+import moment from 'moment-timezone';
 
 export default {
     async createSessionWithSeats(req, res) {
@@ -163,17 +164,20 @@ export default {
                         include: [
                             {
                                 model: SeatPriceCategory,
-                                attributes: ['id', 'categoryName', 'price'], // Include category name and price
+                                attributes: ['id', 'categoryName', 'price'],
                             },
                         ],
                     },
                 ],
             });
-            if (!session) {
-                throw new AppErrorNotExist('Session not found');
-            }
+
             const sessionDto = new SessionDto(session);
-            res.json(sessionDto);
+            const sessionWithoutTZ = {
+                ...sessionDto,
+                sessionTime: moment(sessionDto.sessionTime).tz('UTC').format('DD-MM-YYYY HH:mm'),
+            };
+
+            res.json(sessionWithoutTZ);
         } catch (error) {
             console.error('Ошибка при получении сессии:', error);
             res.status(500).json({ error: 'Internal Server Error' });
@@ -203,7 +207,14 @@ export default {
                     },
                 ],
             });
-            const sessionDtos = sessions.map(session => new SessionDto(session));
+            const sessionDtos = sessions.map(session => {
+                const formattedSessionTime = moment(session.sessionTime).tz('UTC').format('DD-MM-YYYY HH:mm'); // Format session time
+                return new SessionDto({
+                    ...session.toJSON(),
+                    sessionTime: formattedSessionTime,
+                });
+            });
+
             res.json(sessionDtos);
         } catch (error) {
             console.error('Ошибка при получении всех сессий:', error);
