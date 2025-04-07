@@ -31,4 +31,12 @@ router
         asyncRoute(profileController.addPaymentMethod)
     );
 
+router
+    .route('/getAllUsers')
+    .get(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR])),
+        asyncRoute(profileController.getAllUsers)
+    );
+
 export default router;

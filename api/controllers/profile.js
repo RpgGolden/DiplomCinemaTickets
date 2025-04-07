@@ -3,7 +3,7 @@ import User from '../models/user.js';
 
 import 'dotenv/config';
 import UserPaymentMethod from '../models/user-payment-methods.js';
-import {UserDto, ProfileAdminDto} from '../dtos/profile-dto.js';
+import { UserDto, ProfileAdminDto } from '../dtos/profile-dto.js';
 import roles from '../config/roles.js';
 export default {
     async addPaymentMethod(req, res) {
@@ -74,7 +74,7 @@ export default {
                 throw new AppErrorAlreadyExists('User not found');
             }
 
-            let userDto = ''
+            let userDto = '';
             // Создаем DTO для пользователя
             if (user.role === roles.CLIENT) {
                 userDto = new UserDto(user, user.UserPaymentMethods);
@@ -83,6 +83,20 @@ export default {
             }
 
             return res.status(200).json(userDto);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    },
+
+    async getAllUsers(req, res) {
+        try {
+            const users = await User.findAll({
+                include: [{ model: UserPaymentMethod }],
+                order: [['role', 'DESC']],
+            });
+            const usersDto = users.map(user => new UserDto(user, user.UserPaymentMethods));
+            return res.status(200).json(usersDto);
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Internal server error' });
