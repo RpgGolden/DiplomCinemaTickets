@@ -9,10 +9,8 @@ function AdminPage({}) {
         <div className={styles.AdminPage}>
             <LeftMenu/>
                 <section className={styles.mainSection}>
-                    <Layout>
-                        <input className={styles.inputSearch} placeholder="Search"/>
-                        <Outlet />
-                    </Layout>
+                    <input className={styles.inputSearch} placeholder="Search"/>
+                    <Outlet />
                 </section>
         </div>
     );

@@ -10,6 +10,7 @@ import Sessions from "./modules/AdminPageModule/Sessions/Sessions";
 import Halls from "./modules/AdminPageModule/Halls/Halls";
 import Promotions from "./modules/AdminPageModule/Promotions/Promotions";
 import Requests from "./modules/AdminPageModule/Requests/Requests";
+import TypePlace from "./modules/AdminPageModule/TypePlace/TypePlace";
 function App() {
 
   const context = {
@@ -28,8 +29,9 @@ function App() {
           <Route path="sessions" element={<Sessions/>} ></Route>
           <Route path="halls" element={<Halls/>} ></Route>
           <Route path="promotions" element={<Promotions/>} ></Route>
+          <Route path="typePlace" element={<TypePlace/>} ></Route>
         </Route>
-          <Route path="/login" element={<Login/>}></Route>
+          <Route path="/" element={<Login/>}></Route>
         </Routes>
       </main>
     </BrowserRouter>

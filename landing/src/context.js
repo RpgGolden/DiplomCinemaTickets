@@ -4,6 +4,7 @@ import PopUpSelectFilms from "./components/PopUp/PopUpSelectFilms/PopUpSelectFil
 import PopUpSelectNews from "./components/PopUp/PopUpSelectNews/PopUpSelectNews";
 import { getOneMovie, getOneSession } from "./API/apiRequest";
 import PopUpSucsess from "./components/PopUp/PopUpSucsess/PopUpSucsess";
+import PopUpPromotions from "./components/PopUp/PopUpPromotions/PopUpPromotions";
 
 Modal.setAppElement("#root");
 
@@ -18,7 +19,6 @@ export const DataProvider = ({ children }) => {
     const openModal = (film) => {
         getOneMovie(film.id).then((res) => {
             if(res.status === 200){
-                console.log("selectedFilm", res.data)
                 setSelectedFilm(res.data);
                 setModalIsOpen(true);
             }
@@ -33,7 +33,13 @@ export const DataProvider = ({ children }) => {
     const closeModal = () => {
         setSelectedFilm(null);
         setSelectedNews(null);
+        setViziblePopUp(null);
         setModalIsOpen(false);
+    };
+
+    const openModalPromotions = () => {
+        setViziblePopUp("PopUpPromotions");
+        setModalIsOpen(true);
     };
 
     const dataProviderData = {
@@ -46,12 +52,15 @@ export const DataProvider = ({ children }) => {
         setSelectedSession,
         selectedSession,
         setViziblePopUp,
-        viziblePopUp
+        viziblePopUp,
+        openModalPromotions
     }
     const closePopUpSucsess = () => {
         setViziblePopUp(null)
         setModalIsOpen(false);
     }
+
+
     return (
         <DataContext.Provider value={dataProviderData}>
             {children}
@@ -62,6 +71,7 @@ export const DataProvider = ({ children }) => {
                     {selectedFilm && <PopUpSelectFilms close={closeModal} selectedFilm={selectedFilm} setSelectedFilm={setSelectedFilm}  />}
                     {selectedNews && <PopUpSelectNews close={closeModal} selectedNews={selectedNews} />}
                     {viziblePopUp === "bookingConfirmed" && <PopUpSucsess closePopUpSucsess={closePopUpSucsess} />}
+                    {viziblePopUp === "PopUpPromotions" && <PopUpPromotions close={closeModal}/>}
                 </div>
             </div>
         </DataContext.Provider>

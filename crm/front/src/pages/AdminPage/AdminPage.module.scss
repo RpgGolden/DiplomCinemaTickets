@@ -1,8 +1,7 @@
 @import "./../../styles/mixin.scss";
 
 .mainSection{
-    padding-left: 200px;
-    width: calc(100vw - 200px);
+    padding-left: 250px;
     padding-top: 20px;
     .inputSearch{
         @include inputBase;

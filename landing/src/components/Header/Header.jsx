@@ -3,8 +3,11 @@ import styles from './Header.module.scss';
 import logo from './../../assets/img/logo.svg';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/UseAuth';
+import { useContext } from 'react';
+import DataContext from '../../context';
 function Header() {
-      const { isAuthenticated, role, logout } = useAuth();
+      const { isAuthenticated } = useAuth();
+      const { openModalPromotions } = useContext(DataContext);
 
     const navigate = useNavigate();
 
@@ -28,10 +31,11 @@ function Header() {
                     <ul className={styles.list}>
                         <li onClick={() => navigate('/')}>Главная</li>
                         <li onClick={() => navigate('/catalog')}>Каталог</li>
+                        <li onClick={() => openModalPromotions()} >Акции</li>
                     </ul>
                 </nav>
             <div className={styles.navButContainer}>
-                <div className={styles.social}>
+                {/* <div className={styles.social}>
                     <span className={styles.icon}>
                         <Instagram />
                     </span>
@@ -41,7 +45,7 @@ function Header() {
                     <span className={styles.icon}>
                         <Facebook />
                     </span>
-                </div>
+                </div> */}
                 <button className={styles.button} onClick={() => clickBtn()}>  
                     {isAuthenticated ? "Профиль" : <><DoorOpen />"Вход"</>}
                 </button>
