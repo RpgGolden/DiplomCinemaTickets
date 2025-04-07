@@ -12,7 +12,7 @@ router
     .route('/createSlider')
     .post(
         authenticateToken,
-        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
         upload.array('images'),
         asyncRoute(sliderController.createSlider)
     );
@@ -25,7 +25,7 @@ router
     .route('/deleteSlider/:id')
     .get(
         authenticateToken,
-        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
         asyncRoute(sliderController.deleteSlider)
     );
 
@@ -33,7 +33,7 @@ router
     .route('/updateSlider/:id')
     .patch(
         authenticateToken,
-        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
         upload.array('images'),
         asyncRoute(sliderController.updateSlider)
     );

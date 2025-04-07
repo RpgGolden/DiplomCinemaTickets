@@ -11,7 +11,7 @@ router
     .route('/createPromotion')
     .post(
         authenticateToken,
-        asyncRoute(checkRole([roles.ADMINISTRATOR])),
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.SUPERADMIN])),
         upload.single('image'),
         asyncRoute(promotionController.createPromotion)
     );
@@ -22,7 +22,7 @@ router
     .route('/updatePromotion/:id')
     .patch(
         authenticateToken,
-        asyncRoute(checkRole([roles.ADMINISTRATOR])),
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.SUPERADMIN])),
         upload.single('image'),
         asyncRoute(promotionController.updatePromotion)
     );
@@ -33,7 +33,7 @@ router
     .route('/deletePromotion/:id')
     .delete(
         authenticateToken,
-        asyncRoute(checkRole([roles.ADMINISTRATOR])),
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.SUPERADMIN])),
         asyncRoute(promotionController.deletePromotion)
     );
 

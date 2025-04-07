@@ -12,7 +12,7 @@ router
     .route('/createNews')
     .post(
         authenticateToken,
-        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
         upload.single('image'),
         asyncRoute(newsController.createNews)
     );
@@ -23,7 +23,7 @@ router
     .route('/updateNews/:id')
     .patch(
         authenticateToken,
-        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
         upload.single('image'),
         asyncRoute(newsController.updateNews)
     );
@@ -33,7 +33,7 @@ router
     .route('/deleteNews/:id')
     .delete(
         authenticateToken,
-        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
         asyncRoute(newsController.deleteNews)
     );
 

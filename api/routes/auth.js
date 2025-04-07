@@ -21,7 +21,7 @@ router
     .route('/updateProfile')
     .post(
         authenticateToken,
-        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
         asyncRoute(authController.updateProfile)
     );
 
@@ -29,7 +29,7 @@ router
     .route('/addPaymentMethod')
     .post(
         authenticateToken,
-        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
         asyncRoute(authController.addPaymentMethod)
     );
 

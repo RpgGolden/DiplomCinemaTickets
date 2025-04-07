@@ -11,7 +11,7 @@ router
     .route('/getBonusHistory')
     .get(
         authenticateToken,
-        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
         asyncRoute(userBonusController.getBonusHistory)
     );
 
@@ -19,7 +19,7 @@ router
     .route('/getUserBonus')
     .get(
         authenticateToken,
-        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
         asyncRoute(userBonusController.getUserBonus)
     );
 
@@ -27,14 +27,14 @@ router
     .route('/getBonusHistoryById/:id')
     .get(
         authenticateToken,
-        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
         asyncRoute(userBonusController.getBonusHistoryById)
     );
 router
     .route('/getAllBonusHistories')
     .get(
         authenticateToken,
-        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
         asyncRoute(userBonusController.getAllBonusHistories)
     );
 
@@ -42,7 +42,7 @@ router
     .route('/getAllUserBonusesHistoryByUserId')
     .get(
         authenticateToken,
-        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
         asyncRoute(userBonusController.getAllUserBonusesHistoryByUserId)
     );
 

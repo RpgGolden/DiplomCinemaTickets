@@ -91,10 +91,21 @@ export default {
 
     async getAllUsers(req, res) {
         try {
+            const currentUser = await User.findByPk(req.user.id);
+
+            let whereCondition = {};
+            if (currentUser.role === roles.SUPERADMIN) {
+                whereCondition = {};
+            } else if (currentUser.role === roles.ADMINISTRATOR) {
+                whereCondition = { role: roles.CLIENT };
+            }
+
             const users = await User.findAll({
+                where: whereCondition,
                 include: [{ model: UserPaymentMethod }],
                 order: [['role', 'DESC']],
             });
+
             const usersDto = users.map(user => new UserDto(user, user.UserPaymentMethods));
             return res.status(200).json(usersDto);
         } catch (error) {
