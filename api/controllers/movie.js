@@ -5,6 +5,9 @@ import { MovieDto, MovieWithSessionsDto } from '../dtos/movie-dto.js';
 import Session from '../models/session.js';
 import moment from 'moment-timezone';
 import Hall from '../models/hall.js';
+import Seat from '../models/seat.js';
+import SeatPriceCategory from '../models/seat-price-category.js';
+import { Op } from 'sequelize';
 export default {
     async createMovie(req, res) {
         try {
@@ -43,10 +46,24 @@ export default {
                 include: [
                     {
                         model: Session,
-                        include: [{ model: Hall }],
+                        include: [
+                            {
+                                model: Hall,
+                            },
+                            {
+                                model: Seat, // Включаем модель Seat
+                                include: [
+                                    {
+                                        model: SeatPriceCategory, // Включаем модель SeatPriceCategory
+                                        attributes: ['categoryName', 'price'], // Указываем, что хотим получить название категории и цену
+                                    },
+                                ],
+                            },
+                        ],
                     },
                 ],
             });
+
             if (!movie) {
                 return res.status(404).json({ error: 'Movie not found' });
             }
@@ -54,6 +71,17 @@ export default {
             if (movie.Sessions) {
                 movie.Sessions.forEach(session => {
                     session.sessionTime = moment(session.sessionTime).format('YYYY-MM-DDTHH:mm');
+
+                    // Получаем первую цену и категорию из мест
+                    if (session.Seats && session.Seats.length > 0) {
+                        const firstSeat = session.Seats[0];
+                        session.seatPrice = {
+                            price: firstSeat.SeatPriceCategory ? firstSeat.SeatPriceCategory.price : null,
+                            category: firstSeat.SeatPriceCategory ? firstSeat.SeatPriceCategory.categoryName : null,
+                        };
+                    } else {
+                        session.seatPrice = null;
+                    }
                 });
             }
 
@@ -147,5 +175,22 @@ export default {
             return res.status(500).json({ error: 'Internal Server Error' });
         }
     },
-    
+
+    async findMovieByTitle(req, res) {
+        try {
+            const { title } = req.query;
+            const movie = await Movie.findAll({
+                where: {
+                    title: {
+                        [Op.iLike]: `%${title}%`,
+                    },
+                },
+            });
+
+            return res.json(movie);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
 };

@@ -39,6 +39,15 @@ export default class Ticket extends Model {
                     type: DataTypes.DATE,
                     defaultValue: DataTypes.NOW,
                 },
+                isCancelled: {
+                    type: DataTypes.BOOLEAN,
+                    defaultValue: false,
+                },
+                ticketStatus: {
+                    type: DataTypes.ENUM('cancelled', 'purchased', 'movie_started', 'movie_ended'),
+                    defaultValue: 'purchased',
+                    allowNull: true,
+                },
             },
             {
                 sequelize,

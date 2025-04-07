@@ -1,3 +1,5 @@
+import moment from "moment-timezone";
+
 class UserBonusDto {
     id;
     name;
@@ -18,6 +20,7 @@ export default class UserBonusHistoryDto {
     userId;
     amount;
     ticketId;
+    ticketPrice;
     description;
     createdAt;
     seatNumber;
@@ -30,12 +33,13 @@ export default class UserBonusHistoryDto {
         this.userId = userBonusHistory.userId;
         this.amount = userBonusHistory.amount;
         this.ticketId = userBonusHistory.ticketId;
+        this.ticketPrice = userBonusHistory.ticketPrice;
         this.description = userBonusHistory.description;
         this.createdAt = userBonusHistory.createdAt;
         this.seatNumber = seatNumber;
         this.rowNumber = rowNumber;
         this.movieTitle = movieTitle;
-        this.sessionTime = sessionTime;
+        this.sessionTime = moment(sessionTime).tz('UTC').format('YYYY-MM-DDTHH:mm');
     }
 }
 

@@ -9,6 +9,8 @@ const router = Router();
 
 router.route('/register').post(asyncRoute(authController.register));
 
+router.route('/registerAdmin').post(asyncRoute(authController.registerAdmin));
+
 router.route('/login').post(asyncRoute(authController.login));
 
 router.route('/logout').post(asyncRoute(authController.logout));

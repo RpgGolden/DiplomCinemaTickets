@@ -3,7 +3,8 @@ import User from '../models/user.js';
 
 import 'dotenv/config';
 import UserPaymentMethod from '../models/user-payment-methods.js';
-import ProfileDto from '../dtos/profile-dto.js';
+import {UserDto, ProfileAdminDto} from '../dtos/profile-dto.js';
+import roles from '../config/roles.js';
 export default {
     async addPaymentMethod(req, res) {
         try {
@@ -73,8 +74,13 @@ export default {
                 throw new AppErrorAlreadyExists('User not found');
             }
 
+            let userDto = ''
             // Создаем DTO для пользователя
-            const userDto = new ProfileDto(user, user.UserPaymentMethods);
+            if (user.role === roles.CLIENT) {
+                userDto = new UserDto(user, user.UserPaymentMethods);
+            } else {
+                userDto = new ProfileAdminDto(user);
+            }
 
             return res.status(200).json(userDto);
         } catch (error) {

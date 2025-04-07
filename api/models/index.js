@@ -10,9 +10,11 @@ import Session from './session.js';
 import Ticket from './ticket.js';
 import UserBonus from './user-bonus.js';
 import Hall from './hall.js';
+import Promotion from './promotions.js';
 import SeatPriceCategory from './seat-price-category.js';
 import UserBonusHistory from './user-bonus-history.js';
 import UserPaymentMethod from './user-payment-methods.js';
+import Slider from './sliders.js';
 
 const { DB_USER, DB_PWD, DB_HOST, DB_PORT, DB_NAME } = process.env;
 
@@ -29,6 +31,8 @@ export const models = {
     Seat,
     Ticket,
     UserBonus,
+    Slider,
+    Promotion
 };
 export const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PWD, {
     host: DB_HOST,

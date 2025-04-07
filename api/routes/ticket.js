@@ -32,6 +32,14 @@ router
     );
 
 router
+    .route('/getAllTicketsUser')
+    .get(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
+        asyncRoute(ticketsController.getAllTicketsUser)
+    );
+
+router
     .route('/getTicket/:id')
     .get(
         authenticateToken,

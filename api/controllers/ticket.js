@@ -58,7 +58,7 @@ export default {
                     throw new AppErrorInvalid('Not enough bonus points to complete the purchase');
                 }
             }
-
+            let totalEarnedBonusPoints;
             const ticketPromises = availableSeats.map(async seat => {
                 const seatPrice = seat.SeatPriceCategory.price;
 
@@ -74,11 +74,13 @@ export default {
                 seat.isAvailable = false; // Должно быть false, а не true
                 await seat.save();
 
+                totalEarnedBonusPoints = Math.floor(totalTicketPrice * 0.1);
                 // Создаем запись в UserBonusHistory
                 await UserBonusHistory.create({
                     userId,
                     ticketId: ticket.id,
-                    amount: seatPrice,
+                    amount: totalEarnedBonusPoints / 2,
+                    ticketPrice: seat.SeatPriceCategory.price,
                     description: 'Билет успешно забронирован',
                 });
 
@@ -88,7 +90,6 @@ export default {
             const ticketsInfo = await Promise.all(ticketPromises);
 
             // Начисляем бонусы пользователю
-            const totalEarnedBonusPoints = Math.floor(totalTicketPrice * 0.1);
 
             // Если способ оплаты - бонус, списываем бонусы
             if (userPaymentMethod.methodType === 'bonus') {
@@ -158,16 +159,34 @@ export default {
                 if (userBonus) {
                     userBonus.bonusPoints += Math.floor(ticketPrice);
                     await userBonus.save();
+
+                    // Записываем в историю бонусов
+                    await UserBonusHistory.create({
+                        userId: user.id,
+                        amount: Math.floor(ticketPrice), // Начисленные бонусы
+                        ticketPrice,
+                        ticketId: ticket.id,
+                        description: 'Бонусы начислены за отмену билета',
+                    });
                 }
             } else {
                 if (userBonus) {
                     const bonusDeduction = Math.floor(ticketPrice * 0.1);
                     userBonus.bonusPoints = Math.max(0, userBonus.bonusPoints - bonusDeduction);
                     await userBonus.save();
+
+                    // Записываем в историю бонусов
+                    await UserBonusHistory.create({
+                        userId: user.id,
+                        amount: -bonusDeduction, // Списанные бонусы
+                        ticketPrice,
+                        ticketId: ticket.id,
+                        description: 'Бонусы списаны за отмену билета',
+                    });
                 }
             }
 
-            await Ticket.destroy({ where: { id: ticketId } });
+            await Ticket.update({ isCancelled: true, ticketStatus: 'cancelled' }, { where: { id: ticketId } });
 
             return res.status(200).json({ message: 'Билет успешно отменен и бонусы начислены/списаны.' });
         } catch (error) {
@@ -177,8 +196,52 @@ export default {
     },
     async getAllTickets(req, res) {
         try {
-            const tickets = await Ticket.findAll({ where: { userId: req.user.id } });
-            return res.json(tickets);
+            const tickets = await Ticket.findAll({
+                include: [
+                    {
+                        model: User,
+                        attributes: ['email', 'name'],
+                    },
+                    {
+                        model: Session,
+                        include: [
+                            {
+                                model: Movie,
+                                attributes: ['title'],
+                            },
+                        ],
+                    },
+                    {
+                        model: Seat,
+                        include: [
+                            {
+                                model: SeatPriceCategory,
+                                attributes: ['price'],
+                            },
+                        ],
+                    },
+                ],
+                order: [[{ model: Session }, 'sessionTime', 'DESC']], // Сортируем по времени сеанса от новых к старым
+            });
+
+            // Формируем массив с информацией о билетах
+            const ticketsInfo = tickets.map(ticket => ({
+                userId: ticket.userId,
+                email: ticket.User.email,
+                name: ticket.User.name,
+                ticketId: ticket.id,
+                movieTitle: ticket.Session.Movie.title,
+                sessionId: ticket.Session.id,
+                seatNumber: ticket.Seat.seatNumber,
+                rowNumber: ticket.Seat.rowNumber,
+                sessionTime: moment(ticket.Session.sessionTime).tz('UTC').format('DD-MM-YYYY HH:mm'),
+                seatPrice: ticket.Seat.SeatPriceCategory.price,
+                paymentMethod: ticket.paymentMethod,
+                isCancelled: ticket.isCancelled,
+                ticketStatus: ticket.ticketStatus,
+            }));
+
+            return res.status(200).json(ticketsInfo); // Возвращаем информацию о билетах
         } catch (error) {
             console.error(error);
             return res.status(500).json({ error: 'Internal Server Error' });
@@ -187,11 +250,110 @@ export default {
 
     async getTicket(req, res) {
         try {
-            const ticket = await Ticket.findByPk(req.params.id);
+            const ticket = await Ticket.findByPk(req.params.id, {
+                include: [
+                    {
+                        model: User,
+                        attributes: ['email', 'name'],
+                    },
+                    {
+                        model: Session,
+                        include: [
+                            {
+                                model: Movie,
+                                attributes: ['title'],
+                            },
+                        ],
+                    },
+                    {
+                        model: Seat,
+                        include: [
+                            {
+                                model: SeatPriceCategory,
+                                attributes: ['price'],
+                            },
+                        ],
+                    },
+                ],
+            });
+
             if (!ticket) {
                 return res.status(404).json({ error: 'Ticket not found' });
             }
-            return res.json(ticket);
+
+            // Формируем объект с информацией о билете
+            const ticketInfo = {
+                userId: ticket.userId,
+                email: ticket.User.email,
+                name: ticket.User.name,
+                ticketId: ticket.id,
+                movieTitle: ticket.Session.Movie.title,
+                sessionId: ticket.Session.id,
+                seatNumber: ticket.Seat.seatNumber,
+                rowNumber: ticket.Seat.rowNumber,
+                sessionTime: moment(ticket.Session.sessionTime).tz('UTC').format('DD-MM-YYYY HH:mm'),
+                seatPrice: ticket.Seat.SeatPriceCategory.price,
+                paymentMethod: ticket.paymentMethod,
+                isCancelled: ticket.isCancelled,
+                ticketStatus: ticket.ticketStatus,
+            };
+
+            return res.status(200).json(ticketInfo); // Возвращаем информацию о билете
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+
+    async getAllTicketsUser(req, res) {
+        try {
+            const tickets = await Ticket.findAll({
+                where: { userId: req.user.id },
+                include: [
+                    {
+                        model: User,
+                        attributes: ['email', 'name'], // Включаем только необходимые атрибуты пользователя
+                    },
+                    {
+                        model: Session,
+                        include: [
+                            {
+                                model: Movie,
+                                attributes: ['title'], // Включаем только название фильма
+                            },
+                        ],
+                    },
+                    {
+                        model: Seat,
+                        include: [
+                            {
+                                model: SeatPriceCategory,
+                                attributes: ['price'], // Включаем только цену
+                            },
+                        ],
+                    },
+                ],
+                order: [[{ model: Session }, 'sessionTime', 'DESC']], // Сортируем по времени сеанса от новых к старым
+            });
+
+            // Формируем массив с информацией о билетах
+            const ticketsInfo = tickets.map(ticket => ({
+                userId: ticket.userId,
+                email: ticket.User.email,
+                name: ticket.User.name,
+                ticketId: ticket.id,
+                movieTitle: ticket.Session.Movie.title,
+                sessionId: ticket.Session.id,
+                seatNumber: ticket.Seat.seatNumber,
+                rowNumber: ticket.Seat.rowNumber,
+                sessionTime: moment(ticket.Session.sessionTime).tz('UTC').format('DD-MM-YYYY HH:mm'),
+                seatPrice: ticket.Seat.SeatPriceCategory.price,
+                paymentMethod: ticket.paymentMethod,
+                isCancelled: ticket.isCancelled,
+                ticketStatus: ticket.ticketStatus,
+            }));
+
+            return res.status(200).json(ticketsInfo); // Возвращаем информацию о билетах
         } catch (error) {
             console.error(error);
             return res.status(500).json({ error: 'Internal Server Error' });

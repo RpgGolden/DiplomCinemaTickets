@@ -21,6 +21,10 @@ export default class UserBonusHistory extends Model {
                     type: DataTypes.INTEGER,
                     allowNull: false,
                 },
+                ticketPrice: {
+                    type: DataTypes.INTEGER,
+                    allowNull: true,
+                },
                 ticketId: {
                     type: DataTypes.INTEGER,
                     references: {

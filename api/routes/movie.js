@@ -26,6 +26,8 @@ router.route('/updateMovie/:id').patch(
 
 router.route('/getAllMovies').get(asyncRoute(movieController.getAllMovies));
 
+router.route('/findMovieByTitle').get(asyncRoute(movieController.findMovieByTitle));
+
 router
     .route('/deleteMovie/:id')
     .delete(
