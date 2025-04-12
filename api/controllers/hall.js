@@ -167,6 +167,21 @@ export default {
         }
     },
 
+    async deleteHalls(req, res) {
+        try {
+            const { ids } = req.body;
+            if (!ids || !Array.isArray(ids) || ids.length === 0) {
+                return res.status(400).json({ error: 'No hall IDs provided' });
+            }
+
+            await Seat.destroy({ where: { hallId: ids } });
+            await Hall.destroy({ where: { id: ids } }, { force: true });
+            res.json({ message: 'Halls successfully deleted' });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    },
     // Создаем зал
     // К залу крепим места
     // К этому залу крепим сессии, условно две сессии

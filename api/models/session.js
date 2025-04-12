@@ -45,6 +45,7 @@ export default class Session extends Model {
                         model: 'sessions',
                         key: 'id',
                     },
+                    onDelete: 'CASCADE',
                 },
             },
             {

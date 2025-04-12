@@ -37,4 +37,12 @@ router
         asyncRoute(newsController.deleteNews)
     );
 
+router
+    .route('/deleteNewsMany')
+    .delete(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
+        asyncRoute(newsController.deleteNewsMany)
+    );
+
 export default router;

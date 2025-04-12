@@ -114,4 +114,19 @@ export default {
             res.status(500).json({ error: 'Internal Server Error' });
         }
     },
+
+    async deleteNewsMany(req, res) {
+        try {
+            const newsIds = req.body.ids;
+            if (!Array.isArray(newsIds) || newsIds.length === 0) {
+                return res.status(400).json({ error: 'No news IDs provided' });
+            }
+            await News.destroy({ where: { id: newsIds } }, { force: true });
+
+            res.json({ message: 'Новости успешно удалена' });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
 };

@@ -40,6 +40,14 @@ router
     );
 
 router
+    .route('/deleteHalls')
+    .delete(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
+        asyncRoute(hallController.deleteHalls)
+    );
+
+router
     .route('/createSession')
     .post(
         authenticateToken,

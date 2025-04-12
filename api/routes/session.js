@@ -56,6 +56,14 @@ router
     );
 
 router
+    .route('/deleteSessions')
+    .delete(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
+        asyncRoute(sessionController.deleteManySessions)
+    );
+
+router
     .route('/createSessionSeatCategory')
     .post(
         authenticateToken,

@@ -40,4 +40,11 @@ router
         asyncRoute(movieController.deleteMovie)
     );
 
+router
+    .route('/deleteMovies')
+    .delete(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
+        asyncRoute(movieController.deleteMovies)
+    );
 export default router;

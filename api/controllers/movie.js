@@ -24,7 +24,9 @@ export default {
                 typeFilm,
             } = req.body;
             const images = req.files ? req.files.map(file => path.posix.join('uploads', 'movies', file.filename)) : [];
-
+            console.log(req);
+            console.log(req.body);
+            console.log(req.files);
             if (!title || !description || !duration || !trailerVideo) {
                 throw new AppErrorNotExist('Не все данные заполнены');
             }
@@ -179,7 +181,30 @@ export default {
             await movie.destroy({
                 force: true,
             });
-            return res.json({ message: 'Movie deleted successfully' });
+            return res.json({ message: 'Фильм успешно удалён' });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+
+    async deleteMovies(req, res) {
+        try {
+            const movieIds = req.body.ids; // Предполагается, что массив идентификаторов передается в теле запроса
+
+            if (!Array.isArray(movieIds) || movieIds.length === 0) {
+                return res.status(400).json({ error: 'No movie IDs provided' });
+            }
+
+            // Удаляем фильмы по идентификаторам
+            await Movie.destroy({
+                where: {
+                    id: movieIds,
+                },
+                force: true, // Удаление без возможности восстановления
+            });
+
+            return res.json({ message: 'Фильмы успешно удалены' });
         } catch (error) {
             console.error(error);
             return res.status(500).json({ error: 'Internal Server Error' });

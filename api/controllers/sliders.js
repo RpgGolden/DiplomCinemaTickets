@@ -53,7 +53,21 @@ export default {
                 return res.status(404).json({ error: 'Slider not found' });
             }
             await slider.destroy({ force: true });
-            return res.json({ message: 'Slider deleted successfully' });
+            return res.json({ message: 'Слайдер успешно удалён' });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    },
+
+    async deleteSliders(req, res) {
+        try {
+            const sliderIds = req.body.ids;
+            if (!Array.isArray(sliderIds) || sliderIds.length === 0) {
+                return res.status(400).json({ error: 'No slider IDs provided' });
+            }
+            await Slider.destroy({ where: { id: sliderIds } }, { force: true });
+            res.json({ message: 'Слайдеры успешно удалены' });
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Internal server error' });

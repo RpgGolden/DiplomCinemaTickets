@@ -113,4 +113,21 @@ export default {
             res.status(500).json({ error: 'Internal Server Error' });
         }
     },
+
+    async deletePromotions(req, res) {
+        try {
+            const promotionIds = req.body.ids;
+
+            if (!Array.isArray(promotionIds) || promotionIds.length === 0) {
+                return res.status(400).json({ error: 'No promotion IDs provided' });
+            }
+
+            await Promotion.destroy({ where: { id: promotionIds } }, { force: true });
+
+            res.json({ message: 'Акции успешно удалена' });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
 };
