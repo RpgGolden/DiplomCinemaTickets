@@ -1,19 +1,15 @@
-// ipfsClient.js
-import { create } from 'ipfs-http-client';
+// pinataClient.js
+import axios from 'axios';
 
-// Создайте экземпляр клиента IPFS
-const ipfs = create({ host: 'localhost', port: '5001', protocol: 'http' });
+const pinataApiKey = process.env.PINATA_API_KEY;
+const pinataSecretApiKey = process.env.PINATA_SECRET_API_KEY;
 
-// Проверка подключения к IPFS
-async function checkIPFSConnection() {
-    try {
-        const version = await ipfs.version();
-        console.log(`IPFS client connected. Version: ${version.version}`);
-    } catch (error) {
-        console.error('Failed to connect to IPFS:', error);
-    }
-}
+const pinata = axios.create({
+    baseURL: 'https://api.pinata.cloud',
+    headers: {
+        pinata_api_key: pinataApiKey,
+        pinata_secret_api_key: pinataSecretApiKey,
+    },
+});
 
-checkIPFSConnection();
-
-export default ipfs;
+export default pinata;

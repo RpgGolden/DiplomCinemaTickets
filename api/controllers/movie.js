@@ -52,9 +52,11 @@ export default {
             return res.status(500).json({ error: 'Internal Server Error' });
         }
     },
-
+    // Тута
     async getMovie(req, res) {
         try {
+            const currentTime = moment().utc().add(3, 'hours');
+            console.log(req.params.id);
             const movie = await Movie.findByPk(req.params.id, {
                 include: [
                     {
@@ -64,11 +66,11 @@ export default {
                                 model: Hall,
                             },
                             {
-                                model: Seat, // Включаем модель Seat
+                                model: Seat,
                                 include: [
                                     {
-                                        model: SeatPriceCategory, // Включаем модель SeatPriceCategory
-                                        attributes: ['categoryName', 'price'], // Указываем, что хотим получить название категории и цену
+                                        model: SeatPriceCategory,
+                                        attributes: ['categoryName', 'price'],
                                     },
                                 ],
                             },
@@ -76,16 +78,21 @@ export default {
                     },
                 ],
             });
-
+            console.log(movie);
             if (!movie) {
                 return res.status(404).json({ error: 'Movie not found' });
             }
 
             if (movie.Sessions) {
+                // Фильтруем сессии, оставляя только будущие и активные
+                movie.Sessions = movie.Sessions.filter(session => {
+                    const sessionTime = moment(session.sessionTime);
+                    return sessionTime.isAfter(currentTime) && session.isActive;
+                });
+
                 movie.Sessions.forEach(session => {
                     session.sessionTime = moment(session.sessionTime).format('YYYY-MM-DDTHH:mm');
 
-                    // Получаем первую цену и категорию из мест
                     if (session.Seats && session.Seats.length > 0) {
                         const firstSeat = session.Seats[0];
                         session.seatPrice = {

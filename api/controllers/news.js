@@ -98,6 +98,27 @@ export default {
         }
     },
 
+    async getAllNewsForSite(req, res) {
+        try {
+            const newsList = await News.findAll({
+                order: [['createdAt', 'DESC']],
+                where: {
+                    status: true,
+                },
+            });
+
+            const newsWithDtos = newsList.map(news => {
+                const newsDto = new NewsDto(news, process.env.HOST);
+                return newsDto;
+            });
+
+            res.json(newsWithDtos);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+
     async deleteNews(req, res) {
         try {
             const news = await News.findOne({ where: { id: req.params.id } });

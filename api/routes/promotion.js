@@ -29,6 +29,8 @@ router
 
 router.route('/getAllPromotions').get(asyncRoute(promotionController.getAllPromotions));
 
+router.route('/getAllPromotionsForSite').get(asyncRoute(promotionController.getAllPromotionsForSite));
+
 router
     .route('/deletePromotion/:id')
     .delete(
