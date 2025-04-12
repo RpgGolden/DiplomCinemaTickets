@@ -11,7 +11,7 @@ router
     .route('/bookingTickets')
     .post(
         authenticateToken,
-        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
         asyncRoute(ticketsController.createTicket)
     );
 
@@ -19,7 +19,7 @@ router
     .route('/cancelTicket/:id')
     .delete(
         authenticateToken,
-        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
         asyncRoute(ticketsController.cancelTicket)
     );
 
@@ -27,15 +27,31 @@ router
     .route('/getAllTickets')
     .get(
         authenticateToken,
-        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
         asyncRoute(ticketsController.getAllTickets)
+    );
+
+router
+    .route('/getAllTicketsUser')
+    .get(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
+        asyncRoute(ticketsController.getAllTicketsUser)
     );
 
 router
     .route('/getTicket/:id')
     .get(
         authenticateToken,
-        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
         asyncRoute(ticketsController.getTicket)
+    );
+
+router
+    .route('/getBookedTickets')
+    .get(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
+        asyncRoute(ticketsController.getBookedTickets)
     );
 export default router;

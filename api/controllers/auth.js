@@ -7,6 +7,7 @@ import jwtUtils from '../utils/jwt.js';
 import 'dotenv/config';
 import UserPaymentMethod from '../models/user-payment-methods.js';
 import UserBonus from '../models/user-bonus.js';
+import roles from '../config/roles.js';
 
 export default {
     async register(req, res) {
@@ -25,7 +26,7 @@ export default {
 
             const hashedPassword = await bcrypt.hash(password, 10);
 
-            const user = await User.create({ name, surname, patronymic, email, password: hashedPassword });
+            const user = await User.create({ name, surname, patronymic, email, password: hashedPassword, role: roles.CLIENT });
             await UserBonus.create({ userId: user.id });
 
             // Создаем объект paymentMethods
@@ -51,6 +52,45 @@ export default {
                 accessToken,
                 refreshToken,
                 paymentMethods: userData.UserPaymentMethods,
+            });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    },
+
+    async registerAdmin(req, res) {
+        try {
+            const { name, surname, patronymic, email, password } = req.body;
+
+            if (!name || !surname || !patronymic || !email || !password) {
+                throw new AppErrorMissing('No name, surname, email or password');
+            }
+
+            // Проверяем, существует ли пользователь с таким же логином
+            const existingUser = await User.findOne({ where: { email } });
+            if (existingUser) {
+                throw new AppErrorAlreadyExists('User already exists');
+            }
+
+            const hashedPassword = await bcrypt.hash(password, 10);
+
+            // Создаем пользователя без бонусов и методов оплаты
+            const user = await User.create({ name, surname, patronymic, email, password: hashedPassword, role: roles.ADMINISTRATOR });
+
+            // Генерируем и сохраняем JWT-токены
+            const { accessToken, refreshToken } = jwtUtils.generate({ id: user.id });
+            await jwtUtils.saveToken(user.id, refreshToken);
+
+            // Получаем пользователя без методов оплаты
+            const userData = await User.findByPk(user.id);
+
+            // Формируем ответ
+            const authDto = new AuthDto(userData);
+            return res.json({
+                ...authDto,
+                accessToken,
+                refreshToken,
             });
         } catch (error) {
             console.error(error);

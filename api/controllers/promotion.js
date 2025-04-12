@@ -1,44 +1,30 @@
 import { AppErrorAlreadyExists, AppErrorMissing } from '../utils/errors.js';
-import Promotion from '../models/promotion.js';
+import Promotion from '../models/promotions.js';
 import 'dotenv/config';
 import path from 'path';
 import PromotionDto from '../dtos/promotion-dto.js';
-import moment from 'moment-timezone';
+
 export default {
     async createPromotion(req, res) {
         try {
-            const { description, discountPercentage, conditions, startDate, endDate } = req.body;
+            const { title, description, endDate } = req.body; // Добавляем endDate
             const image = req.file ? path.posix.join('uploads', 'promotions', req.file.filename) : null;
-            if (!description || !discountPercentage || !conditions) {
+            if (!title || !description || !endDate) {
+                // Проверяем наличие endDate
                 throw new AppErrorMissing('Не все данные заполнены');
             }
 
-            const existingPromotion = await Promotion.findOne({ where: { description } });
+            const existingPromotion = await Promotion.findOne({ where: { title } });
             if (existingPromotion) {
                 throw new AppErrorAlreadyExists('Такая акция уже существует');
             }
 
-            let formattedStartDate = null;
-            let formattedEndDate = null;
-
-            if (startDate) {
-                const startDateObj = new Date(startDate);
-                formattedStartDate = startDateObj.setHours(startDateObj.getHours() + 3); // Add 3 hours
-            }
-
-            if (endDate) {
-                const endDateObj = new Date(endDate);
-                formattedEndDate = endDateObj.setHours(endDateObj.getHours() + 3); // Add 3 hours
-            }
-
             const promotion = await Promotion.create({
+                title,
                 description,
-                discountPercentage,
-                conditions,
                 image,
-                startDate: formattedStartDate,
-                endDate: formattedEndDate,
-                status: false, // Устанавливаем статус по умолчанию в false
+                isOutput: false, // Устанавливаем статус по умолчанию в false
+                endDate, // Сохраняем endDate
             });
 
             const promotionDto = new PromotionDto(promotion, process.env.HOST);
@@ -52,7 +38,7 @@ export default {
     async updatePromotion(req, res) {
         try {
             const { id } = req.params;
-            const { description, discountPercentage, conditions, startDate, endDate, status } = req.body;
+            const { title, description, isOutput, endDate } = req.body; // Добавляем endDate
             const image = req.file ? path.posix.join('uploads', 'promotions', req.file.filename) : null;
 
             const promotion = await Promotion.findOne({ where: { id } });
@@ -61,28 +47,11 @@ export default {
                 return res.status(404).json({ error: 'Акция не найдена' });
             }
 
+            promotion.title = title || promotion.title;
             promotion.description = description || promotion.description;
-            promotion.discountPercentage = discountPercentage || promotion.discountPercentage;
-            promotion.conditions = conditions || promotion.conditions;
             promotion.image = image || promotion.image;
-
-            if (status === '0' || 0) {
-                promotion.status = false;
-            } else {
-                promotion.status = status || promotion.status;
-            }
-
-            if (startDate) {
-                const formattedStartDate = new Date(startDate);
-                formattedStartDate.setHours(formattedStartDate.getHours() + 3);
-                promotion.startDate = formattedStartDate;
-            }
-
-            if (endDate) {
-                const formattedEndDate = new Date(endDate);
-                formattedEndDate.setHours(formattedEndDate.getHours() + 3);
-                promotion.endDate = formattedEndDate;
-            }
+            promotion.isOutput = isOutput !== undefined ? isOutput : promotion.isOutput;
+            promotion.endDate = endDate || promotion.endDate; // Обновляем endDate
 
             await promotion.save();
 
@@ -103,13 +72,7 @@ export default {
             }
 
             const promotionDto = new PromotionDto(promotion, process.env.HOST);
-            const promotionWithoutTZ = {
-                ...promotionDto,
-                startDate: moment(promotionDto.startDate).tz('UTC').format('YYYY-MM-DD HH:mm'),
-                endDate: moment(promotionDto.endDate).tz('UTC').format('YYYY-MM-DD HH:mm'),
-            };
-
-            res.json(promotionWithoutTZ);
+            res.json(promotionDto);
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Internal Server Error' });
@@ -118,17 +81,13 @@ export default {
 
     async getAllPromotions(req, res) {
         try {
-            const promotions = await Promotion.findAll({
-                order: [['createdAt', 'DESC']],
+            const promotionsList = await Promotion.findAll({
+                order: [['endDate', 'DESC']],
             });
 
-            const promotionsWithDtos = promotions.map(promotion => {
+            const promotionsWithDtos = promotionsList.map(promotion => {
                 const promotionDto = new PromotionDto(promotion, process.env.HOST);
-                return {
-                    ...promotionDto,
-                    startDate: moment(promotionDto.startDate).tz('UTC').format('YYYY-MM-DD HH:mm'),
-                    endDate: moment(promotionDto.endDate).tz('UTC').format('YYYY-MM-DD HH:mm'),
-                };
+                return promotionDto;
             });
 
             res.json(promotionsWithDtos);

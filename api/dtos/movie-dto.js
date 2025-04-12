@@ -1,4 +1,4 @@
-import removeTimezone from '../utils/removetimezone.js';
+import moment from 'moment-timezone';
 
 class MovieDto {
     id;
@@ -11,6 +11,7 @@ class MovieDto {
     genres;
     ageRating;
     actors;
+    typeFilm;
     imageUrls;
 
     constructor(movie, host) {
@@ -24,6 +25,7 @@ class MovieDto {
         this.genres = movie.genres;
         this.ageRating = movie.ageRating;
         this.actors = movie.actors;
+        this.typeFilm = movie.typeFilm;
         this.imageUrls = movie.images ? movie.images.map(image => `${host}/${image}`) : [];
     }
 }
@@ -39,6 +41,7 @@ class MovieWithSessionsDto {
     genres;
     ageRating;
     actors;
+    typeFilm
     imageUrls;
     sessions;
 
@@ -53,11 +56,12 @@ class MovieWithSessionsDto {
         this.genres = movie.genres;
         this.ageRating = movie.ageRating;
         this.actors = movie.actors;
+        this.typeFilm = movie.typeFilm
         this.imageUrls = movie.images ? movie.images.map(image => `${host}/${image}`) : [];
         this.sessions = (movie.Sessions || []).map(session => ({
             id: session.id,
             movieId: session.movieId,
-            sessionTime: removeTimezone(session.sessionTime),
+            sessionTime: moment(session.sessionTime).tz('UTC').format('YYYY-MM-DDTHH:mm'),
             hall: session.Hall
                 ? {
                       id: session.Hall.id,
@@ -66,6 +70,15 @@ class MovieWithSessionsDto {
                       seatCount: session.Hall.seatCount,
                   }
                 : null,
+            seatPrice:
+                session.Seats && session.Seats.length > 0
+                    ? {
+                          price: session.Seats[0].SeatPriceCategory ? session.Seats[0].SeatPriceCategory.price : null,
+                          category: session.Seats[0].SeatPriceCategory
+                              ? session.Seats[0].SeatPriceCategory.categoryName
+                              : null,
+                      }
+                    : null,
         }));
     }
 }

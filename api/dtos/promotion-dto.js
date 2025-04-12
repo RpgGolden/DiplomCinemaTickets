@@ -1,21 +1,15 @@
 export default class PromotionDto {
     id;
+    title;
     description;
-    discountPercentage;
-    conditions;
     imageUrl;
-    startDate;
-    endDate;
-    status;
+    isOutput;
 
     constructor(promotion, host) {
         this.id = promotion.id;
+        this.title = promotion.title;
         this.description = promotion.description;
-        this.discountPercentage = Number(promotion.discountPercentage);
-        this.conditions = promotion.conditions;
         this.imageUrl = promotion.image ? `${host}/${promotion.image}` : null;
-        this.startDate = promotion.startDate;
-        this.endDate = promotion.endDate;
-        this.status = Boolean(promotion.status);
+        this.isOutput = Boolean(promotion.isOutput);
     }
 }

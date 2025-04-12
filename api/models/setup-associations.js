@@ -3,7 +3,6 @@ const {
     User,
     TokenSchema,
     Movie,
-    Promotion,
     Seat,
     Session,
     Ticket,
@@ -51,18 +50,18 @@ export default function () {
     Movie.hasMany(Session, { foreignKey: 'movieId' }); // Убрали onDelete
     Session.belongsTo(Movie, { foreignKey: 'movieId' }); // Убрали onDelete
 
-    // Promotion model
-    Promotion.belongsToMany(User, { through: 'UserPromotions', foreignKey: 'promotionId', onDelete: 'CASCADE' });
-    User.belongsToMany(Promotion, { through: 'UserPromotions', foreignKey: 'userId', onDelete: 'CASCADE' });
+    // // Promotion model
+    // Promotion.belongsToMany(User, { through: 'UserPromotions', foreignKey: 'promotionId', onDelete: 'CASCADE' });
+    // User.belongsToMany(Promotion, { through: 'UserPromotions', foreignKey: 'userId', onDelete: 'CASCADE' });
 
-    Promotion.belongsToMany(Movie, { through: 'MoviePromotions', foreignKey: 'promotionId' });
-    Movie.belongsToMany(Promotion, { through: 'MoviePromotions', foreignKey: 'movieId' });
+    // Promotion.belongsToMany(Movie, { through: 'MoviePromotions', foreignKey: 'promotionId' });
+    // Movie.belongsToMany(Promotion, { through: 'MoviePromotions', foreignKey: 'movieId' });
 
-    Promotion.belongsToMany(Session, { through: 'PromotionSessions', foreignKey: 'promotionId' });
-    Session.belongsToMany(Promotion, { through: 'PromotionSessions', foreignKey: 'sessionId' });
+    // Promotion.belongsToMany(Session, { through: 'PromotionSessions', foreignKey: 'promotionId' });
+    // Session.belongsToMany(Promotion, { through: 'PromotionSessions', foreignKey: 'sessionId' });
 
-    Promotion.hasMany(Ticket, { foreignKey: 'promotionId' });
-    Ticket.belongsTo(Promotion, { foreignKey: 'promotionId' });
+    // Promotion.hasMany(Ticket, { foreignKey: 'promotionId' });
+    // Ticket.belongsTo(Promotion, { foreignKey: 'promotionId' });
 
     // UserBonus model
     UserBonus.belongsTo(User, { foreignKey: 'userId', onDelete: 'CASCADE' });

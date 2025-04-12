@@ -9,6 +9,10 @@ const storage = multer.diskStorage({
         let folder = 'uploads'; // Default folder
         if (req.baseUrl.includes('/movie')) {
             folder = path.join('uploads', 'movies');
+        } else if (req.baseUrl.includes('/news')) {
+            folder = path.join('uploads', 'news');
+        } else if (req.baseUrl.includes('/slider')) {
+            folder = path.join('uploads', 'sliders');
         } else if (req.baseUrl.includes('/promotion')) {
             folder = path.join('uploads', 'promotions');
         }

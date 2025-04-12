@@ -40,6 +40,10 @@ export default class Movie extends Model {
                 actors: {
                     type: DataTypes.ARRAY(DataTypes.STRING),
                 },
+                typeFilm: {
+                    type: DataTypes.ENUM('premiere', 'base_movie'),
+                    allowNull: true
+                }
             },
             {
                 sequelize,

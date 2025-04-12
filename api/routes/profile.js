@@ -11,7 +11,7 @@ router
     .route('/getProfile')
     .get(
         authenticateToken,
-        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
         asyncRoute(profileController.getProfile)
     );
 
@@ -19,7 +19,7 @@ router
     .route('/updateProfile')
     .post(
         authenticateToken,
-        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
         asyncRoute(profileController.updateProfile)
     );
 
@@ -27,8 +27,16 @@ router
     .route('/addPaymentMethod')
     .post(
         authenticateToken,
-        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT])),
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
         asyncRoute(profileController.addPaymentMethod)
+    );
+
+router
+    .route('/getAllUsers')
+    .get(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.SUPERADMIN])),
+        asyncRoute(profileController.getAllUsers)
     );
 
 export default router;
