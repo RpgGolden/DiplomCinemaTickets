@@ -22,6 +22,7 @@ function FilmBookings(props) {
       if (res.status === 200) {
         console.log("sessionInfo", res.data);
         setSessionInfo(res.data);
+        console.log("seats", res.data);
         setSeats(
           res.data.seats.map((seat) => ({
             id: seat.id,
@@ -101,7 +102,7 @@ function FilmBookings(props) {
       </div>
 
       <div className={styles.cinema}>
-        {[...Array(5)].map((_, rowIdx) => (
+        {[...Array(props.session.hall.rowCount)].map((_, rowIdx) => (
           <div key={rowIdx} className={styles.rowWrapper}>
             {/* Номер ряда слева */}
             <div className={styles.rowNumber}>

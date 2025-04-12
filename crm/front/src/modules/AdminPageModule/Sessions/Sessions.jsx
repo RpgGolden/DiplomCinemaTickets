@@ -28,8 +28,7 @@ function Sessions() {
 
   useEffect(() => {
     // Получаем данные о сессиях
-    dispatch(getAndSetSessionData((data) => dispatch(setSessionData(data))));
-
+        dispatch(getAndSetSessionData((data) => dispatch(setSessionData(data))));
     // Получаем и устанавливаем фильмы
     if (MovieData?.length === 0 || !MovieData) {
       dispatch(getandSetMovieData((data) => {
@@ -46,14 +45,11 @@ function Sessions() {
       dispatch(getandSetHallData((data) => {
         console.log("getandSetHallData", data)
         dispatch(setHallData(data));
-        setHallsData(data); // Обновляем состояние залов
+        setHallsData(data); 
       }));
     } else {
-      setHallsData(HallData); // Если данные уже есть в стейте, обновляем их
+      setHallsData(HallData); 
     }
-
-    console.log("MovieData", moviesData);
-    console.log("HallData", hallsData); // Логирование данных залов
   }, [dispatch]);
 
   const handleOpenDialog = (session = null) => {
@@ -111,6 +107,7 @@ function Sessions() {
           onEdit={handleOpenDialog}
           onDelete={handleDeleteSession}
           editingMode={true}
+          addMode={true} // Разрешаем добавление
         />
       </div>
 

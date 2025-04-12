@@ -14,9 +14,7 @@ function Promotions() {
     const [selectedPromotions, setSelectedPromotions] = useState(null);
 
   useEffect(() => {
-    // if(promotionsData?.length === 0 || !promotionsData){
         dispatch(getAndSetPromotionData((data) => dispatch(setPromotionData(data))));
-   // }
   }, [dispatch]);
 
     // Открытие модалки для добавления/редактирования фильма
@@ -71,6 +69,7 @@ function Promotions() {
                 onEdit={handleOpenDialog}
                 onDelete={handleDeleteMovie}
                 editingMode={true}
+                addMode={true} // Разрешаем добавление
                 />
                 <PromotionsDialog
                     open={openDialog}

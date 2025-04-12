@@ -15,7 +15,7 @@ function Halls() {
 
   // Загружаем данные о залах при монтировании компонента
   useEffect(() => {
-    dispatch(getandSetHallData((data) => dispatch(setHallData(data))));
+        dispatch(getandSetHallData((data) => dispatch(setHallData(data))));
   }, [dispatch]);
 
   // Открытие модалки для добавления/редактирования зала
@@ -75,6 +75,7 @@ function Halls() {
           onEdit={handleOpenDialog} // Открытие модалки для редактирования
           onDelete={handleDeleteHall} // Удаление зала
           editingMode={false}
+          addMode={true} // Разрешаем добавление
         />
       </div>
 

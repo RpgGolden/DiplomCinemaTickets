@@ -15,6 +15,7 @@ import MoviesSlice from "./MoviesSlice/MoviesSlice.js";
 import HallsSlice from "./HallsSlice/HallsSlice.js";
 import SessionsSlice from "./SessionsSlice/SessionsSlice.js";
 import PromotionsSlice from "./PromotionsSlice/PromotionsSlice.js";
+import UserSlice from "./UserSlice/UserSlice.js";
 
 const rootReducer = combineReducers({
   PopUpSlice: PopUpSlice,
@@ -22,12 +23,13 @@ const rootReducer = combineReducers({
   HallsSlice: HallsSlice,
   SessionsSlice: SessionsSlice,
   PromotionsSlice: PromotionsSlice,
+  UserSlice: UserSlice
 });
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["PopUpSlice", "MoviesSlice", "HallsSlice", "SessionsSlice", "PromotionsSlice"],
+  whitelist: ["PopUpSlice", "MoviesSlice", "HallsSlice", "SessionsSlice", "PromotionsSlice", "UserSlice"],
   // blacklist: ["editColumTableSlice", "isCheckedSlice"],
 };
 const persistedReducer = persistReducer(persistConfig, rootReducer);

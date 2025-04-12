@@ -11,6 +11,7 @@ import Halls from "./modules/AdminPageModule/Halls/Halls";
 import Promotions from "./modules/AdminPageModule/Promotions/Promotions";
 import Requests from "./modules/AdminPageModule/Requests/Requests";
 import TypePlace from "./modules/AdminPageModule/TypePlace/TypePlace";
+import News from "./modules/AdminPageModule/News/News";
 function App() {
   const context = {
    
@@ -29,6 +30,7 @@ function App() {
           <Route path="halls" element={<Halls/>} ></Route>
           <Route path="promotions" element={<Promotions/>} ></Route>
           <Route path="typePlace" element={<TypePlace/>} ></Route>
+          <Route path="news" element={<News/>} ></Route>
         </Route>
           <Route path="/" element={<Login/>}></Route>
         </Routes>

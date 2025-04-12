@@ -12,6 +12,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.8.4",
+    "file-saver": "^2.0.5",
     "lucide": "^0.487.0",
     "lucide-react": "^0.479.0",
     "material-react-table": "^3.2.1",
@@ -22,7 +23,8 @@
     "react-scripts": "5.0.1",
     "redux-persist": "^6.0.0",
     "sass": "^1.79.5",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "xlsx": "^0.18.5"
   },
   "scripts": {
     "start": "react-scripts start",

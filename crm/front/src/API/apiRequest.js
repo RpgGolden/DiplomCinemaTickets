@@ -20,7 +20,12 @@ import { AUTH_LOGIN_URL, AUTH_LOGOUT_URL, MOVIE_GET_ALL_URL,
     PROMOTION_UPDATE_URL,
     PROMOTION_GET_ALL_URL,
     PROMOTION_DELETE_URL,
-    AUTH_GET_ALL_USERS_URL
+    AUTH_GET_ALL_USERS_URL,
+    GET_ALL_NEWS_URL,
+    CREATE_NEWS_URL,
+    UPDATE_NEWS_URL,
+    GET_NEWS_URL,
+    GET_ALL_TICKETS_URL
 } from './ApiUrl';
 import api from './axios';
 
@@ -260,6 +265,53 @@ export const deletePromotion = async id => {
 export const getAllUsers = async () => {
     try {
         const response = await api.get(AUTH_GET_ALL_USERS_URL);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+//!News
+
+export const createNews = async data => {
+    try {
+        const response = await api.post(CREATE_NEWS_URL, data);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+export const getAllNews = async () => {
+    try {
+        const response = await api.get(GET_ALL_NEWS_URL);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+export const getOneNews = async id => {
+    try {
+        const response = await api.get(`${GET_NEWS_URL}/${id}`);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+export const updateNews = async (id, data) => {
+    try {
+        const response = await api.patch(`${UPDATE_NEWS_URL}/${id}`, data);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+export const getAllTickets = async () => {
+    try {
+        const response = await api.get(GET_ALL_TICKETS_URL);
         return response;
     } catch (error) {
         return error;

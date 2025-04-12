@@ -1,8 +1,17 @@
 .ButtonTop{
     display: flex;
     justify-content: start;
+    gap: 1rem;
+    svg{
+        width: 16px;
+        height: 16px;
+        margin-left: 5px;
+    }
 }
 .table{    
     margin-top: 2rem;
     margin-right: 4rem;
+}
+.tableContainer{
+    margin-top: 18px;
 }

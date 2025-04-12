@@ -2,6 +2,8 @@ import { useState } from "react";
 import styles from "./Login.module.scss";
 import { apiLogin } from "../../../API/apiRequest";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUserData } from "../../../store/UserSlice/UserSlice";
 
 function Login() {
     const [datalogin, setDatalogin] = useState({
@@ -32,6 +34,8 @@ function Login() {
         return Object.keys(newErrors).length === 0;
     };
 
+    const dispatch = useDispatch();
+
     const handleSubmit = (e) => {
         e.preventDefault();
         setGeneralError("");
@@ -40,7 +44,8 @@ function Login() {
             // Пример запроса
             apiLogin(datalogin).then(res => {
                 if (res.status === 200) {
-                    navigate('/adminPage/users')
+                    dispatch(setUserData(res.data))
+                    navigate('/adminPage/request')
                 } else {
                     setGeneralError("Неверный логин или пароль");
                 }

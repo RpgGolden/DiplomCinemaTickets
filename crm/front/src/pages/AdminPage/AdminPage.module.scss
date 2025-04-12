@@ -7,4 +7,85 @@
         @include inputBase;
         width: 340px;
     }
+   
 }
+.AdminPage{
+    .user{
+    position: absolute;
+    right: 12px;
+    top: 12px;
+        svg{
+            width: 34px;
+            height: 34px;
+            cursor: pointer;
+            color: var(--primary-color);
+            transition: 0.3s;
+            &:hover{
+                color: var(--accent-color);
+                scale: 1.1;
+            }
+        }
+    }
+}
+
+
+  
+  .user {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+  }
+  
+  .userIcon {
+    cursor: pointer;
+    transition: 0.3s;
+    color: #333;
+  
+    &:hover {
+      color: #000;
+      transform: scale(1.05);
+    }
+  }
+  
+  .userModal {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background-color: white;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    min-width: 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 200;
+    animation: fadeIn 0.2s ease-out;
+  
+    button {
+      background-color: var(--accent-color);
+      border: none;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+  
+      &:hover {
+        background-color: var(--primary-color);
+      }
+    }
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  

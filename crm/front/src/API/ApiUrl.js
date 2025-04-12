@@ -32,3 +32,11 @@ export const SESSION_CHANGE_SEAT_CATEGORY_URL = '/session/changeSeatCategory';
 export const SESSION_DELETE_URL = '/session/deleteSession';
 
 export const TICKET_BOOKING_URL = '/tickets/bookingTickets';
+
+export const CREATE_NEWS_URL = '/news/createNews';
+export const GET_NEWS_URL = '/news/getNews';
+export const UPDATE_NEWS_URL = '/news/updateNews';
+export const GET_ALL_NEWS_URL = '/news/getAllNews';
+export const DELETE_NEWS_URL = '/news/deleteNews';
+
+export const GET_ALL_TICKETS_URL = '/tickets/getAllTickets';

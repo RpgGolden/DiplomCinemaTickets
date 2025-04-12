@@ -219,3 +219,74 @@ export const userColumns = [
     header: "Роль",
   },
 ]
+
+export const newsColumns = [
+  {
+    accessorKey: "id",
+    header: "ID",
+  },
+  {
+    accessorKey: "title",
+    header: "Заголовок",
+  },
+  {
+    accessorKey: "content",
+    header: "Контент",
+  },
+  {
+    accessorKey: "status",
+    header: "Статус",
+    Cell: ({ cell }) => (cell.getValue() ? "Активно" : "Не активно"), // Преобразуем булевое значение в строку
+  }  
+] 
+
+export const requestColumns = [
+
+  {
+    accessorKey: "ticketId",
+    header: "Id",
+  },
+  {
+    accessorKey: "name",
+    header: "Бронь на имя",
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
+  },
+  {
+    accessorKey: "ticketId",
+    header: "Билет",
+  },
+  {
+    accessorKey: "ticketStatus",
+    header: "Статус",
+  },
+  {
+    accessorKey: "paymentMethod",
+    header: "Способ оплаты",
+  },
+  {
+    accessorKey: "seatNumber",
+    header: "Место",
+  },
+  {
+    accessorKey: "rowNumber",
+    header: "Ряд",
+  }
+  ,
+  {
+    accessorKey: "sessionTime",
+    header: "Время сеанса",
+  },
+  {
+    accessorKey: "movieTitle",
+    header: "Фильм",
+  },
+  {
+    accessorKey: "isCancelled",
+    header: "Отменён",
+    Cell: ({ cell }) => (cell.getValue() ? "Да" : "Нет"), // Преобразуем булевое значение в строку
+  },
+
+];

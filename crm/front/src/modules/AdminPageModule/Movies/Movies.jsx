@@ -15,7 +15,7 @@ function Movies() {
   const [selectedMovie, setSelectedMovie] = useState(null);
 
   useEffect(() => {
-    dispatch(getandSetMovieData((data) => dispatch(setMovieData(data))));
+      dispatch(getandSetMovieData((data) => dispatch(setMovieData(data))));
   }, [dispatch]);
 
   // Открытие модалки для добавления/редактирования фильма
@@ -69,6 +69,7 @@ function Movies() {
           onEdit={handleOpenDialog}  // Открытие модалки для редактирования
           onDelete={handleDeleteMovie}  // Удаление фильма
           editingMode={true}
+          addMode={true} // Разрешаем добавление
         />
       </div>
 
