@@ -140,9 +140,23 @@ export default {
             // Удаляем оригинальную сессию
             await session.destroy();
 
-            res.json({ message: 'Session successfully deleted' });
+            res.json({ message: 'Сессия успешно удалена' });
         } catch (error) {
             console.error('Ошибка при удалении сессии:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+
+    async deleteManySessions(req, res) {
+        try {
+            const sessionIds = req.body.ids;
+            if (!Array.isArray(sessionIds) || sessionIds.length === 0) {
+                return res.status(400).json({ error: 'No session IDs provided' });
+            }
+            await Session.destroy({ where: { id: sessionIds } }, { force: true });
+            res.json({ message: 'Сессии успешно удалены' });
+        } catch (error) {
+            console.error('Ошибка при удалении сессий:', error);
             res.status(500).json({ error: 'Internal Server Error' });
         }
     },
@@ -222,16 +236,16 @@ export default {
                 const sortedSeats = session.Seats
                     ? session.Seats.sort((a, b) => {
                           if (a.rowNumber === b.rowNumber) {
-                              return a.seatNumber - b.seatNumber; 
+                              return a.seatNumber - b.seatNumber;
                           }
-                          return a.rowNumber - b.rowNumber; 
+                          return a.rowNumber - b.rowNumber;
                       })
                     : [];
 
                 return new SessionDto({
                     ...session.toJSON(),
                     sessionTime: formattedSessionTime,
-                    Seats: sortedSeats, 
+                    Seats: sortedSeats,
                 });
             });
 

@@ -23,10 +23,18 @@ router.route('/getSlider/:id').get(authenticateToken, asyncRoute(sliderControlle
 
 router
     .route('/deleteSlider/:id')
-    .get(
+    .delete(
         authenticateToken,
         asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
         asyncRoute(sliderController.deleteSlider)
+    );
+
+router
+    .route('/deleteSliders')
+    .delete(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
+        asyncRoute(sliderController.deleteSliders)
     );
 
 router

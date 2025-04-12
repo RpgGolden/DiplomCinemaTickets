@@ -98,6 +98,27 @@ export default {
         }
     },
 
+    async getAllNewsForSite(req, res) {
+        try {
+            const newsList = await News.findAll({
+                order: [['createdAt', 'DESC']],
+                where: {
+                    status: true,
+                },
+            });
+
+            const newsWithDtos = newsList.map(news => {
+                const newsDto = new NewsDto(news, process.env.HOST);
+                return newsDto;
+            });
+
+            res.json(newsWithDtos);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+
     async deleteNews(req, res) {
         try {
             const news = await News.findOne({ where: { id: req.params.id } });
@@ -109,6 +130,21 @@ export default {
             await news.destroy({ force: true });
 
             res.json({ message: 'Новость успешно удалена' });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+
+    async deleteNewsMany(req, res) {
+        try {
+            const newsIds = req.body.ids;
+            if (!Array.isArray(newsIds) || newsIds.length === 0) {
+                return res.status(400).json({ error: 'No news IDs provided' });
+            }
+            await News.destroy({ where: { id: newsIds } }, { force: true });
+
+            res.json({ message: 'Новости успешно удалена' });
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Internal Server Error' });

@@ -82,7 +82,28 @@ export default {
     async getAllPromotions(req, res) {
         try {
             const promotionsList = await Promotion.findAll({
-                order: [['endDate', 'DESC']],
+                order: [['endDate', 'ASC']],
+            });
+
+            const promotionsWithDtos = promotionsList.map(promotion => {
+                const promotionDto = new PromotionDto(promotion, process.env.HOST);
+                return promotionDto;
+            });
+
+            res.json(promotionsWithDtos);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+
+    async getAllPromotionsForSite(req, res) {
+        try {
+            const promotionsList = await Promotion.findAll({
+                order: [['endDate', 'ASC']],
+                where: {
+                    isOutput: true,
+                },
             });
 
             const promotionsWithDtos = promotionsList.map(promotion => {
@@ -108,6 +129,23 @@ export default {
             await promotion.destroy({ force: true });
 
             res.json({ message: 'Акция успешно удалена' });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+
+    async deletePromotions(req, res) {
+        try {
+            const promotionIds = req.body.ids;
+
+            if (!Array.isArray(promotionIds) || promotionIds.length === 0) {
+                return res.status(400).json({ error: 'No promotion IDs provided' });
+            }
+
+            await Promotion.destroy({ where: { id: promotionIds } }, { force: true });
+
+            res.json({ message: 'Акции успешно удалена' });
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Internal Server Error' });

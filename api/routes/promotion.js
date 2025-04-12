@@ -29,12 +29,22 @@ router
 
 router.route('/getAllPromotions').get(asyncRoute(promotionController.getAllPromotions));
 
+router.route('/getAllPromotionsForSite').get(asyncRoute(promotionController.getAllPromotionsForSite));
+
 router
     .route('/deletePromotion/:id')
     .delete(
         authenticateToken,
         asyncRoute(checkRole([roles.ADMINISTRATOR, roles.SUPERADMIN])),
         asyncRoute(promotionController.deletePromotion)
+    );
+
+router
+    .route('/deletePromotions')
+    .delete(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.SUPERADMIN])),
+        asyncRoute(promotionController.deletePromotions)
     );
 
 export default router;

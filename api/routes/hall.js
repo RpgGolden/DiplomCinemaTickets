@@ -16,6 +16,14 @@ router
     );
 
 router
+    .route('/updateHall/:id')
+    .patch(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
+        asyncRoute(hallController.updateHall)
+    );
+
+router
     .route('/getAllHalls')
     .get(
         authenticateToken,
@@ -37,6 +45,14 @@ router
         authenticateToken,
         asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
         asyncRoute(hallController.deleteHall)
+    );
+
+router
+    .route('/deleteHalls')
+    .delete(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
+        asyncRoute(hallController.deleteHalls)
     );
 
 router

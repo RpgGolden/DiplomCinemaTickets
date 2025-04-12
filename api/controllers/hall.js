@@ -62,6 +62,24 @@ export default {
         }
     },
 
+    async updateHall(req, res) {
+        try {
+            const { id } = req.params;
+            const { hallName } = req.body;
+
+            const hall = await Hall.findByPk(id);
+            if (!hall) {
+                return res.status(404).json({ error: 'Hall not found' });
+            }
+
+            await hall.update({ name: hallName });
+
+            res.json({ message: 'Имя зала обновлено' });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
     async getHalls(req, res) {
         try {
             const halls = await Hall.findAll();
@@ -167,6 +185,21 @@ export default {
         }
     },
 
+    async deleteHalls(req, res) {
+        try {
+            const { ids } = req.body;
+            if (!ids || !Array.isArray(ids) || ids.length === 0) {
+                return res.status(400).json({ error: 'No hall IDs provided' });
+            }
+
+            await Seat.destroy({ where: { hallId: ids } });
+            await Hall.destroy({ where: { id: ids } }, { force: true });
+            res.json({ message: 'Halls successfully deleted' });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    },
     // Создаем зал
     // К залу крепим места
     // К этому залу крепим сессии, условно две сессии
