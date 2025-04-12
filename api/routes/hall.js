@@ -16,6 +16,14 @@ router
     );
 
 router
+    .route('/updateHall/:id')
+    .patch(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
+        asyncRoute(hallController.updateHall)
+    );
+
+router
     .route('/getAllHalls')
     .get(
         authenticateToken,

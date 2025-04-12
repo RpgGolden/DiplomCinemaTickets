@@ -62,6 +62,24 @@ export default {
         }
     },
 
+    async updateHall(req, res) {
+        try {
+            const { id } = req.params;
+            const { hallName } = req.body;
+
+            const hall = await Hall.findByPk(id);
+            if (!hall) {
+                return res.status(404).json({ error: 'Hall not found' });
+            }
+
+            await hall.update({ name: hallName });
+
+            res.json({ message: 'Имя зала обновлено' });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
     async getHalls(req, res) {
         try {
             const halls = await Hall.findAll();
