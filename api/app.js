@@ -15,11 +15,14 @@ import userBonusRoute from './routes/user-bonus.js';
 import profileRoute from './routes/profile.js';
 import sliderRoute from './routes/sliders.js';
 import promotionRoute from './routes/promotion.js';
+import '../api/utils/cron/cronJobs.js'
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 (async function initDb() {
     try {
         await dbUtils.initializeDbModels();
@@ -42,9 +45,9 @@ app.use('/movie', movieRoute);
 app.use('/session', sessionRoute);
 app.use('/tickets', ticketsRoute);
 app.use('/userBonus', userBonusRoute);
-app.use('/profile', profileRoute)
-app.use('/slider', sliderRoute)
-app.use('/promotion', promotionRoute)
+app.use('/profile', profileRoute);
+app.use('/slider', sliderRoute);
+app.use('/promotion', promotionRoute);
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 

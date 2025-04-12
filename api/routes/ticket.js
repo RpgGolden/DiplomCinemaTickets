@@ -43,7 +43,15 @@ router
     .route('/getTicket/:id')
     .get(
         authenticateToken,
-        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT], roles.SUPERADMIN)),
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
         asyncRoute(ticketsController.getTicket)
+    );
+
+router
+    .route('/getBookedTickets')
+    .get(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
+        asyncRoute(ticketsController.getBookedTickets)
     );
 export default router;

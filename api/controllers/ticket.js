@@ -141,9 +141,15 @@ export default {
             const ticket = await Ticket.findByPk(ticketId, {
                 include: [{ model: Seat, include: [SeatPriceCategory] }, { model: User }],
             });
-
             if (!ticket) {
                 return res.status(404).json({ error: 'Ticket not found' });
+            }
+            if (
+                ticket.ticketStatus === 'canceled' ||
+                ticket.ticketStatus === 'movie_started' ||
+                ticket.ticketStatus === 'movie_ended'
+            ) {
+                return res.status(400).json({ error: 'Вы уже не можете вернуть билет на этот сеанс.' });
             }
 
             const seat = ticket.Seat;
@@ -354,6 +360,91 @@ export default {
             }));
 
             return res.status(200).json(ticketsInfo); // Возвращаем информацию о билетах
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+
+    async getBookedTickets(req, res) {
+        try {
+            // Extract filter parameters from the request query
+            const { paymentMethod, isCancelled, ticketStatus, excludeFields } = req.query;
+
+            // Build the where clause dynamically based on the provided filters
+            const filters = {};
+
+            if (paymentMethod) {
+                filters.paymentMethod = paymentMethod;
+            }
+
+            if (isCancelled !== undefined && isCancelled !== null && isCancelled !== '') {
+                filters.isCancelled = isCancelled === 'true';
+            }
+
+            if (ticketStatus) {
+                filters.ticketStatus = ticketStatus;
+            }
+
+            // Fetch tickets with the constructed where clause
+            const tickets = await Ticket.findAll({
+                where: filters,
+                include: [
+                    {
+                        model: User,
+                        attributes: ['email', 'name'],
+                    },
+                    {
+                        model: Session,
+                        include: [
+                            {
+                                model: Movie,
+                                attributes: ['title'],
+                            },
+                        ],
+                    },
+                    {
+                        model: Seat,
+                        include: [
+                            {
+                                model: SeatPriceCategory,
+                                attributes: ['price'],
+                            },
+                        ],
+                    },
+                ],
+                order: [[{ model: Session }, 'sessionTime', 'DESC']],
+            });
+
+            // Map the tickets to the desired format, excluding specified fields
+            const ticketsInfo = tickets.map(ticket => {
+                const ticketData = {
+                    userId: ticket.userId,
+                    email: ticket.User.email,
+                    name: ticket.User.name,
+                    ticketId: ticket.id,
+                    movieTitle: ticket.Session.Movie.title,
+                    sessionId: ticket.Session.id,
+                    seatNumber: ticket.Seat.seatNumber,
+                    rowNumber: ticket.Seat.rowNumber,
+                    sessionTime: moment(ticket.Session.sessionTime).tz('UTC').format('DD-MM-YYYY HH:mm'),
+                    seatPrice: ticket.Seat.SeatPriceCategory.price,
+                    paymentMethod: ticket.paymentMethod,
+                    isCancelled: ticket.isCancelled,
+                    ticketStatus: ticket.ticketStatus,
+                };
+
+                // Exclude fields if specified
+                if (excludeFields) {
+                    excludeFields.split(',').forEach(field => {
+                        delete ticketData[field];
+                    });
+                }
+
+                return ticketData;
+            });
+
+            return res.status(200).json(ticketsInfo);
         } catch (error) {
             console.error(error);
             return res.status(500).json({ error: 'Internal Server Error' });

@@ -11,6 +11,7 @@ class MovieDto {
     genres;
     ageRating;
     actors;
+    typeFilm;
     imageUrls;
 
     constructor(movie, host) {
@@ -24,6 +25,7 @@ class MovieDto {
         this.genres = movie.genres;
         this.ageRating = movie.ageRating;
         this.actors = movie.actors;
+        this.typeFilm = movie.typeFilm;
         this.imageUrls = movie.images ? movie.images.map(image => `${host}/${image}`) : [];
     }
 }
@@ -39,6 +41,7 @@ class MovieWithSessionsDto {
     genres;
     ageRating;
     actors;
+    typeFilm
     imageUrls;
     sessions;
 
@@ -53,6 +56,7 @@ class MovieWithSessionsDto {
         this.genres = movie.genres;
         this.ageRating = movie.ageRating;
         this.actors = movie.actors;
+        this.typeFilm = movie.typeFilm
         this.imageUrls = movie.images ? movie.images.map(image => `${host}/${image}`) : [];
         this.sessions = (movie.Sessions || []).map(session => ({
             id: session.id,

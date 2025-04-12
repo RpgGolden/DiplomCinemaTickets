@@ -11,8 +11,18 @@ import { Op } from 'sequelize';
 export default {
     async createMovie(req, res) {
         try {
-            const { title, trailerVideo, duration, director, releaseDate, description, genres, ageRating, actors } =
-                req.body;
+            const {
+                title,
+                trailerVideo,
+                duration,
+                director,
+                releaseDate,
+                description,
+                genres,
+                ageRating,
+                actors,
+                typeFilm,
+            } = req.body;
             const images = req.files ? req.files.map(file => path.posix.join('uploads', 'movies', file.filename)) : [];
 
             if (!title || !description || !duration || !trailerVideo) {
@@ -30,6 +40,7 @@ export default {
                 genres,
                 ageRating,
                 actors,
+                typeFilm,
             });
 
             const movieDto = new MovieDto(movie, process.env.HOST);
@@ -96,8 +107,18 @@ export default {
     async updateMovie(req, res) {
         try {
             const { id } = req.params;
-            const { title, trailerVideo, duration, director, releaseDate, description, genres, ageRating, actors } =
-                req.body;
+            const {
+                title,
+                trailerVideo,
+                duration,
+                director,
+                releaseDate,
+                description,
+                genres,
+                ageRating,
+                actors,
+                typeFilm,
+            } = req.body;
             const images = req.files ? req.files.map(file => path.posix.join('uploads', 'movies', file.filename)) : [];
 
             const movie = await Movie.findByPk(id);
@@ -115,6 +136,7 @@ export default {
             movie.ageRating = ageRating || movie.ageRating;
             movie.actors = actors || movie.actors;
             movie.images = images || movie.images;
+            movie.typeFilm = typeFilm || movie.typeFilm;
 
             await movie.save();
             const movieDto = new MovieDto(movie, process.env.HOST);
@@ -131,6 +153,7 @@ export default {
 
             if (withSession === 'true') {
                 const movies = await Movie.findAll({
+                    order: [['releaseDate', 'DESC']],
                     include: [{ model: Session, include: [Hall] }],
                 });
                 const moviesDto = movies.map(movie => new MovieWithSessionsDto(movie, process.env.HOST));
@@ -188,6 +211,49 @@ export default {
             });
 
             return res.json(movie);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+
+    async getHits(req, res) {
+        try {
+            const currentDay = moment().format('YYYY-MM-DD');
+            const nextThreeMovies = await Movie.findAll({
+                limit: 5,
+                where: {
+                    releaseDate: {
+                        [Op.lte]: currentDay,
+                    },
+                },
+                order: [['releaseDate', 'DESC']],
+            });
+
+            const moviesDto = nextThreeMovies.map(movie => new MovieDto(movie, process.env.HOST));
+            return res.json(moviesDto);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+
+    async comingSoon(req, res) {
+        try {
+            const currentDay = moment().format('YYYY-MM-DD');
+            const nextThreeMovies = await Movie.findAll({
+                where: {
+                    releaseDate: {
+                        [Op.gte]: currentDay,
+                    },
+                    typeFilm: 'premiere',
+                },
+                limit: 5,
+                order: [['releaseDate', 'ASC']],
+            });
+
+            const moviesDto = nextThreeMovies.map(movie => new MovieDto(movie, process.env.HOST));
+            return res.json(moviesDto);
         } catch (error) {
             console.error(error);
             return res.status(500).json({ error: 'Internal Server Error' });

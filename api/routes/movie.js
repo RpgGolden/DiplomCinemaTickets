@@ -28,6 +28,10 @@ router.route('/getAllMovies').get(asyncRoute(movieController.getAllMovies));
 
 router.route('/findMovieByTitle').get(asyncRoute(movieController.findMovieByTitle));
 
+router.route('/getHits').get(asyncRoute(movieController.getHits));
+
+router.route('/comingSoon').get(asyncRoute(movieController.comingSoon));
+
 router
     .route('/deleteMovie/:id')
     .delete(
