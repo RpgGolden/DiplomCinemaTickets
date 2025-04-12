@@ -10,16 +10,24 @@ import {
   REGISTER,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import basicSlice from "./basicSlice/basic.Slice.js";
+import PopUpSlice from "./PopUpSlice/PopUpSlice.js";
+import MoviesSlice from "./MoviesSlice/MoviesSlice.js";
+import HallsSlice from "./HallsSlice/HallsSlice.js";
+import SessionsSlice from "./SessionsSlice/SessionsSlice.js";
+import PromotionsSlice from "./PromotionsSlice/PromotionsSlice.js";
 
 const rootReducer = combineReducers({
-  BasicSlice: basicSlice,
+  PopUpSlice: PopUpSlice,
+  MoviesSlice: MoviesSlice,
+  HallsSlice: HallsSlice,
+  SessionsSlice: SessionsSlice,
+  PromotionsSlice: PromotionsSlice,
 });
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["BasicSlice",],
+  whitelist: ["PopUpSlice", "MoviesSlice", "HallsSlice", "SessionsSlice", "PromotionsSlice"],
   // blacklist: ["editColumTableSlice", "isCheckedSlice"],
 };
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import React from "react";
+import React, { useState } from "react";
 import DataContext from "./context";
 import "./styles/app.scss"
 import Login from "./pages/Auth/Login/Login";
@@ -12,9 +12,8 @@ import Promotions from "./modules/AdminPageModule/Promotions/Promotions";
 import Requests from "./modules/AdminPageModule/Requests/Requests";
 import TypePlace from "./modules/AdminPageModule/TypePlace/TypePlace";
 function App() {
-
   const context = {
-
+   
   }
 
   return (

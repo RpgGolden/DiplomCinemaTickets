@@ -5,6 +5,7 @@ import path from 'path';
 // Configure multer for file uploads
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
+        console.log("req.baseUrl", req)
         // Determine the folder based on the route or other request parameters
         let folder = 'uploads'; // Default folder
         if (req.baseUrl.includes('/movie')) {

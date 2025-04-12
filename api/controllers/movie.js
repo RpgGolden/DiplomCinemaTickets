@@ -23,12 +23,21 @@ export default {
                 actors,
                 typeFilm,
             } = req.body;
+    
+            // Преобразуем genres и actors из строки JSON в массивы
+            const genresArray = genres ? JSON.parse(genres) : [];
+            const actorsArray = actors ? JSON.parse(actors) : [];
+    
+            // Обработка файлов как массива
             const images = req.files ? req.files.map(file => path.posix.join('uploads', 'movies', file.filename)) : [];
-
+    
             if (!title || !description || !duration || !trailerVideo) {
                 throw new AppErrorNotExist('Не все данные заполнены');
             }
-
+    
+            console.log('req.body', req.body);
+            console.log('req.files', req.files);
+    
             const movie = await Movie.create({
                 title,
                 images, // Сохраняем массив изображений
@@ -37,12 +46,12 @@ export default {
                 director,
                 releaseDate,
                 description,
-                genres,
+                genres: genresArray, // Сохраняем массив жанров
                 ageRating,
-                actors,
+                actors: actorsArray, // Сохраняем массив актеров
                 typeFilm,
             });
-
+    
             const movieDto = new MovieDto(movie, process.env.HOST);
             return res.json(movieDto);
         } catch (error) {
@@ -120,7 +129,11 @@ export default {
                 typeFilm,
             } = req.body;
             const images = req.files ? req.files.map(file => path.posix.join('uploads', 'movies', file.filename)) : [];
-
+            // Преобразуем genres и actors из строки JSON в массивы
+            const genresArray = genres ? JSON.parse(genres) : [];
+            const actorsArray = actors ? JSON.parse(actors) : [];
+    
+            
             const movie = await Movie.findByPk(id);
             if (!movie) {
                 return res.status(404).json({ error: 'Фильм не найден' });
@@ -132,9 +145,9 @@ export default {
             movie.director = director || movie.director;
             movie.releaseDate = releaseDate ? new Date(releaseDate) : movie.releaseDate;
             movie.description = description || movie.description;
-            movie.genres = genres || movie.genres;
+            movie.genres = genresArray || movie.genres;
             movie.ageRating = ageRating || movie.ageRating;
-            movie.actors = actors || movie.actors;
+            movie.actors = actorsArray || movie.actors;
             movie.images = images || movie.images;
             movie.typeFilm = typeFilm || movie.typeFilm;
 
