@@ -24,9 +24,7 @@ export default {
                 typeFilm,
             } = req.body;
             const images = req.files ? req.files.map(file => path.posix.join('uploads', 'movies', file.filename)) : [];
-            console.log(req);
-            console.log(req.body);
-            console.log(req.files);
+
             if (!title || !description || !duration || !trailerVideo) {
                 throw new AppErrorNotExist('Не все данные заполнены');
             }
