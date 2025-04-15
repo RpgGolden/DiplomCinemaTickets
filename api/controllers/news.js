@@ -3,7 +3,7 @@ import News from '../models/news.js';
 import 'dotenv/config';
 import path from 'path';
 import NewsDto from '../dtos/news-dto.js';
-import { uploadToPinata, getFileFromPinata, deleteFromPinata } from '../ipfs-client/ipfsClient.js';
+import { uploadToPinata, deleteFromPinata } from '../ipfs-client/ipfsClient.js';
 
 export default {
     async createNews(req, res) {

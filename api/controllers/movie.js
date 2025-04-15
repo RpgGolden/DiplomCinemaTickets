@@ -8,6 +8,7 @@ import Hall from '../models/hall.js';
 import Seat from '../models/seat.js';
 import SeatPriceCategory from '../models/seat-price-category.js';
 import { Op } from 'sequelize';
+import { deleteFromPinata, uploadToPinata } from '../ipfs-client/ipfsClient.js';
 export default {
     async createMovie(req, res) {
         try {
@@ -29,10 +30,16 @@ export default {
                 throw new AppErrorNotExist('Не все данные заполнены');
             }
 
+            const ipfsHashes = [];
+            for (const image of images) {
+                const pinataResponse = await uploadToPinata(image, 'movies', { category: 'Movie' });
+                ipfsHashes.push(pinataResponse.IpfsHash);
+            }
+
             const movie = await Movie.create({
                 title,
-                images, // Сохраняем массив изображений
-                trailerVideo, // Сохраняем трейлер видео
+                images: ipfsHashes,
+                trailerVideo,
                 duration,
                 director,
                 releaseDate,
@@ -126,13 +133,30 @@ export default {
                 actors,
                 typeFilm,
             } = req.body;
-            const images = req.files ? req.files.map(file => path.posix.join('uploads', 'movies', file.filename)) : [];
+            const newImages = req.files
+                ? req.files.map(file => path.posix.join('uploads', 'movies', file.filename))
+                : [];
 
             const movie = await Movie.findByPk(id);
             if (!movie) {
                 return res.status(404).json({ error: 'Фильм не найден' });
             }
 
+            // Если есть новые изображения, удаляем старые и загружаем новые
+            if (newImages.length > 0) {
+                for (const image of movie.images) {
+                    await deleteFromPinata(image);
+                }
+
+                const newIpfsHashes = [];
+                for (const image of newImages) {
+                    const pinataResponse = await uploadToPinata(image, 'movies', { category: 'Movie' });
+                    newIpfsHashes.push(pinataResponse.IpfsHash);
+                }
+                movie.images = newIpfsHashes;
+            }
+
+            // Обновляем данные фильма
             movie.title = title || movie.title;
             movie.trailerVideo = trailerVideo || movie.trailerVideo;
             movie.duration = duration || movie.duration;
@@ -142,7 +166,6 @@ export default {
             movie.genres = genres || movie.genres;
             movie.ageRating = ageRating || movie.ageRating;
             movie.actors = actors || movie.actors;
-            movie.images = images || movie.images;
             movie.typeFilm = typeFilm || movie.typeFilm;
 
             await movie.save();
@@ -153,7 +176,6 @@ export default {
             return res.status(500).json({ error: 'Internal Server Error', message: 'Ошибка при обновлении фильма' });
         }
     },
-
     async getAllMovies(req, res) {
         try {
             const withSession = req.query.withSession;
@@ -183,9 +205,12 @@ export default {
                 return res.status(404).json({ error: 'Movie not found' });
             }
 
-            await movie.destroy({
-                force: true,
-            });
+            // Delete images from Pinata
+            for (const image of movie.images) {
+                await deleteFromPinata(image);
+            }
+
+            await movie.destroy({ force: true });
             return res.json({ message: 'Фильм успешно удалён' });
         } catch (error) {
             console.error(error);
@@ -195,20 +220,22 @@ export default {
 
     async deleteMovies(req, res) {
         try {
-            const movieIds = req.body.ids; // Предполагается, что массив идентификаторов передается в теле запроса
+            const movieIds = req.body.ids;
 
             if (!Array.isArray(movieIds) || movieIds.length === 0) {
                 return res.status(400).json({ error: 'No movie IDs provided' });
             }
 
-            // Удаляем фильмы по идентификаторам
-            await Movie.destroy({
-                where: {
-                    id: movieIds,
-                },
-                force: true, // Удаление без возможности восстановления
-            });
+            const movies = await Movie.findAll({ where: { id: movieIds } });
 
+            for (const movie of movies) {
+                // Delete images from Pinata
+                for (const image of movie.images) {
+                    await deleteFromPinata(image);
+                }
+            }
+
+            await Movie.destroy({ where: { id: movieIds }, force: true });
             return res.json({ message: 'Фильмы успешно удалены' });
         } catch (error) {
             console.error(error);
