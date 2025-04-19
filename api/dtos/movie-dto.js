@@ -26,10 +26,9 @@ class MovieDto {
         this.ageRating = movie.ageRating;
         this.actors = movie.actors;
         this.typeFilm = movie.typeFilm;
-        this.imageUrls = movie.images ? movie.images.map(image => `${host}/${image}`) : [];
+        this.imageUrls = movie.images ? movie.images.map(image => `https://ipfs.io/ipfs/${image}`) : [];
     }
 }
-
 class MovieWithSessionsDto {
     id;
     title;
@@ -41,7 +40,7 @@ class MovieWithSessionsDto {
     genres;
     ageRating;
     actors;
-    typeFilm
+    typeFilm;
     imageUrls;
     sessions;
 
@@ -56,8 +55,8 @@ class MovieWithSessionsDto {
         this.genres = movie.genres;
         this.ageRating = movie.ageRating;
         this.actors = movie.actors;
-        this.typeFilm = movie.typeFilm
-        this.imageUrls = movie.images ? movie.images.map(image => `${host}/${image}`) : [];
+        this.typeFilm = movie.typeFilm;
+        this.imageUrls = movie.images ? movie.images.map(image => `https://ipfs.io/ipfs/${image}`) : [];
         this.sessions = (movie.Sessions || []).map(session => ({
             id: session.id,
             movieId: session.movieId,
@@ -82,4 +81,5 @@ class MovieWithSessionsDto {
         }));
     }
 }
+
 export { MovieDto, MovieWithSessionsDto };

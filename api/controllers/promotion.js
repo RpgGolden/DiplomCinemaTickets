@@ -3,14 +3,14 @@ import Promotion from '../models/promotions.js';
 import 'dotenv/config';
 import path from 'path';
 import PromotionDto from '../dtos/promotion-dto.js';
+import { deleteFromPinata, uploadToPinata } from '../ipfs-client/ipfsClient.js';
 
 export default {
     async createPromotion(req, res) {
         try {
-            const { title, description, endDate } = req.body; // Добавляем endDate
+            const { title, description, endDate } = req.body;
             const image = req.file ? path.posix.join('uploads', 'promotions', req.file.filename) : null;
             if (!title || !description || !endDate) {
-                // Проверяем наличие endDate
                 throw new AppErrorMissing('Не все данные заполнены');
             }
 
@@ -19,12 +19,18 @@ export default {
                 throw new AppErrorAlreadyExists('Такая акция уже существует');
             }
 
+            let ipfsHash = null;
+            if (image) {
+                const pinataResponse = await uploadToPinata(image, 'promotions', { category: 'Promotion' });
+                ipfsHash = pinataResponse.IpfsHash;
+            }
+
             const promotion = await Promotion.create({
                 title,
                 description,
-                image,
-                isOutput: false, // Устанавливаем статус по умолчанию в false
-                endDate, // Сохраняем endDate
+                image: ipfsHash,
+                isOutput: false,
+                endDate,
             });
 
             const promotionDto = new PromotionDto(promotion, process.env.HOST);
@@ -38,7 +44,7 @@ export default {
     async updatePromotion(req, res) {
         try {
             const { id } = req.params;
-            const { title, description, isOutput, endDate } = req.body; // Добавляем endDate
+            const { title, description, isOutput, endDate } = req.body;
             const image = req.file ? path.posix.join('uploads', 'promotions', req.file.filename) : null;
 
             const promotion = await Promotion.findOne({ where: { id } });
@@ -47,11 +53,16 @@ export default {
                 return res.status(404).json({ error: 'Акция не найдена' });
             }
 
+            if (image && promotion.image) {
+                await deleteFromPinata(promotion.image);
+                const pinataResponse = await uploadToPinata(image, 'promotions', { category: 'Promotion' });
+                promotion.image = pinataResponse.IpfsHash;
+            }
+
             promotion.title = title || promotion.title;
             promotion.description = description || promotion.description;
-            promotion.image = image || promotion.image;
             promotion.isOutput = isOutput !== undefined ? isOutput : promotion.isOutput;
-            promotion.endDate = endDate || promotion.endDate; // Обновляем endDate
+            promotion.endDate = endDate || promotion.endDate;
 
             await promotion.save();
 
@@ -126,6 +137,10 @@ export default {
                 return res.status(404).json({ error: 'Акция не найдена' });
             }
 
+            if (promotion.image) {
+                await deleteFromPinata(promotion.image);
+            }
+
             await promotion.destroy({ force: true });
 
             res.json({ message: 'Акция успешно удалена' });
@@ -143,9 +158,20 @@ export default {
                 return res.status(400).json({ error: 'No promotion IDs provided' });
             }
 
-            await Promotion.destroy({ where: { id: promotionIds } }, { force: true });
+            const promotions = await Promotion.findAll({ where: { id: promotionIds } });
 
-            res.json({ message: 'Акции успешно удалена' });
+            const deletedImages = new Set();
+
+            for (const promotion of promotions) {
+                if (promotion.image && !deletedImages.has(promotion.image)) {
+                    await deleteFromPinata(promotion.image);
+                    deletedImages.add(promotion.image);
+                }
+            }
+
+            await Promotion.destroy({ where: { id: promotionIds }, force: true });
+
+            res.json({ message: 'Акции успешно удалены' });
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Internal Server Error' });

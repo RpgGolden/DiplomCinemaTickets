@@ -3,6 +3,7 @@ import News from '../models/news.js';
 import 'dotenv/config';
 import path from 'path';
 import NewsDto from '../dtos/news-dto.js';
+import { uploadToPinata, deleteFromPinata } from '../ipfs-client/ipfsClient.js';
 
 export default {
     async createNews(req, res) {
@@ -18,11 +19,18 @@ export default {
                 throw new AppErrorAlreadyExists('Такая новость уже существует');
             }
 
+            let ipfsHash = null;
+            if (image) {
+                // Передаем группу и тег в функцию uploadToPinata
+                const pinataResponse = await uploadToPinata(image, 'news', { category: 'News' });
+                ipfsHash = pinataResponse.IpfsHash;
+            }
+
             const news = await News.create({
                 title,
                 content,
-                image,
-                status: false, // Устанавливаем статус по умолчанию в false
+                image: ipfsHash, // Сохраняем IPFS hash вместо локального пути
+                status: false,
             });
 
             const newsDto = new NewsDto(news, process.env.HOST);
@@ -45,9 +53,15 @@ export default {
                 return res.status(404).json({ error: 'Новость не найдена' });
             }
 
+            // Если загружается новое изображение, удаляем старое из Pinata
+            if (image && news.image) {
+                await deleteFromPinata(news.image);
+                const pinataResponse = await uploadToPinata(image, 'news', { category: 'News' });
+                news.image = pinataResponse.IpfsHash;
+            }
+
             news.title = title || news.title;
             news.content = content || news.content;
-            news.image = image || news.image;
 
             if (status === '0' || 0) {
                 news.status = false;
@@ -127,9 +141,15 @@ export default {
                 return res.status(404).json({ error: 'Новость не найдена' });
             }
 
+            // Удаляем изображение из Pinata, если оно существует и не было удалено ранее
+            if (news.image) {
+                await deleteFromPinata(news.image);
+            }
+
+            // Удаляем сущность из базы данных
             await news.destroy({ force: true });
 
-            res.json({ message: 'Новость успешно удалена' });
+            res.json({ message: 'Новость и изображение успешно удалены' });
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Internal Server Error' });
@@ -142,9 +162,25 @@ export default {
             if (!Array.isArray(newsIds) || newsIds.length === 0) {
                 return res.status(400).json({ error: 'No news IDs provided' });
             }
-            await News.destroy({ where: { id: newsIds } }, { force: true });
 
-            res.json({ message: 'Новости успешно удалена' });
+            // Получаем все новости, которые будут удалены
+            const newsList = await News.findAll({ where: { id: newsIds } });
+
+            // Используем множество для отслеживания уже удалённых изображений
+            const deletedImages = new Set();
+
+            // Удаляем изображения из Pinata
+            for (const news of newsList) {
+                if (news.image && !deletedImages.has(news.image)) {
+                    await deleteFromPinata(news.image);
+                    deletedImages.add(news.image);
+                }
+            }
+
+            // Удаляем сущности из базы данных
+            await News.destroy({ where: { id: newsIds }, force: true });
+
+            res.json({ message: 'Новости и изображения успешно удалены' });
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Internal Server Error' });

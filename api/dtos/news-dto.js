@@ -9,7 +9,7 @@ export default class NewsDto {
         this.id = news.id;
         this.title = news.title;
         this.content = news.content;
-        this.imageUrl = news.image ? `${host}/${news.image}` : null;
+        this.imageUrl = news.image ? `https://ipfs.io/ipfs/${news.image}` : null; // Формируем ссылку на IPFS
         this.status = Boolean(news.status);
     }
 }
