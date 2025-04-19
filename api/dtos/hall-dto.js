@@ -3,6 +3,8 @@ export default class HallDto {
     name;
     rowCount;
     seatCount;
+    price;
+    categoryName;
     seats;
     sessions; // New field for storing session information
 
@@ -12,6 +14,8 @@ export default class HallDto {
         this.name = hall.name;
         this.rowCount = hall.rowCount;
         this.seatCount = hall.seatCount;
+        this.price = seats[0]?.SeatPriceCategory?.price;
+        this.categoryName = seats[0]?.SeatPriceCategory?.categoryName;
         this.seats = seats.map(seat => ({
             id: seat.id,
             rowNumber: seat.rowNumber,
