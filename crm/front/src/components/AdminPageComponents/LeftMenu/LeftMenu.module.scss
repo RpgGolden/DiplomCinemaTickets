@@ -1,0 +1,44 @@
+.LeftMenu {
+    padding: 16px;
+    background-color: #f4f4f4;
+    height: 100vh;
+    width: 200px;
+    position: fixed;
+    left: 0;
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      
+    }
+    li {
+        margin-bottom: 12px;
+        text-decoration: none;
+        color: #333;
+        font-weight: 500;
+        padding: 8px 12px;
+        display: block;
+        border-radius: 8px;
+        transition: 0.3s;
+        cursor: pointer;
+        &:hover {
+            background-color: var(--light-red);
+        }
+    }
+    .logOut{
+        position: absolute;
+        bottom: 25px;
+        width: calc(100% - 35px);
+        box-sizing: border-box;
+        text-align: center;
+    }
+
+    .active {
+        background-color: var(--accent-color);
+        color: white;
+        &:hover {
+            background-color: var(--accent-color);
+            color: white;
+        }
+    }
+}

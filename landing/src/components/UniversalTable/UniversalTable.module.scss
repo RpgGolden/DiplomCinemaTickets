@@ -1,0 +1,47 @@
+.UniversalTable{
+    margin-top: 18px;
+    max-height: 65vh;
+    overflow-y: scroll;
+    border-radius: 8px;  
+    table{ 
+        width: 100%;
+        min-height: auto;
+        border-radius: 8px;
+        min-height: 305px;
+        thead {
+          position: sticky;
+          top: 0;
+          z-index: 1;
+          background-color: var(rgb(213, 181, 122)); // Ensure this background color is set, otherwise it will be transparent.
+          th{
+            position: relative;
+            align-items: center;
+            padding: 10px;
+            text-align: center;
+            &:nth-child(1) {
+              border-radius: 8px 0 0 0;
+            }
+            &:last-child{
+              border-radius: 0 8px 0 0;
+            }
+          }          
+        }
+        tbody{
+            td{
+              padding: 10px;
+              align-items: center;
+              text-align: center;
+              background-color:#f7f7f7;
+            }
+        }
+        .imgTable{
+            width: 150px;
+            height: 150px;
+            transition: 0.1s all linear;
+            &:hover{
+              opacity: 0.4;
+            }
+          }
+        
+    }
+}

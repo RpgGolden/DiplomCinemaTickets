@@ -1,0 +1,31 @@
+.PopUpSelectNews{
+    width: 800px;
+    height: 100%;
+    .PopUpSelectNewsContainer{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        gap: 20px;
+        .PopUpSelectNewsImg{
+            img{
+                width: 300px;
+                max-height: 300px;
+                object-fit: cover;
+            }
+          
+        }
+        .PopUpSelectNewsText{
+            flex: 1;
+            gap: 5px;
+            text-align: start;
+            display: flex;
+            justify-content: start;
+            flex-direction: column;
+            .promotionTitle{
+                font-size: 22px;
+                font-weight: 600;
+                color: var(--text-color);
+            }
+        }
+    }
+}
