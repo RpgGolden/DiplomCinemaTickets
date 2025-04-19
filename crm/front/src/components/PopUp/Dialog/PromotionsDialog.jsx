@@ -6,6 +6,8 @@ import {
   DialogTitle,
   Button,
   TextField,
+  Box,
+  Typography,
 } from "@mui/material";
 
 const PromotionsDialog = ({ open, onClose, promotionData, onSave, onDelete }) => {
@@ -59,6 +61,7 @@ const PromotionsDialog = ({ open, onClose, promotionData, onSave, onDelete }) =>
         formDataWithFile.append(key, formData[key]);
       }
     }
+    console.log("formData", formData)
   
     if (file) {
       console.log('file', file);
@@ -66,7 +69,11 @@ const PromotionsDialog = ({ open, onClose, promotionData, onSave, onDelete }) =>
     }
   
     // Передаем formData с файлом в родительскую функцию
-    onSave(formDataWithFile);
+    if(formData.id){
+      onSave(formData)
+    }else{
+      onSave(formDataWithFile);
+    }
     onClose();
   };
   
@@ -114,15 +121,35 @@ const PromotionsDialog = ({ open, onClose, promotionData, onSave, onDelete }) =>
             shrink: true,
           }}
         />
-        <div>
+         {!promotionData?.id && (
+        <Box>
           {promotionData?.imageUrl && (
-            <div>
-              <h4>Текущее изображение:</h4>
+            <Box mb={2}>
+              <Typography variant="h6">Текущее изображение:</Typography>
               <img src={promotionData.imageUrl} alt="promotion" width="100" />
-            </div>
+            </Box>
           )}
-          <input type="file" onChange={handleFileChange} />
-        </div>
+          
+          <input
+            type="file"
+            id="upload-button-file"
+            style={{ display: 'none' }}
+            onChange={handleFileChange}
+          />
+          <label htmlFor="upload-button-file">
+            <Button variant="contained" component="span">
+              Загрузить изображение
+            </Button>
+          </label>
+
+          {file && (
+            <Typography variant="body2" mt={1}>
+              Загружен файл: {file.name}
+            </Typography>
+          )}
+
+        </Box>
+      )}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} variant="contained" color="primary">Отмена</Button>

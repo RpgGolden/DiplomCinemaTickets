@@ -1,5 +1,6 @@
 import { AUTH_LOGIN_URL, AUTH_LOGOUT_URL, MOVIE_GET_ALL_URL, 
     SESSION_CREATE_URL ,
+    DELETE_TICKET_URL,
     SESSION_GET_ALL_URL ,
     SESSION_UPDATE_URL ,
     SESSION_CHANGE_SEAT_CATEGORY_URL,
@@ -11,6 +12,7 @@ import { AUTH_LOGIN_URL, AUTH_LOGOUT_URL, MOVIE_GET_ALL_URL,
     MOVIE_UPDATE_URL,
     MOVIE_CREATE_URL,
     HALL_CREATE_URL,
+    HALL_UPDATE_URL,
     HALL_GET_ALL_URL,
     HALL_GET_URL,
     HALL_DELETE_URL, 
@@ -23,6 +25,7 @@ import { AUTH_LOGIN_URL, AUTH_LOGOUT_URL, MOVIE_GET_ALL_URL,
     AUTH_GET_ALL_USERS_URL,
     GET_ALL_NEWS_URL,
     CREATE_NEWS_URL,
+    DELETE_NEWS_URL,
     UPDATE_NEWS_URL,
     GET_NEWS_URL,
     GET_ALL_TICKETS_URL
@@ -185,7 +188,7 @@ export const getOneHall = async id => {
     }
 }
 
-export const createHall = async data => {    
+export const createHall = async (data) => {    
     try {
         const response = await api.post(HALL_CREATE_URL, data);
         return response;
@@ -194,9 +197,9 @@ export const createHall = async data => {
     }
 }
 
-export const updateHall = async data => {
+export const updateHall = async (id,data) => {
     try {
-        const response = await api.patch(HALL_CREATE_URL, data);
+        const response = await api.patch(`${HALL_UPDATE_URL}/${id}`, data);
         return response;
     } catch (error) {
         return error;
@@ -290,6 +293,14 @@ export const getAllNews = async () => {
         return error;
     }
 }
+export const deleteNews = async id => {
+    try {
+        const response = await api.delete(`${DELETE_NEWS_URL}/${id}`);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
 
 export const getOneNews = async id => {
     try {
@@ -312,6 +323,15 @@ export const updateNews = async (id, data) => {
 export const getAllTickets = async () => {
     try {
         const response = await api.get(GET_ALL_TICKETS_URL);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+export const deleteTicket = async id => {
+    try {
+        const response = await api.delete(`${DELETE_TICKET_URL}/${id}`);
         return response;
     } catch (error) {
         return error;

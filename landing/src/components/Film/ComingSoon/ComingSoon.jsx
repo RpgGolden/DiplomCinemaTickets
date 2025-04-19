@@ -1,13 +1,14 @@
-import { useContext, useEffect, useState } from "react";
-import { getAllMovies } from "../../../API/apiRequest";
-import DataContext from "../../../context";
-import styles from "./CardFilms.module.scss";
+import { getMovieComingSoon } from "../../../API/apiRequest";
+import styles from "./ComingSoon.module.scss"
 import treangle from "./../../../assets/img/view_trailer_icon.svg";
-function CardFilms() {
+import { useContext, useEffect, useState } from "react";
+import DataContext from "../../../context";
+
+function ComingSoon() {
     const { openModal } = useContext(DataContext);
     const [dataFilms, setDataFilms] = useState([]);
     useEffect(() => {
-        getAllMovies().then((res) => {
+        getMovieComingSoon().then((res) => {
                 console.log('res.data',res)
                 setDataFilms(res.data)
         })
@@ -40,4 +41,4 @@ function CardFilms() {
     );
 }
 
-export default CardFilms;
+export default ComingSoon;

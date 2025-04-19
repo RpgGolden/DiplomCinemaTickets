@@ -99,6 +99,14 @@ export const hallColumns = [
     header: 'Количество мест',
   },
   {
+    accessorKey: 'price',
+    header: 'Цена за билет',
+  },
+  {
+    accessorKey: 'categoryName',
+    header: 'Категория мест',
+  },
+  {
     accessorKey: 'sessions',
     header: 'Сессии',
     Cell: ({ cell }) => {
@@ -237,7 +245,33 @@ export const newsColumns = [
     accessorKey: "status",
     header: "Статус",
     Cell: ({ cell }) => (cell.getValue() ? "Активно" : "Не активно"), // Преобразуем булевое значение в строку
-  }  
+  },
+  {
+    accessorKey: "imageUrl",
+    header: "Изображение",
+    Cell: ({ cell }) => {
+      const imageUrl = cell.getValue(); // Получаем URL изображения
+      const dispatch = useDispatch(); // Используем dispatch внутри компонента
+      return (
+        <div style={{ display: "flex", gap: 8 }}>
+          {imageUrl && (
+            <img
+              src={imageUrl}
+              alt="promotion"
+              style={{
+                width: 100,
+                height: 100,
+                objectFit: "cover",
+                borderRadius: 4,
+                cursor: "pointer",
+              }}
+              onClick={() => dispatch(openImageModal(imageUrl))} // Открываем модалку по клику на изображение
+            />
+          )}
+        </div>
+      );
+    },
+  },
 ] 
 
 export const requestColumns = [

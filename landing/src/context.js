@@ -2,9 +2,10 @@ import { createContext, useState } from "react";
 import Modal from "react-modal";
 import PopUpSelectFilms from "./components/PopUp/PopUpSelectFilms/PopUpSelectFilms";
 import PopUpSelectNews from "./components/PopUp/PopUpSelectNews/PopUpSelectNews";
-import { getOneMovie, getOneSession } from "./API/apiRequest";
+import { getAllNews, getOneMovie, getOneSession } from "./API/apiRequest";
 import PopUpSucsess from "./components/PopUp/PopUpSucsess/PopUpSucsess";
 import PopUpPromotions from "./components/PopUp/PopUpPromotions/PopUpPromotions";
+import { useEffect } from "react";
 
 Modal.setAppElement("#root");
 
@@ -16,6 +17,13 @@ export const DataProvider = ({ children }) => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [selectedNews, setSelectedNews] = useState(null);
     const [viziblePopUp, setViziblePopUp] = useState("");
+    const [newsData, setNewsData] = useState([]);
+    useEffect(() => {
+        getAllNews().then((res) => {
+            console.log('res.data',res)
+            setNewsData(res.data)
+        })
+    },[])
     const openModal = (film) => {
         getOneMovie(film.id).then((res) => {
             if(res.status === 200){
@@ -53,7 +61,8 @@ export const DataProvider = ({ children }) => {
         selectedSession,
         setViziblePopUp,
         viziblePopUp,
-        openModalPromotions
+        openModalPromotions,
+        newsData
     }
     const closePopUpSucsess = () => {
         setViziblePopUp(null)

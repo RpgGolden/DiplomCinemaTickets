@@ -106,7 +106,7 @@ function Sessions() {
           onAdd={() => handleOpenDialog()}
           onEdit={handleOpenDialog}
           onDelete={handleDeleteSession}
-          editingMode={true}
+          editingMode={false}
           addMode={true} // Разрешаем добавление
         />
       </div>

@@ -4,7 +4,7 @@ import UniversalTable from "../../../components/UniversalTable/UniversalTable"; 
 import { hallColumns } from "../../../utils/ColumnsTable"; // Столбцы для таблицы
 import { getandSetHallData, setHallData } from "../../../store/HallsSlice/HallsSlice"; // Redux для залов
 import styles from "./Halls.module.scss";
-import { createHall, deleteHall } from "../../../API/apiRequest";
+import { createHall, deleteHall, updateHall } from "../../../API/apiRequest";
 import HallDialog from "../../../components/PopUp/Dialog/HallDialog";
 
 function Halls() {
@@ -40,21 +40,22 @@ function Halls() {
         categoryName: formData.categoryName,
         price: formData.price
       }
-    // if (hall.get("id")) {
-    //   // Обновление зала
-    // //   updateHall(hall.get("id"), hall).then((resp) => {
-    // //     if (resp?.status === 200) {
-    // //       dispatch(getandSetHallData((data) => dispatch(setHallData(data))));
-    // //     }
-    // //   });
-    // } else {
+    if (hall.id) {
+      // Обновление зала
+      updateHall(hall.id, data).then((resp) => {
+        if (resp?.status === 200) {
+          dispatch(getandSetHallData((data) => dispatch(setHallData(data))));
+        }
+      });
+    } else {
+      console.log("data", data)
       // Добавление нового зала
       createHall(data).then((resp) => {
         if (resp?.status === 200) {
           dispatch(getandSetHallData((data) => dispatch(setHallData(data))));
         }
       });
-   //}
+   }
   };
   // Удаление зала
   const handleDeleteHall = (hallId) => {
@@ -74,7 +75,7 @@ function Halls() {
           onAdd={() => handleOpenDialog()} // Открытие модалки для добавления
           onEdit={handleOpenDialog} // Открытие модалки для редактирования
           onDelete={handleDeleteHall} // Удаление зала
-          editingMode={false}
+          editingMode={true}
           addMode={true} // Разрешаем добавление
         />
       </div>

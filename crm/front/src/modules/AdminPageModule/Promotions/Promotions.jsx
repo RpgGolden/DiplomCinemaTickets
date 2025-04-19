@@ -31,8 +31,7 @@ function Promotions() {
     
 
       const handleSavePromotions = (formData) => {
-        console.log("formDataImage", formData.get("image")); // Используем .get() для извлечения изображения
-      
+        console.log("formData", formData.id);
         if (formData?.id) {
           // Обновляем существующий сеанс
           updatePromotion(formData.id, formData).then((resp) => {
@@ -44,7 +43,7 @@ function Promotions() {
           // Создаем новый сеанс
           createPromotion(formData).then((resp) => {
             if (resp?.status === 200) {
-              // Ваша логика для создания
+              dispatch(getAndSetPromotionData((data) => dispatch(setPromotionData(data))));
             }
           });
         }

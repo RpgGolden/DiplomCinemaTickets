@@ -9,9 +9,12 @@ import Footer from "../../components/Footer/Footer";
 import InfiniteSlider from "../../components/SliderAutho/InfiniteSlider";
 import arrow from "./../../assets/img/green_triangle.svg";
 import News from "../../modules/News/News";
+import HitFilms from "../../components/Film/HitFilms/HitFilms";
+import ComingSoon from "../../components/Film/ComingSoon/ComingSoon";
 function HomePage() {
     const context = useContext(DataContext);
     console.log("context", context)
+    
     return ( 
        <main>
         <Header/>
@@ -21,7 +24,7 @@ function HomePage() {
                 <h1 className={styles.soonFilmsTitle}>Хиты</h1>
                 <img src={arrow} alt="arrow" />
             </div>
-            <FilmsProk/>
+            <HitFilms/>
         </div>
         <Layout>
             <div className={styles.container}>
@@ -36,7 +39,7 @@ function HomePage() {
                         <h1 className={styles.soonFilmsTitle}>Скоро в кино</h1>
                         <img src={arrow} alt="arrow" />
                     </div>
-                    <FilmsProk/>
+                    <ComingSoon/>
                 </div>
                 <div className={styles.soonFilms}>
                     <div className={styles.soonFilmsContainertitle}>

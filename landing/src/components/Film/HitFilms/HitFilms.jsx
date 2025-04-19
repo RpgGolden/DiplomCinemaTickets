@@ -1,13 +1,16 @@
-import { useContext, useEffect, useState } from "react";
-import { getAllMovies } from "../../../API/apiRequest";
+import { useContext } from "react";
+import { getMovieHits } from "../../../API/apiRequest";
+import styles from "./HitFilms.module.scss"
 import DataContext from "../../../context";
-import styles from "./CardFilms.module.scss";
+import { useState } from "react";
+import { useEffect } from "react";
 import treangle from "./../../../assets/img/view_trailer_icon.svg";
-function CardFilms() {
+
+function HitFilms() {
     const { openModal } = useContext(DataContext);
     const [dataFilms, setDataFilms] = useState([]);
     useEffect(() => {
-        getAllMovies().then((res) => {
+        getMovieHits().then((res) => {
                 console.log('res.data',res)
                 setDataFilms(res.data)
         })
@@ -19,15 +22,14 @@ function CardFilms() {
                 <div key={item.id} className={styles.card}>
                     <div className={styles.cardImage}>
                     {item.imageUrls && item.imageUrls.length > 0 ? 
-                    <>
-                        <img src={item.imageUrls[0]} alt={item.title}/>
-                    </>
-                        :
-                    <>
-                        <img src="/img/noPhoto.png" alt={item.title} />
-                    </>
+                        <>
+                            <img src={item.imageUrls[0]} alt={item.title}/>
+                        </>
+                            :
+                        <>
+                            <img src="/img/noPhoto.png" alt={item.title} />
+                        </>
                     }
-
                         <button onClick={() => openModal(item)}>Расписание и билеты</button>
                     </div>
                     <div className={styles.cardContent}>
@@ -40,4 +42,4 @@ function CardFilms() {
     );
 }
 
-export default CardFilms;
+export default HitFilms;

@@ -6,6 +6,7 @@ import {
   DialogTitle,
   Button,
   TextField,
+  Typography,
 } from "@mui/material";
 
 const MovieDialog = ({ open, onClose, movieData, onSave, onDelete }) => {
@@ -23,25 +24,22 @@ const MovieDialog = ({ open, onClose, movieData, onSave, onDelete }) => {
     } else {
       setFormData({});
     }
-  
     setFiles([]);
     setErrors({});
   }, [movieData]);
-  
 
-  
   const validateFields = (data = formData) => {
     const newErrors = {};
-      if (!String(data.title).trim()) newErrors.title = "Название обязательно.";
-      if (!String(data.director).trim()) newErrors.director = "Режиссер обязателен.";
-      if (!String(data.description).trim()) newErrors.description = "Описание обязательно.";
-      if (!String(data.genres).trim()) newErrors.genres = "Жанры обязательны.";
-      if (!String(data.actors).trim()) newErrors.actors = "Актеры обязательны.";
-      if (!String(data.releaseDate).trim()) newErrors.releaseDate = "Дата релиза обязательна.";
-      if (!String(data.ageRating).trim()) newErrors.ageRating = "Возрастной рейтинг обязателен.";
-      if (!String(data.duration).trim()) newErrors.duration = "Продолжительность обязательна.";
-      if (!String(data.trailerVideo).trim()) newErrors.trailerVideo = "Видео трейлера обязательно.";
-      if (!String(data.typeFilm).trim()) newErrors.typeFilm = "Тип фильма обязателен.";
+    if (!String(data.title).trim()) newErrors.title = "Название обязательно.";
+    if (!String(data.director).trim()) newErrors.director = "Режиссер обязателен.";
+    if (!String(data.description).trim()) newErrors.description = "Описание обязательно.";
+    if (!String(data.genres).trim()) newErrors.genres = "Жанры обязательны.";
+    if (!String(data.actors).trim()) newErrors.actors = "Актеры обязательны.";
+    if (!String(data.releaseDate).trim()) newErrors.releaseDate = "Дата релиза обязательна.";
+    if (!String(data.ageRating).trim()) newErrors.ageRating = "Возрастной рейтинг обязателен.";
+    if (!String(data.duration).trim()) newErrors.duration = "Продолжительность обязательна.";
+    if (!String(data.trailerVideo).trim()) newErrors.trailerVideo = "Видео трейлера обязательно.";
+    if (!String(data.typeFilm).trim()) newErrors.typeFilm = "Тип фильма обязателен.";
     return newErrors;
   };
 
@@ -64,15 +62,11 @@ const MovieDialog = ({ open, onClose, movieData, onSave, onDelete }) => {
     if (Object.keys(currentErrors).length > 0) return;
 
     const formDataWithFiles = new FormData();
-    const genresArray = typeof formData.genres === "string" && formData.genres.trim() !== ""
-    ? formData.genres.split(",").map(item => item.trim())
-    : [];
-  const actorsArray = typeof formData.actors === "string" && formData.actors.trim() !== ""
-    ? formData.actors.split(",").map(item => item.trim())
-    : [];
+    const genresArray = formData.genres?.split(",").map((g) => g.trim()) || [];
+    const actorsArray = formData.actors?.split(",").map((a) => a.trim()) || [];
 
     for (const key in formData) {
-      if (key !== "images" && key !== "genres" && key !== "actors") {
+      if (!["images", "genres", "actors"].includes(key)) {
         formDataWithFiles.append(key, formData[key]);
       }
     }
@@ -80,17 +74,9 @@ const MovieDialog = ({ open, onClose, movieData, onSave, onDelete }) => {
     formDataWithFiles.append("genres", JSON.stringify(genresArray));
     formDataWithFiles.append("actors", JSON.stringify(actorsArray));
 
-    if (files.length > 0) {
-      files.forEach((file) => {
-        formDataWithFiles.append("images", file);
-      });
-    }
-
-    if (movieData?.imageUrls?.length > 0) {
-      movieData.imageUrls.forEach((image) => {
-        formDataWithFiles.append("images", image);
-      });
-    }
+    files.forEach((file) => {
+      formDataWithFiles.append("images", file);
+    });
 
     onSave(formDataWithFiles);
     onClose();
@@ -105,124 +91,66 @@ const MovieDialog = ({ open, onClose, movieData, onSave, onDelete }) => {
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>{movieData ? "Редактировать фильм" : "Добавить новый фильм"}</DialogTitle>
       <DialogContent>
-        <TextField
-          label="Название"
-          name="title"
-          value={formData.title || ""}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          error={!!errors.title}
-          helperText={errors.title}
-        />
-        <TextField
-          label="Режиссер"
-          name="director"
-          value={formData.director || ""}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          error={!!errors.director}
-          helperText={errors.director}
-        />
-        <TextField
-          label="Описание"
-          name="description"
-          value={formData.description || ""}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          error={!!errors.description}
-          helperText={errors.description}
-        />
-        <TextField
-          label="Жанры (через запятую)"
-          name="genres"
-          value={formData.genres || ""}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          error={!!errors.genres}
-          helperText={errors.genres}
-        />
-        <TextField
-          label="Актеры (через запятую)"
-          name="actors"
-          value={formData.actors || ""}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          error={!!errors.actors}
-          helperText={errors.actors}
-        />
-        <TextField
-          label="Дата релиза"
-          name="releaseDate"
-          type="date"
-          value={formData.releaseDate || ""}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          InputLabelProps={{
-            shrink: true,
-          }}
-          error={!!errors.releaseDate}
-          helperText={errors.releaseDate}
-        />
-        <TextField
-          label="Возрастной рейтинг"
-          name="ageRating"
-          value={formData.ageRating || ""}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          error={!!errors.ageRating}
-          helperText={errors.ageRating}
-        />
-        <TextField
-          label="Продолжительность (мин)"
-          name="duration"
-          value={formData.duration || ""}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          error={!!errors.duration}
-          helperText={errors.duration}
-        />
-        <TextField
-          label="Видео трейлера"
-          name="trailerVideo"
-          value={formData.trailerVideo || ""}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          error={!!errors.trailerVideo}
-          helperText={errors.trailerVideo}
-        />
-        <TextField
-          label="Тип фильма"
-          name="typeFilm"
-          value={formData.typeFilm || ""}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          error={!!errors.typeFilm}
-          helperText={errors.typeFilm}
-        />
+        {["title", "director", "description", "genres", "actors", "releaseDate", "ageRating", "duration", "trailerVideo", "typeFilm"].map((field) => (
+          <TextField
+            key={field}
+            label={
+              {
+                title: "Название",
+                director: "Режиссер",
+                description: "Описание",
+                genres: "Жанры (через запятую)",
+                actors: "Актеры (через запятую)",
+                releaseDate: "Дата релиза",
+                ageRating: "Возрастной рейтинг",
+                duration: "Продолжительность (мин)",
+                trailerVideo: "Видео трейлера",
+                typeFilm: "Тип фильма",
+              }[field]
+            }
+            name={field}
+            type={field === "releaseDate" ? "date" : "text"}
+            value={formData[field] || ""}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            InputLabelProps={field === "releaseDate" ? { shrink: true } : undefined}
+            error={!!errors[field]}
+            helperText={errors[field]}
+          />
+        ))}
 
         {movieData?.imageUrls?.length > 0 && (
-          <div>
-            <h4>Старые изображения:</h4>
-            <div style={{ display: "flex", gap: "10px" }}>
+          <>
+            <Typography variant="subtitle1">Старые изображения:</Typography>
+            <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
               {movieData.imageUrls.map((image, index) => (
-                <img key={index} src={image} alt={`image-${index}`} width="100" />
+                <img key={index} src={image} alt={`img-${index}`} width={100} />
               ))}
             </div>
-          </div>
+          </>
         )}
 
-        <input type="file" multiple onChange={handleFileChange} />
+        <input
+          type="file"
+          id="upload-button-file"
+          style={{ display: "none" }}
+          multiple
+          onChange={handleFileChange}
+        />
+        <label htmlFor="upload-button-file">
+          <Button variant="contained" component="span">
+            Загрузить изображения
+          </Button>
+        </label>
+
+        {files.length > 0 && (
+          <Typography variant="body2" mt={1}>
+            Загруженные файлы: {files.map((file) => file.name).join(", ")}
+          </Typography>
+        )}
       </DialogContent>
+
       <DialogActions>
         <Button onClick={onClose} variant="contained" color="primary">Отмена</Button>
         <Button

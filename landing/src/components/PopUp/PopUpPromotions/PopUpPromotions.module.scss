@@ -1,6 +1,90 @@
 .PopUpPromotions{
+    width: 680px;
+    
     .close{
         position: absolute;
         right: 0;
     }
 }
+.PopUpPromotions {
+    position: relative;
+    background-color: var(--background-color);
+    padding: 2rem;
+    border-radius: 16px;
+    max-height: 90vh;
+    color: var(--text-color);
+  }
+  
+  .closeButton {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 0.8rem;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .closeButton:hover {
+    background: var(--primary-color);
+  }
+  
+  .title {
+    text-transform: uppercase;
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--secondary-color);
+    text-align: center;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--light-red);
+    display: inline-block;
+    padding-bottom: 0.5rem;
+  }
+  
+  .promotionsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    overflow-y: auto;
+  }
+  
+  .promotionCard {
+    display: flex;
+    background-color: var(--color-gray);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .image {
+    width: 300px;
+    max-height: 300px;
+    object-fit: cover;
+  }
+  
+  .promotionText {
+    padding: 1rem;
+    flex: 1;
+  }
+  
+  .promotionTitle {
+    color: var(--accent-color);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .promotionDescription {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--text-color);
+  }
+  
+  .noPromotions {
+    text-align: center;
+    font-size: 1.2rem;
+    color: var(--error-color);
+  }

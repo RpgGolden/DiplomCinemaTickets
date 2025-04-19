@@ -16,11 +16,13 @@ export const MOVIE_GET_URL = '/movie/getMovie';
 export const MOVIE_UPDATE_URL = '/movie/updateMovie/:id';
 export const MOVIE_GET_ALL_URL = '/movie/getAllMovies';
 export const MOVIE_DELETE_URL = '/movie/deleteMovie/:id';
+export const MOVIE_GET_COMING_SOON_URL = '/movie/comingSoon';
+export const MOVIE_GET_HITS_URL = '/movie/getHits';
 
 export const PROMOTION_CREATE_URL = '/promotion/createPromotion';
 export const PROMOTION_GET_URL = '/promotion/getPromotion/:id';
 export const PROMOTION_UPDATE_URL = '/promotion/updatePromotion/:id';
-export const PROMOTION_GET_ALL_URL = '/promotion/getAllPromotion';
+export const PROMOTION_GET_ALL_URL = 'promotion/getAllPromotions';
 export const PROMOTION_DELETE_URL = '/promotion/deletePromotion/:name';
 
 export const SESSION_CREATE_URL = '/session/createSession';
@@ -31,3 +33,6 @@ export const SESSION_CHANGE_SEAT_CATEGORY_URL = '/session/changeSeatCategory/:id
 export const SESSION_DELETE_URL = '/session/deleteSession/:id';
 
 export const TICKET_BOOKING_URL = '/tickets/bookingTickets';
+
+export const GET_ALL_NEWS_URL = '/news/getAllNews';
+export const GET_NEWS_URL = '/news/getNews';

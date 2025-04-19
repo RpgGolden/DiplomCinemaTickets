@@ -35,8 +35,6 @@ function Catalog() {
             <div className={styles.catalogContainer}>
                 <div className={styles.catalogHeader}>
                     <h1>Каталог</h1>
-                </div>
-                <Layout>
                     <div className={styles.catalogSearch}>
                         <input 
                             type="text" 
@@ -46,6 +44,9 @@ function Catalog() {
                         />
                         <Search />
                     </div>
+                </div>
+                <Layout>
+                   
                     <div className={styles.catalogFilms}>
                         <CardFilms data={films} />
                     </div>

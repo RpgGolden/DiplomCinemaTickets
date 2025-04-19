@@ -51,16 +51,16 @@ const theme = createTheme({
         },
       },
     },
-    // MuiPaginationItem: {
-    //   styleOverrides: {
-    //     root: {
-    //       '&.Mui-selected': {
-    //         backgroundColor: '#dc143c',
-    //         color: '#fff',
-    //       },
-    //     },
-    //   },
-    // },
+    MuiPaginationItem: {
+      styleOverrides: {
+        root: {
+          '&.Mui-selected': {
+            backgroundColor: '#dc143c',
+            color: '#fff',
+          },
+        },
+      },
+    },
   },
 });
 
