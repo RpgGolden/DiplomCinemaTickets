@@ -147,7 +147,8 @@ export default {
             if (!movie) {
                 return res.status(404).json({ error: 'Фильм не найден' });
             }
-
+            const genresArray = genres ? JSON.parse(genres) : movie.genres;
+            const actorsArray = actors ? JSON.parse(actors) : movie.actors;
             // Если есть новые изображения, удаляем старые и загружаем новые
             if (newImages.length > 0) {
                 for (const image of movie.images) {
@@ -171,7 +172,7 @@ export default {
             movie.description = description || movie.description;
             movie.genres = genresArray || movie.genres;
             movie.ageRating = ageRating || movie.ageRating;
-            movie.actors = actors || movie.actors;
+            movie.actors = actorsArray || movie.actors;
             movie.typeFilm = typeFilm || movie.typeFilm;
 
             await movie.save();
