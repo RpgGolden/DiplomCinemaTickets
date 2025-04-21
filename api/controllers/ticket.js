@@ -227,7 +227,7 @@ export default {
                         ],
                     },
                 ],
-                order: [[{ model: Session }, 'sessionTime', 'DESC']],
+                order: [['createdAt', 'DESC']],
             });
 
             // Формируем массив с информацией о билетах
