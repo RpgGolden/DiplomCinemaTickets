@@ -24,11 +24,11 @@ export default {
                 actors,
                 typeFilm,
             } = req.body;
-    
+
             // Преобразуем genres и actors из строки JSON в массивы
             const genresArray = genres ? JSON.parse(genres) : [];
             const actorsArray = actors ? JSON.parse(actors) : [];
-    
+
             // Обработка файлов как массива
             const images = req.files ? req.files.map(file => path.posix.join('uploads', 'movies', file.filename)) : [];
 
@@ -55,7 +55,7 @@ export default {
                 actors: actorsArray, // Сохраняем массив актеров
                 typeFilm,
             });
-    
+
             const movieDto = new MovieDto(movie, process.env.HOST);
             return res.json(movieDto);
         } catch (error) {
@@ -88,12 +88,13 @@ export default {
                         ],
                     },
                 ],
+                order: [[{ model: Session }, 'sessionTime', 'ASC']],
             });
             console.log(movie);
             if (!movie) {
                 return res.status(404).json({ error: 'Movie not found' });
             }
-
+            console.log(movie.Sessions);
             if (movie.Sessions) {
                 // Фильтруем сессии, оставляя только будущие и активные
                 movie.Sessions = movie.Sessions.filter(session => {
@@ -115,7 +116,7 @@ export default {
                     }
                 });
             }
-
+            console.log(movie.Sessions);
             const movieDto = new MovieWithSessionsDto(movie, process.env.HOST);
             return res.json(movieDto);
         } catch (error) {

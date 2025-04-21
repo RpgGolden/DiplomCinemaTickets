@@ -227,7 +227,7 @@ export default {
                         ],
                     },
                 ],
-                order: [[{ model: Session }, 'sessionTime', 'DESC']], // Сортируем по времени сеанса от новых к старым
+                order: [[{ model: Session }, 'sessionTime', 'DESC']],
             });
 
             // Формируем массив с информацией о билетах
