@@ -29,7 +29,9 @@ export default {
 
     async getSliders(req, res) {
         try {
-            const sliders = await Slider.findAll();
+            const sliders = await Slider.findAll({
+                order: [['createdAt', 'DESC']],
+            });
             const slidersDto = sliders.map(slider => new SliderDto(slider, process.env.HOST));
             return res.json(slidersDto);
         } catch (error) {

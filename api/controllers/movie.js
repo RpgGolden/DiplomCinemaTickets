@@ -188,7 +188,9 @@ export default {
                 const moviesDto = movies.map(movie => new MovieWithSessionsDto(movie, process.env.HOST));
                 return res.json(moviesDto);
             } else {
-                const movies = await Movie.findAll();
+                const movies = await Movie.findAll({
+                    order: [['releaseDate', 'DESC']],
+                });
                 const moviesDto = movies.map(movie => new MovieDto(movie, process.env.HOST));
                 return res.json(moviesDto);
             }
