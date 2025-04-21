@@ -93,7 +93,7 @@ export default {
     async getAllPromotions(req, res) {
         try {
             const promotionsList = await Promotion.findAll({
-                order: [['endDate', 'ASC']],
+                order: [['createdAt', 'DESC']],
             });
 
             const promotionsWithDtos = promotionsList.map(promotion => {
