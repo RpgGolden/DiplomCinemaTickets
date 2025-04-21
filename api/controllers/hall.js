@@ -82,7 +82,9 @@ export default {
     },
     async getHalls(req, res) {
         try {
-            const halls = await Hall.findAll();
+            const halls = await Hall.findAll({
+                order: [['createdAt', 'DESC']],
+            });
 
             if (halls.length === 0) {
                 res.json([]);
