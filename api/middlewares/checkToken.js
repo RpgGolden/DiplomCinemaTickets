@@ -5,15 +5,15 @@ import { AppErrorInvalid } from '../utils/errors.js';
 export const authenticateToken = async (req, res, next) => {
     try {
         // Получаем токен из заголовка Authorization
-        const token = req.headers.authorization;
-
+        const authHeader = req.headers.authorization;
+        const token = authHeader && authHeader.split(' ')[1]; // split by space
+        
         if (!token) {
             throw new AppErrorInvalid('No token provided');
         }
-
-        // Проверяем валидность токена
+        
         const decoded = await jwtUtils.verifyAccessToken(token);
-
+        
         // Передаем информацию о пользователе в запрос для последующих обработчиков
         req.user = decoded;
 

@@ -1,0 +1,184 @@
+@import "../../../styles/mixin.scss";
+
+.container {
+    font-family: sans-serif;
+  }
+  
+  .title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .screen {
+    width: 100%;
+    margin: 0 auto 30px auto;
+    border-radius: 10px;
+    text-align: center;
+    line-height: 30px;
+    font-weight: bold;
+    img{
+        width: 100%;
+    }
+  }
+  
+  .cinema {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+  }
+  
+  .rowWrapper {
+    display: flex;
+    align-items: center;
+  }
+  
+  .rowNumber {
+    text-align: right;
+    margin-right: 10px;
+    font-weight: bold;
+  }
+  
+  .row {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .seat {
+    width: 30px;
+    height: 30px;
+    background-color: var(--accent-color);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.2s;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    user-select: none;
+  }
+  
+  .seat:hover {
+    opacity: 0.8;
+  }
+  
+  .booked {
+    background-color: #9e9e9e !important;
+    cursor: not-allowed;
+  }
+  
+  .selected {
+    background-color: var(--primary-color) !important;
+  }
+  .infoSelected{
+    background-color: #f7f7f7;
+    margin-top: 20px;
+    padding: 10px;
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    .selection {
+      font-size: 16px;
+      text-align: start;
+    }
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+ 
+  .legend {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 14px;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legendBox {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+}
+
+/* Цвета для подсказки */
+.free {
+  background-color: var(--accent-color);
+}
+.selectedLegend {
+  background-color: var(--primary-color);
+}
+.bookedLegend {
+  background-color: #9e9e9e;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  gap: 20px
+}
+
+.buttonConfirm {
+  @include baseButton;
+}
+
+.buttonBack {
+  @include baseButton;
+  background-color: #ccc;
+  color: black;
+
+  &:hover {
+    background-color: #aaa;
+  }
+}
+.selectedSeats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.seatTile {
+  background-color: #f0f0f0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  position: relative;
+  transition: background-color 0.3s ease;
+  cursor: default;
+
+  &:hover {
+    .trashIcon {
+      opacity: 1;
+    }
+  }
+
+  .trashIcon {
+    opacity: 0.6;
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  // Когда наводим на иконку — красим весь .seatTile
+  .trashIcon:hover ~ &,
+  &:has(.trashIcon:hover) {
+    background-color: var(--light-red); // светло-красный
+  }
+}

@@ -1,0 +1,80 @@
+@import "../../styles/mixin.scss";
+
+.header{
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    border-radius: 0 0 1rem 1rem ;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--background-color);
+    .logo{
+        width: 175px;
+        img{
+            width: 100%;
+        }
+    }   
+    .contacts{
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        p{
+            margin: 0;
+        }
+    }
+    .nav{
+        display: flex;
+        gap: 1rem;
+        list-style: none;
+        .list{
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            li{
+                text-decoration: none;
+                color: var(--text-color);
+                cursor: pointer;
+                text-decoration: none;
+                color: var(--text-color);
+                font-size: 1.2rem;
+                transition: all 0.3s ease;
+                &:hover{
+                    color: var(--primary-color);
+                }
+            }
+        }
+    }
+    .navButContainer{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+    }
+    .social{
+        display: flex;
+        gap: 1rem;
+        .icon{
+            font-size: 1.2rem;
+            color: var(--text-color);
+            @include hover-opacity;
+        }
+    }
+    
+    
+    .button{
+        border: none;
+        border: 1px solid var(--text-color);
+        background-color: transparent;
+        color: var(--text-color);
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        @include hover-button;
+    }
+}
