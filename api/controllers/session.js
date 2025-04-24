@@ -228,6 +228,7 @@ export default {
                         ],
                     },
                 ],
+                order: [['sessionTime', 'DESC']],
             });
 
             const sessionDtos = sessions.map(session => {

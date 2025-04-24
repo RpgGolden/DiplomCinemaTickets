@@ -16,6 +16,9 @@ function LeftMenu() {
         { id: 5, name: "Акции", link: "/adminPage/promotions" },
         { id: 6, name: "Пользователи", link: "/adminPage/users" },
         { id: 7, name: "Новости", link: "/adminPage/news" },
+        { id: 8, name: "Слайдер", link: "/adminPage/sliders" },
+        { id: 9, name: "Бонусы пользователей", link: "/adminPage/bonuses" },
+        { id: 10, name: "Категория мест", link: "/adminPage/categoryPlace" },
         // { id: 7, name: "Типы мест", link: "/adminPage/typePlace" },
     ];
 

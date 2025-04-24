@@ -24,11 +24,11 @@ export default {
                 actors,
                 typeFilm,
             } = req.body;
-    
+
             // Преобразуем genres и actors из строки JSON в массивы
             const genresArray = genres ? JSON.parse(genres) : [];
             const actorsArray = actors ? JSON.parse(actors) : [];
-    
+
             // Обработка файлов как массива
             const images = req.files ? req.files.map(file => path.posix.join('uploads', 'movies', file.filename)) : [];
 
@@ -55,7 +55,7 @@ export default {
                 actors: actorsArray, // Сохраняем массив актеров
                 typeFilm,
             });
-    
+
             const movieDto = new MovieDto(movie, process.env.HOST);
             return res.json(movieDto);
         } catch (error) {
@@ -189,13 +189,21 @@ export default {
 
             if (withSession === 'true') {
                 const movies = await Movie.findAll({
-                    order: [['releaseDate', 'DESC']],
+                    order: [
+                        ['releaseDate', 'DESC'],
+                        ['id', 'DESC'],
+                    ],
                     include: [{ model: Session, include: [Hall] }],
                 });
                 const moviesDto = movies.map(movie => new MovieWithSessionsDto(movie, process.env.HOST));
                 return res.json(moviesDto);
             } else {
-                const movies = await Movie.findAll();
+                const movies = await Movie.findAll({
+                    order: [
+                        ['releaseDate', 'DESC'],
+                        ['id', 'ASC'],
+                    ],
+                });
                 const moviesDto = movies.map(movie => new MovieDto(movie, process.env.HOST));
                 return res.json(moviesDto);
             }
