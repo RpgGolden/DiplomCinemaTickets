@@ -27,6 +27,14 @@ router
         asyncRoute(promotionController.updatePromotion)
     );
 
+router
+    .route('/updatePromotionStatus/:id')
+    .patch(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.SUPERADMIN])),
+        asyncRoute(promotionController.updatePromotionStatus)
+    );
+
 router.route('/getAllPromotions').get(asyncRoute(promotionController.getAllPromotions));
 
 router.route('/getAllPromotionsForSite').get(asyncRoute(promotionController.getAllPromotionsForSite));

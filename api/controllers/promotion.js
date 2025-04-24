@@ -44,7 +44,7 @@ export default {
     async updatePromotion(req, res) {
         try {
             const { id } = req.params;
-            const { title, description, isOutput, endDate } = req.body;
+            const { title, description, endDate } = req.body;
             const image = req.file ? path.posix.join('uploads', 'promotions', req.file.filename) : null;
 
             const promotion = await Promotion.findOne({ where: { id } });
@@ -61,7 +61,6 @@ export default {
 
             promotion.title = title || promotion.title;
             promotion.description = description || promotion.description;
-            promotion.isOutput = isOutput !== undefined ? isOutput : promotion.isOutput;
             promotion.endDate = endDate || promotion.endDate;
 
             await promotion.save();
@@ -74,6 +73,24 @@ export default {
         }
     },
 
+    async updatePromotionStatus(req, res) {
+        try {
+            const { id } = req.params;
+            const promotion = await Promotion.findOne({ where: { id } });
+
+            if (!promotion) {
+                return res.status(404).json({ error: 'Акция не найдена' });
+            }
+
+            await promotion.update({ isOutput: !promotion.isOutput });
+
+            const promotionDto = new PromotionDto(promotion, process.env.HOST);
+            res.json(promotionDto);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error', message: 'Ошибка при обновлении акции' });
+        }
+    },
     async getPromotion(req, res) {
         try {
             const promotion = await Promotion.findOne({ where: { id: req.params.id } });
