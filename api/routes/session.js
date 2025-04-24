@@ -71,4 +71,20 @@ router
         asyncRoute(sessionController.createSessionSeatCategory)
     );
 
+router
+    .route('/getSeatCategories')
+    .get(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
+        asyncRoute(sessionController.getSeatCategories)
+    );
+
+router
+    .route('/getSeatCategory/:id')
+    .get(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
+        asyncRoute(sessionController.getSeatCategory)
+    );
+
 export default router;
