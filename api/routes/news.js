@@ -28,6 +28,14 @@ router
         asyncRoute(newsController.updateNews)
     );
 
+router
+    .route('/updateNewsStatus/:id')
+    .patch(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
+        asyncRoute(newsController.updateNewsStatus)
+    );
+
 router.route('/getAllNews').get(asyncRoute(newsController.getAllNews));
 router
     .route('/deleteNews/:id')

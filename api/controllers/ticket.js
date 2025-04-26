@@ -227,7 +227,7 @@ export default {
                         ],
                     },
                 ],
-                order: [[{ model: Session }, 'sessionTime', 'DESC']], // Сортируем по времени сеанса от новых к старым
+                order: [['createdAt', 'DESC']],
             });
 
             // Формируем массив с информацией о билетах
@@ -318,14 +318,14 @@ export default {
                 include: [
                     {
                         model: User,
-                        attributes: ['email', 'name'], // Включаем только необходимые атрибуты пользователя
+                        attributes: ['email', 'name'],
                     },
                     {
                         model: Session,
                         include: [
                             {
                                 model: Movie,
-                                attributes: ['title'], // Включаем только название фильма
+                                attributes: ['title'],
                             },
                         ],
                     },
@@ -334,12 +334,12 @@ export default {
                         include: [
                             {
                                 model: SeatPriceCategory,
-                                attributes: ['price'], // Включаем только цену
+                                attributes: ['price'],
                             },
                         ],
                     },
                 ],
-                order: [[{ model: Session }, 'sessionTime', 'DESC']], // Сортируем по времени сеанса от новых к старым
+                order: [['createdAt', 'DESC']],
             });
 
             // Формируем массив с информацией о билетах
@@ -413,7 +413,7 @@ export default {
                         ],
                     },
                 ],
-                order: [[{ model: Session }, 'sessionTime', 'DESC']],
+                order: [['createdAt', 'DESC']],
             });
 
             // Map the tickets to the desired format, excluding specified fields
