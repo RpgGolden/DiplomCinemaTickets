@@ -146,6 +146,7 @@ export default {
         try {
             const sliders = await Slider.findAll({
                 order: [['priority', 'DESC']],
+                where: { status: true },
             });
             const slidersDto = sliders.map(slider => new SliderDto(slider, process.env.HOST));
             return res.json(slidersDto);
