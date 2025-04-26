@@ -18,8 +18,9 @@ export default {
 
             const slider = await Slider.create({ image: ipfsHash });
             await slider.update({
-                priority: slider.id
-            })
+                priority: slider.id,
+            });
+            await slider.reload();
             const sliderDto = new SliderDto(slider, process.env.HOST);
             return res.json(sliderDto);
         } catch (error) {
@@ -104,7 +105,6 @@ export default {
             if (!slider) {
                 return res.status(404).json({ error: 'Slider not found' });
             }
-            const { priority } = req.body;
             const newImage = req.file ? path.posix.join('uploads', 'sliders', req.file.filename) : null;
 
             if (newImage) {
@@ -115,6 +115,23 @@ export default {
                 const pinataResponse = await uploadToPinata(newImage, 'sliders', { category: 'Slider' });
                 slider.image = pinataResponse.IpfsHash;
             }
+            await slider.save();
+            const sliderDto = new SliderDto(slider, process.env.HOST);
+            return res.json(sliderDto);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+
+    async updatePriority(req, res) {
+        try {
+            const slider = await Slider.findByPk(req.params.id);
+            if (!slider) {
+                return res.status(404).json({ error: 'Slider not found' });
+            }
+            const { priority } = req.body;
+
             slider.priority = priority || slider.priority;
             await slider.save();
             const sliderDto = new SliderDto(slider, process.env.HOST);
