@@ -20,6 +20,7 @@ export default {
             await slider.update({
                 priority: slider.id
             })
+            await slider.reload();
             const sliderDto = new SliderDto(slider, process.env.HOST);
             return res.json(sliderDto);
         } catch (error) {
