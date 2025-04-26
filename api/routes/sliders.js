@@ -49,6 +49,14 @@ router
     );
 
 router
+    .route('/updatePriority/:id')
+    .patch(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
+        asyncRoute(sliderController.updatePriority)
+    );
+
+router
     .route('/changeStatus/:id')
     .patch(
         authenticateToken,
