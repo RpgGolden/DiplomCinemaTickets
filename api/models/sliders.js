@@ -11,7 +11,7 @@ export default class Slider extends Model {
                     primaryKey: true,
                 },
                 images: {
-                    type: DataTypes.ARRAY(DataTypes.STRING),
+                    type: DataTypes.STRING,
                 },
             },
             {

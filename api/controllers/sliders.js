@@ -4,21 +4,19 @@ import SliderDto from '../dtos/slider-DTO.js';
 import Slider from '../models/sliders.js';
 import 'dotenv/config';
 import { deleteFromPinata, uploadToPinata } from '../ipfs-client/ipfsClient.js';
+
 export default {
     async createSlider(req, res) {
         try {
-            const images = req.files ? req.files.map(file => path.posix.join('uploads', 'sliders', file.filename)) : [];
-            if (images.length === 0) {
-                throw new AppErrorMissing('Не все данные заполнены');
+            const image = req.file ? path.posix.join('uploads', 'sliders', req.file.filename) : null;
+            if (!image) {
+                throw new AppErrorMissing('Изображение не загружено');
             }
 
-            const ipfsHashes = [];
-            for (const image of images) {
-                const pinataResponse = await uploadToPinata(image, 'sliders', { category: 'Slider' });
-                ipfsHashes.push(pinataResponse.IpfsHash);
-            }
+            const pinataResponse = await uploadToPinata(image, 'sliders', { category: 'Slider' });
+            const ipfsHash = pinataResponse.IpfsHash;
 
-            const slider = await Slider.create({ images: ipfsHashes });
+            const slider = await Slider.create({ images: [ipfsHash] });
             const sliderDto = new SliderDto(slider, process.env.HOST);
             return res.json(sliderDto);
         } catch (error) {
@@ -61,7 +59,6 @@ export default {
                 return res.status(404).json({ error: 'Slider not found' });
             }
 
-            // Delete images from Pinata
             for (const image of slider.images) {
                 await deleteFromPinata(image);
             }
@@ -105,23 +102,15 @@ export default {
                 return res.status(404).json({ error: 'Slider not found' });
             }
 
-            const newImages = req.files
-                ? req.files.map(file => path.posix.join('uploads', 'sliders', file.filename))
-                : [];
+            const newImage = req.file ? path.posix.join('uploads', 'sliders', req.file.filename) : null;
 
-            // If new images are provided, upload them to Pinata and replace the existing images
-            if (newImages.length > 0) {
-                // Delete old images from Pinata
+            if (newImage) {
                 for (const image of slider.images) {
                     await deleteFromPinata(image);
                 }
 
-                const newIpfsHashes = [];
-                for (const image of newImages) {
-                    const pinataResponse = await uploadToPinata(image, 'sliders', { category: 'Slider' });
-                    newIpfsHashes.push(pinataResponse.IpfsHash);
-                }
-                slider.images = newIpfsHashes;
+                const pinataResponse = await uploadToPinata(newImage, 'sliders', { category: 'Slider' });
+                slider.images = [pinataResponse.IpfsHash];
             }
 
             await slider.save();

@@ -1,9 +1,11 @@
 export default class SliderDto {
     id;
-    imageUrls;
+    imageUrl;
+    createdAt;
 
     constructor(slider, host) {
         this.id = slider.id;
-        this.imageUrls = slider.images ? slider.images.map(image => `https://ipfs.io/ipfs/${image}`) : [];
+        this.imageUrl = slider.image ? `https://ipfs.io/ipfs/${slider.image}` : null; // Формируем ссылку на IPFS
+        this.createdAt = slider.createdAt;
     }
 }
