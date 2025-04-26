@@ -44,7 +44,7 @@ export default {
     async updateNews(req, res) {
         try {
             const { id } = req.params;
-            const { title, content, status } = req.body;
+            const { title, content } = req.body;
             const image = req.file ? path.posix.join('uploads', 'news', req.file.filename) : null;
 
             const news = await News.findOne({ where: { id } });
@@ -62,13 +62,26 @@ export default {
 
             news.title = title || news.title;
             news.content = content || news.content;
-
-            if (status === '0' || 0) {
-                news.status = false;
-            } else {
-                news.status = status || news.status;
-            }
             await news.save();
+
+            const newsDto = new NewsDto(news, process.env.HOST);
+            res.json(newsDto);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error', message: 'Ошибка при обновлении новости' });
+        }
+    },
+
+    async updateNewsStatus(req, res) {
+        try {
+            const { id } = req.params;
+            const news = await News.findOne({ where: { id } });
+
+            if (!news) {
+                return res.status(404).json({ error: 'Новость не найдена' });
+            }
+
+            await news.update({ status: !news.status });
 
             const newsDto = new NewsDto(news, process.env.HOST);
             res.json(newsDto);

@@ -31,7 +31,7 @@ export default class Session extends Model {
                 isActive: {
                     type: DataTypes.BOOLEAN,
                     allowNull: false,
-                    defaultValue: true,
+                    defaultValue: false,
                 },
                 repeatDaily: {
                     type: DataTypes.BOOLEAN,

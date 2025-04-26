@@ -301,7 +301,10 @@ export default {
     async createSessionSeatCategory(req, res) {
         try {
             const { categoryName, price } = req.body;
-
+            const existingCategory = await SeatPriceCategory.findOne({ where: { categoryName } });
+            if (existingCategory) {
+                return res.status(400).json({ error: 'Category name already exists' });
+            }
             // Создаем новую категорию мест
             const seatPriceCategory = await SeatPriceCategory.create({ categoryName, price });
 
@@ -309,6 +312,33 @@ export default {
         } catch (error) {
             console.error('Ошибка при создании категории мест:', error);
             res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+
+    async getSeatCategories(req, res) {
+        try {
+            const seatPriceCategories = await SeatPriceCategory.findAll({
+                order: [['id', 'ASC']],
+                attributes: ['id', 'categoryName', 'price'],
+            });
+            res.json(seatPriceCategories);
+        } catch (error) {
+            console.error('Ошибка при получении категорий мест:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+
+    async getSeatCategory(req, res) {
+        try {
+            const { id } = req.params;
+            const seatPriceCategory = await SeatPriceCategory.findByPk(id);
+            if (!seatPriceCategory) {
+                throw new AppErrorNotExist('Ошибка при получении категорий мест');
+            }
+            res.json(seatPriceCategory);
+        } catch (error) {
+            console.error('Ошибка при получении категорий мест:', error);
+            res.status(404).json({ error: 'Not Found' });
         }
     },
 };

@@ -21,15 +21,15 @@ api.interceptors.request.use(
 );
 
 // Добавляем interceptor для обработки 401 Unauthorized
-// api.interceptors.response.use(
-//     (response) => response, // Пропускаем успешные ответы
-//     (error) => {
-//         if (error.response && error.response.status === 401) {
-//             sessionStorage.removeItem("accessToken"); // Очищаем токен
-//             window.location.href = "/"; // Перенаправляем на главную
-//         }
-//         return Promise.reject(error);
-//     }
-// );
+api.interceptors.response.use(
+    (response) => response, // Пропускаем успешные ответы
+    (error) => {
+        if (error.response && error.response.status === 401) {
+            sessionStorage.removeItem("accessToken"); // Очищаем токен
+            window.location.href = "/login"; // Перенаправляем на главную
+        }
+        return Promise.reject(error);
+    }
+);
 
 export default api;

@@ -88,12 +88,13 @@ export default {
                         ],
                     },
                 ],
+                order: [[{ model: Session }, 'sessionTime', 'ASC']],
             });
             console.log(movie);
             if (!movie) {
                 return res.status(404).json({ error: 'Movie not found' });
             }
-
+            console.log(movie.Sessions);
             if (movie.Sessions) {
                 // Фильтруем сессии, оставляя только будущие и активные
                 movie.Sessions = movie.Sessions.filter(session => {
@@ -115,7 +116,7 @@ export default {
                     }
                 });
             }
-
+            console.log(movie.Sessions);
             const movieDto = new MovieWithSessionsDto(movie, process.env.HOST);
             return res.json(movieDto);
         } catch (error) {

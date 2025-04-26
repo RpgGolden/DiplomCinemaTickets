@@ -33,4 +33,12 @@ router
         asyncRoute(authController.addPaymentMethod)
     );
 
+router
+    .route('/deleteAccount/:id')
+    .delete(
+        authenticateToken,
+        asyncRoute(checkRole([roles.SUPERADMIN])),
+        asyncRoute(authController.deleteAccount)
+    );
+
 export default router;
