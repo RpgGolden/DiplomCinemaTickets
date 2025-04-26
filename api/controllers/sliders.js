@@ -8,7 +8,6 @@ import { deleteFromPinata, uploadToPinata } from '../ipfs-client/ipfsClient.js';
 export default {
     async createSlider(req, res) {
         try {
-            const { priority } = req.body;
             const image = req.file ? path.posix.join('uploads', 'sliders', req.file.filename) : null;
             if (!image) {
                 throw new AppErrorMissing('Изображение не загружено');
@@ -17,7 +16,10 @@ export default {
             const pinataResponse = await uploadToPinata(image, 'sliders', { category: 'Slider' });
             const ipfsHash = pinataResponse.IpfsHash;
 
-            const slider = await Slider.create({ image: ipfsHash, priority });
+            const slider = await Slider.create({ image: ipfsHash });
+            await slider.update({
+                priority: slider.id
+            })
             const sliderDto = new SliderDto(slider, process.env.HOST);
             return res.json(sliderDto);
         } catch (error) {
