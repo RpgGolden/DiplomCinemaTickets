@@ -11,6 +11,7 @@ import styles from "./Sessions.module.scss";
 import {
   createSession,
   deleteSession,
+  svitchStatusSession,
   updateSession,
 } from "../../../API/apiRequest";
 import { getandSetHallData, setHallData } from "../../../store/HallsSlice/HallsSlice";
@@ -31,15 +32,10 @@ function Sessions() {
         dispatch(getAndSetSessionData((data) => dispatch(setSessionData(data))));
     // Получаем и устанавливаем фильмы
     if (MovieData?.length === 0 || !MovieData) {
-      dispatch(getandSetMovieData((data) => {
-        console.log("getandSetMovieData", data)
-        dispatch(setMovieData(data));
-        setMoviesData(data);
-      }));
+      fetchSessionData()
     } else {
       setMoviesData(MovieData);
     }
-
     // Получаем и устанавливаем залы
     if (HallData?.length === 0 || !HallData) {
       dispatch(getandSetHallData((data) => {
@@ -51,6 +47,10 @@ function Sessions() {
       setHallsData(HallData); 
     }
   }, [dispatch]);
+
+  const fetchSessionData = async () => {
+    dispatch(getAndSetSessionData((data) => dispatch(setSessionData(data))));
+  }
 
   const handleOpenDialog = (session = null) => {
     setSelectedSession(session);
@@ -96,6 +96,14 @@ function Sessions() {
     });
   };
 
+  const changeStatus = (sessionData) =>{
+    svitchStatusSession(sessionData.id).then(res => {
+        if(res.status === 200){
+          fetchSessionData()
+        }
+    })
+  }
+
 
   return (
     <div className={styles.Sessions}>
@@ -108,6 +116,8 @@ function Sessions() {
           onDelete={handleDeleteSession}
           editingMode={false}
           addMode={true} // Разрешаем добавление
+          statusMode={true}
+          onStatus={changeStatus}
         />
       </div>
 

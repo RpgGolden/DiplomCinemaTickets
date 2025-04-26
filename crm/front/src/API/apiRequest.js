@@ -6,6 +6,7 @@ import { AUTH_LOGIN_URL, AUTH_LOGOUT_URL, MOVIE_GET_ALL_URL,
     SESSION_CHANGE_SEAT_CATEGORY_URL,
     SESSION_DELETE_URL,
     SESSION_GET_URL,
+    SESSION_SVITCH_STATUS_URL,
     TICKET_BOOKING_URL,
     MOVIE_GET_URL,
     MOVIE_DELETE_URL,
@@ -17,6 +18,7 @@ import { AUTH_LOGIN_URL, AUTH_LOGOUT_URL, MOVIE_GET_ALL_URL,
     HALL_GET_URL,
     HALL_DELETE_URL, 
     HALL_CREATE_SESSION_URL,
+    SVITCH_STATUS_NEWS_URL,
     PROMOTION_CREATE_URL,
     PROMOTION_GET_URL,
     PROMOTION_UPDATE_URL,
@@ -28,7 +30,10 @@ import { AUTH_LOGIN_URL, AUTH_LOGOUT_URL, MOVIE_GET_ALL_URL,
     DELETE_NEWS_URL,
     UPDATE_NEWS_URL,
     GET_NEWS_URL,
-    GET_ALL_TICKETS_URL
+    GET_ALL_TICKETS_URL,
+    GET_ALL_POSTERS_URL,
+    CREATE_POSTER_URL,
+    DELETE_POSTER_URL,
 } from './ApiUrl';
 import api from './axios';
 
@@ -320,6 +325,24 @@ export const updateNews = async (id, data) => {
     }
 }
 
+export const svitchStatus = async (id) => {
+    try {
+        const response = await api.patch(`${SVITCH_STATUS_NEWS_URL}/${id}`);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+export const svitchStatusSession = async (id) => {
+    try {
+        const response = await api.patch(`${SESSION_SVITCH_STATUS_URL}/${id}`);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
 export const getAllTickets = async () => {
     try {
         const response = await api.get(GET_ALL_TICKETS_URL);
@@ -332,6 +355,39 @@ export const getAllTickets = async () => {
 export const deleteTicket = async id => {
     try {
         const response = await api.delete(`${DELETE_TICKET_URL}/${id}`);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+//!Posters
+
+export const createPoster = async data => {
+    try {
+        const response = await api.post(CREATE_POSTER_URL, data, {
+            headers: {
+              'Content-Type': 'multipart/form-data', 
+            }
+          });
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+export const getAllPosters = async () => {
+    try {
+        const response = await api.get(GET_ALL_POSTERS_URL);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+export const deletePoster = async id => {
+    try {
+        const response = await api.delete(`${DELETE_POSTER_URL}/${id}`);
         return response;
     } catch (error) {
         return error;

@@ -30,7 +30,7 @@ function Login() {
             }
             apiLogin(data).then((resp) => {
                 if (resp?.status === 200) {
-                    navigate("/");
+                    navigate("/HomePage");
                 }else{
                     const newErrors = {password: 'Неправильный логин или пароль!'}
                     setErrors(newErrors)

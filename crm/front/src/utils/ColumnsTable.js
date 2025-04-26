@@ -324,3 +324,40 @@ export const requestColumns = [
   },
 
 ];
+
+export const postersColumns = [
+  {
+    accessorKey: "id",
+    header: "ID",
+  },
+  {
+    accessorKey: "date",
+    header: "Дата Создания",
+  },
+  {
+    accessorKey: "imageUrls",
+    header: "Изображение",
+    Cell: ({ cell }) => {
+      const imageUrl = cell.getValue(); // Получаем URL изображения
+      const dispatch = useDispatch(); // Используем dispatch внутри компонента
+      return (
+        <div style={{ display: "flex", gap: 8 }}>
+          {imageUrl && (
+            <img
+              src={imageUrl}
+              alt="promotion"
+              style={{
+                width: 500,
+                height: 100,
+                objectFit: "cover",
+                borderRadius: 4,
+                cursor: "pointer",
+              }}
+              onClick={() => dispatch(openImageModal(imageUrl))} // Открываем модалку по клику на изображение
+            />
+          )}
+        </div>
+      );
+    },
+  },
+]

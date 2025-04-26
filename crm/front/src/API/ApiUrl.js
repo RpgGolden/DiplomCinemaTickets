@@ -31,7 +31,7 @@ export const SESSION_GET_URL = '/session/getSession';
 export const SESSION_UPDATE_URL = '/session/updateSession';
 export const SESSION_CHANGE_SEAT_CATEGORY_URL = '/session/changeSeatCategory';
 export const SESSION_DELETE_URL = '/session/deleteSession';
-
+export const SESSION_SVITCH_STATUS_URL = 'session/updateSession';
 export const TICKET_BOOKING_URL = '/tickets/bookingTickets';
 
 export const CREATE_NEWS_URL = '/news/createNews';
@@ -39,6 +39,11 @@ export const GET_NEWS_URL = '/news/getNews';
 export const UPDATE_NEWS_URL = '/news/updateNews';
 export const GET_ALL_NEWS_URL = '/news/getAllNews';
 export const DELETE_NEWS_URL = '/news/deleteNews';
+export const SVITCH_STATUS_NEWS_URL = 'news/updateNewsStatus';
 
 export const GET_ALL_TICKETS_URL = '/tickets/getAllTickets';
 export const DELETE_TICKET_URL = 'tickets/cancelTicket';
+
+export const GET_ALL_POSTERS_URL = '/slider/getSliders';
+export const CREATE_POSTER_URL = '/slider/createSlider';
+export const DELETE_POSTER_URL = '/slider/deleteSlider';

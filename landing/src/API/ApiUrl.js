@@ -34,5 +34,5 @@ export const SESSION_DELETE_URL = '/session/deleteSession/:id';
 
 export const TICKET_BOOKING_URL = '/tickets/bookingTickets';
 
-export const GET_ALL_NEWS_URL = '/news/getAllNews';
+export const GET_ALL_NEWS_URL = '/news/getAllNewsForSite';
 export const GET_NEWS_URL = '/news/getNews';

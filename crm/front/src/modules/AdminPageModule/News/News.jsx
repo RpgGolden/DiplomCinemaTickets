@@ -5,6 +5,7 @@ import {
   deleteNews,
   createNews,
   updateNews,
+  svitchStatus,
 } from "../../../API/apiRequest";
 import UniversalTable from "../../../components/UniversalTable/UniversalTable";
 import { newsColumns } from "../../../utils/ColumnsTable";
@@ -71,10 +72,7 @@ function News() {
   };
 
   const changeStatus = (newsData) =>{
-    const data = {
-        status: !newsData.status
-    }
-    updateNews(newsData.id, data).then(res => {
+    svitchStatus(newsData.id).then(res => {
         if(res.status === 200){
             fetchNews()
         }

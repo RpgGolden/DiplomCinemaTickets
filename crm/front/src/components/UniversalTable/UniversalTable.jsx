@@ -74,7 +74,7 @@ const UniversalTable = ({
                     </Button>
                     {statusMode && (
                       <Button onClick={() => onStatus(row.original)}>
-                        {row.original.status === true ? (
+                        {row.original.status === true || row.original.isActive === true ? (
                           <EyeIcon />
                         ) : (
                           <EyeClosed />
