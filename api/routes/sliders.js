@@ -13,13 +13,15 @@ router
     .post(
         authenticateToken,
         asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
-        upload.array('images'),
+        upload.single('image'),
         asyncRoute(sliderController.createSlider)
     );
 
 router.route('/getSliders').get(authenticateToken, asyncRoute(sliderController.getSliders));
 
 router.route('/getSlider/:id').get(authenticateToken, asyncRoute(sliderController.getSlider));
+
+router.route('/getSliderForSite').get(authenticateToken, asyncRoute(sliderController.getSlidersForSite));
 
 router
     .route('/deleteSlider/:id')
@@ -42,7 +44,15 @@ router
     .patch(
         authenticateToken,
         asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
-        upload.array('images'),
+        upload.single('image'),
         asyncRoute(sliderController.updateSlider)
+    );
+
+router
+    .route('/changeStatus/:id')
+    .patch(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
+        asyncRoute(sliderController.changeStatusSlider)
     );
 export default router;
