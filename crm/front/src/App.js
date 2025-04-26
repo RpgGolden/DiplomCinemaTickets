@@ -13,6 +13,7 @@ import Requests from "./modules/AdminPageModule/Requests/Requests";
 import TypePlace from "./modules/AdminPageModule/TypePlace/TypePlace";
 import News from "./modules/AdminPageModule/News/News";
 import Posters from "./modules/AdminPageModule/Posters/Posters";
+import Register from "./pages/Auth/Register/Register";
 function App() {
   const context = {
    
@@ -35,6 +36,7 @@ function App() {
           <Route path="posters" element={<Posters/>} ></Route>
         </Route>
           <Route path="/" element={<Login/>}></Route>
+          <Route path="/SecretRegister" element={<Register/>}></Route>
         </Routes>
       </main>
     </BrowserRouter>

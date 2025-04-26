@@ -77,4 +77,14 @@
         gap: 0.5rem;
         @include hover-button;
     }
+    .colorBonuses{
+        color: var(--primary-color);
+    }
+    .headerIcon{
+        cursor: pointer;
+        transition: 0.1s linear all;
+        &:hover{
+            scale: 1.1;
+        }
+    }
 }

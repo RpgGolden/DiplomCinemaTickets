@@ -6,11 +6,19 @@ import 'swiper/css/pagination';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRef } from 'react';
 import { activePoint } from '../../utils/testData';
+import { useEffect } from 'react';
+import { getAllPosters } from '../../API/apiRequest';
+import { useState } from 'react';
 
 function SliderPromo() {
-   
+    const [dataSlider, setDataSlider] = useState([]);
     const swiperRef = useRef(null);
-
+    useEffect(()=>{
+        getAllPosters().then((res) => {
+            setDataSlider(res.data)
+            console.log(res.data)
+        })
+    },[])
     return ( 
         <div className={styles.sliderPromoContainer}>
             <div className={styles.arrow} onClick={() => swiperRef.current?.slidePrev()}>
@@ -29,12 +37,12 @@ function SliderPromo() {
                 modules={[Pagination]}
                 onSwiper={(swiper) => (swiperRef.current = swiper)}
             >
-                {activePoint.sliderData.map((item, index) => (
+                {dataSlider.map((item, index) => (
                     <SwiperSlide key={index}>
                         <div className={styles.slide}>
-                            <p className={styles.date}>{item.date}</p>
-                            <img src={item.image} alt={`Слайд ${index + 1}`} className={styles.image} />
-                            <p className={styles.text}>{item.textSlide}</p>
+                            {/* <p className={styles.date}>{item.date}</p> */}
+                            <img src={item.imageUrl} alt={`Слайд ${index + 1}`} className={styles.image} />
+                            {/* <p className={styles.text}>{item.textSlide}</p> */}
                         </div>
                     </SwiperSlide>
                 ))}

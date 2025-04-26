@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./Posters.module.scss";
-import { deletePoster, getAllPosters, createPoster } from "../../../API/apiRequest";
+import { deletePoster, getAllPosters, createPoster, svitchStatusPoster } from "../../../API/apiRequest";
 import { postersColumns } from "../../../utils/ColumnsTable";
 import UniversalTable from "../../../components/UniversalTable/UniversalTable";
 import { Button } from "@mui/material";
@@ -30,7 +30,7 @@ function Posters() {
     if (!file) return;
 
     const formData = new FormData();
-    formData.append('images', file); // Предполагается, что на бэке поле называется "image"
+    formData.append('image', file); // Предполагается, что на бэке поле называется "image"
 
     const res = await createPoster(formData);
     if (res.status === 200) {
@@ -44,6 +44,14 @@ function Posters() {
       inputRef.current.click();
     }
   };
+
+  const changeStatus = (posterData) => {
+    svitchStatusPoster(posterData.id).then(res => {
+      if(res.status === 200){
+        fetchPosters()
+      }
+    })
+  }
 
   return (
     <div className={styles.Posters}>
@@ -60,6 +68,8 @@ function Posters() {
         onDelete={deleteNewsFunc}
         onAdd={() => onAdd()}
         addMode={true}
+        statusMode={true}
+        onStatus={changeStatus}
       />
     </div>
   );

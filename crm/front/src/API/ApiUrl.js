@@ -47,3 +47,7 @@ export const DELETE_TICKET_URL = 'tickets/cancelTicket';
 export const GET_ALL_POSTERS_URL = '/slider/getSliders';
 export const CREATE_POSTER_URL = '/slider/createSlider';
 export const DELETE_POSTER_URL = '/slider/deleteSlider';
+export const SVITCH_STATUS_POSTER_URL = 'slider/changeStatus';
+
+export const BONUSES_USER_GET_ALL_URL = '/userBonus/getUserBonus'
+export const REGISTER_ADMIN_URL = '/auth/registerAdmin'

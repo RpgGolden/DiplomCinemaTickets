@@ -1,9 +1,12 @@
-import { AUTH_LOGIN_URL, AUTH_LOGOUT_URL, MOVIE_GET_ALL_URL, 
+import { 
+    AUTH_LOGIN_URL,
+    AUTH_LOGOUT_URL,
+    MOVIE_GET_ALL_URL, 
     SESSION_CREATE_URL ,
     DELETE_TICKET_URL,
     SESSION_GET_ALL_URL ,
     SESSION_UPDATE_URL ,
-    SESSION_CHANGE_SEAT_CATEGORY_URL,
+    REGISTER_ADMIN_URL,
     SESSION_DELETE_URL,
     SESSION_GET_URL,
     SESSION_SVITCH_STATUS_URL,
@@ -17,7 +20,7 @@ import { AUTH_LOGIN_URL, AUTH_LOGOUT_URL, MOVIE_GET_ALL_URL,
     HALL_GET_ALL_URL,
     HALL_GET_URL,
     HALL_DELETE_URL, 
-    HALL_CREATE_SESSION_URL,
+    BONUSES_USER_GET_ALL_URL,
     SVITCH_STATUS_NEWS_URL,
     PROMOTION_CREATE_URL,
     PROMOTION_GET_URL,
@@ -34,6 +37,7 @@ import { AUTH_LOGIN_URL, AUTH_LOGOUT_URL, MOVIE_GET_ALL_URL,
     GET_ALL_POSTERS_URL,
     CREATE_POSTER_URL,
     DELETE_POSTER_URL,
+    SVITCH_STATUS_POSTER_URL
 } from './ApiUrl';
 import api from './axios';
 
@@ -392,4 +396,33 @@ export const deletePoster = async id => {
     } catch (error) {
         return error;
     }
+}
+
+export const svitchStatusPoster = async (id) => {
+    try {
+        const response = await api.patch(`${SVITCH_STATUS_POSTER_URL}/${id}`);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+//!BONUSES
+
+export const getAllUserBonuses = async () => {
+    try {
+        const response = await api.get(BONUSES_USER_GET_ALL_URL);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+export const registerAdmin = async data => {
+try {
+    const response = await api.post(REGISTER_ADMIN_URL, data);
+    return response;
+} catch (error) {
+    return error;
+}
 }

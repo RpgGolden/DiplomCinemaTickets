@@ -17,8 +17,7 @@ function LeftMenu() {
         { id: 6, name: "Пользователи", link: "/adminPage/users" },
         { id: 7, name: "Новости", link: "/adminPage/news" },
         { id: 8, name: "Постеры", link: "/adminPage/posters" },
-        { id: 9, name: "Бонусы пользователей", link: "/adminPage/bonuses" },
-        { id: 10, name: "Категория мест", link: "/adminPage/categoryPlace" },
+        // { id: 9, name: "Категория мест", link: "/adminPage/categoryPlace" }, //Оно меня смущает, лень делать :)
         // { id: 7, name: "Типы мест", link: "/adminPage/typePlace" },
     ];
 

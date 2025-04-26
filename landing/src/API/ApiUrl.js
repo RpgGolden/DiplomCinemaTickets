@@ -36,3 +36,5 @@ export const TICKET_BOOKING_URL = '/tickets/bookingTickets';
 
 export const GET_ALL_NEWS_URL = '/news/getAllNewsForSite';
 export const GET_NEWS_URL = '/news/getNews';
+
+export const GET_ALL_POSTERS_URL = 'slider/getSliderForSite';

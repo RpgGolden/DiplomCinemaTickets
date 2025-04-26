@@ -10,10 +10,12 @@
         align-items: center;
         cursor: pointer;
         margin: 0px 20px;
+        background-color: #ffffff9f;
+        border-radius: 50%;
         svg{
-            width: 40px;
-            height: 40px;
-            color: #fff;
+            width: 60px;
+            height: 60px;
+            color: var(--secondary-color);
         }
         z-index: 10;
         position: absolute;
@@ -25,16 +27,15 @@
         }
     }
     .arrow:hover{
-        background-color: var(--secondary-color);
+        background-color: #ffffffc7;
     }
 }
 .sliderPromo{
     width: 100%;
-    height: 600px;
+    height: 350px;
     .image{
         width: 100%;
-        height: 800px;
-        object-fit: cover;
+        height: 350px;
     }
     .slide{
        position: absolute;

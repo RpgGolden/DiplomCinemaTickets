@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { openImageModal } from "../store/MoviesSlice/MoviesSlice";
-
+import { methodType, roleClient, ticketStatus, typeFilm } from "./Enums";
 export const movieColumns = [
   {
     accessorKey: 'id',
@@ -50,6 +50,7 @@ export const movieColumns = [
   {
     accessorKey: 'typeFilm',
     header: 'Тип',
+    Cell: ({ cell }) => typeFilm[cell.getValue()],
   },
   {
     accessorKey: "imageUrls",
@@ -137,13 +138,13 @@ export const sessionColumns = [
   },
   {
     accessorKey: "isActive",
-    header: "Активен",
-    cell: ({ row }) => (row.original.isActive ? "Да" : "Нет"), // Используем row.original для доступа к данным
+    header: "Статус",
+    Cell: ({ cell }) => (cell.getValue() ? "Активно" : "Не активно"), // Преобразуем булевое значение в строку
   },
   {
     accessorKey: "repeatDaily",
     header: "Повтор ежедневно",
-    cell: ({ row }) => (row.original.repeatDaily ? "Да" : "Нет"), // Используем row.original для доступа к данным
+    Cell: ({ cell }) => (cell.getValue() ? "Да" : "Нет"),
   },
   {
     accessorKey: "hall.name",
@@ -225,6 +226,7 @@ export const userColumns = [
   {
     accessorKey: "role",
     header: "Роль",
+    Cell: ({ cell }) => (roleClient[cell.getValue()]),
   },
 ]
 
@@ -295,10 +297,13 @@ export const requestColumns = [
   {
     accessorKey: "ticketStatus",
     header: "Статус",
+    Cell: ({ cell }) => (ticketStatus[cell.getValue()]),
   },
   {
     accessorKey: "paymentMethod",
     header: "Способ оплаты",
+    Cell: ({ cell }) => (methodType[cell.getValue()]),
+
   },
   {
     accessorKey: "seatNumber",
@@ -312,6 +317,7 @@ export const requestColumns = [
   {
     accessorKey: "sessionTime",
     header: "Время сеанса",
+    Сell: ({ cell }) => new Date(cell.getValue()).toLocaleDateString(),
   },
   {
     accessorKey: "movieTitle",
@@ -331,11 +337,21 @@ export const postersColumns = [
     header: "ID",
   },
   {
-    accessorKey: "date",
-    header: "Дата Создания",
+    accessorKey: "status",
+    header: "Статус",
+    Cell: ({ cell }) => (cell.getValue() ? "Активно" : "Не активно"), // Преобразуем булевое значение в строку
   },
   {
-    accessorKey: "imageUrls",
+    accessorKey: "priority",
+    header: "Приоритет",
+  },
+  {
+    accessorKey: "createdAt",
+    header: "Дата Создания",
+    Cell: ({ cell }) => new Date(cell.getValue()).toLocaleDateString(),
+  },
+  {
+    accessorKey: "imageUrl",
     header: "Изображение",
     Cell: ({ cell }) => {
       const imageUrl = cell.getValue(); // Получаем URL изображения
@@ -360,4 +376,27 @@ export const postersColumns = [
       );
     },
   },
+]
+
+export const bonusesColumns = [
+  {
+    accessorKey: "id",
+    header: "ID",
+  },
+  {
+    accessorKey: "surname",
+    header: "Фамилия",
+  },
+  {
+    accessorKey: "name",
+    header: "Имя",
+  },
+  {
+    accessorKey: "patronymic",
+    header: "Отчество",
+  },
+  {
+    accessorKey: "bonusPoints",
+    header: "Кол-во бонусов",
+  }
 ]

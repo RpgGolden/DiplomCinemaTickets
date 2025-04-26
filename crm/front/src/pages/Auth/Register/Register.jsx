@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Lock, Mail, User } from "lucide-react";
 import styles from "./Register.module.scss";
 import { useNavigate } from "react-router-dom";
-import { apiRegister } from "../../../API/apiRequest";
+import { registerAdmin } from "../../../API/apiRequest";
 
 function Register() {
     const [form, setForm] = useState({
@@ -42,10 +42,10 @@ function Register() {
                 email: form.email,
                 password: form.password,
             }
-            apiRegister(data).then((resp)=>{
+            registerAdmin(data).then((resp)=>{
                 if(resp?.status === 200){
                     console.log(resp)
-                    navigate("/HomePage")
+                    navigate("/adminPage/request")
                 }
             })
         }

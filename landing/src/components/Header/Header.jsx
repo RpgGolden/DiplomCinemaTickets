@@ -1,4 +1,4 @@
-import { DoorOpen, Instagram, Twitter, Facebook } from 'lucide-react';
+import { DoorOpen, LogOut, CircleUser } from 'lucide-react';
 import styles from './Header.module.scss';
 import logo from './../../assets/img/logo.svg';
 import { useNavigate } from 'react-router-dom';
@@ -15,8 +15,15 @@ function Header() {
         if(isAuthenticated){
             navigate('/profile');
         }else{
-            navigate('/login');
+            navigate('/');
         }
+    }
+
+    const logout = () =>{
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("role");
+        navigate('/');
     }
     return ( 
         <header className={styles.header}>
@@ -46,9 +53,12 @@ function Header() {
                         <Facebook />
                     </span>
                 </div> */}
-                <button className={styles.button} onClick={() => clickBtn()}>  
+                {/* <button className={styles.button} onClick={() => clickBtn()}>  
                     {isAuthenticated ? "Профиль" : <><DoorOpen />"Вход"</>}
-                </button>
+                </button> */}
+                <p> Бонусы: <span className={styles.colorBonuses}>123</span></p>
+                <CircleUser className={styles.headerIcon} onClick={() => clickBtn()}/>
+                <LogOut className={styles.headerIcon} onClick={() => logout()}/>
             </div>
             
         </header>
