@@ -181,4 +181,29 @@
   &:has(.trashIcon:hover) {
     background-color: var(--light-red); // светло-красный
   }
+
+    .paymentMethodDropdown {
+      width: 100%;
+      padding: 10px; 
+      margin-top: 10px; 
+      border-radius: 5px; 
+      border: 1px solid #ccc; 
+      font-size: 14px;
+      background-color: #fff;
+      transition: border-color 0.3s ease;
+      margin-left: 10px;
+      &:focus {
+        border-color: var(--primary-color); 
+        outline: none;
+      }
+
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+      cursor: pointer;
+    }
+
+    .label {
+      margin-right: 10px; // Отступ справа от текста
+    }
+    
 }
