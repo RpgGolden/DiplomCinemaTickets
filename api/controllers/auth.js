@@ -98,6 +98,23 @@ export default {
         }
     },
 
+    async deleteAccount(req, res) {
+        try {
+            const user = await User.findByPk(req.params.id);
+            if (!user) {
+                throw new AppErrorAlreadyExists('User not found');
+            }
+
+            await user.destroy({
+                force: true
+            });
+
+            return res.status(200).json({ message: 'Аккаунт удален' });
+        } catch (error) {
+            console.error(error)
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    },
     async addPaymentMethod(req, res) {
         try {
             const { methodType, details } = req.body;

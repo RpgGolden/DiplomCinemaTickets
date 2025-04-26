@@ -6,7 +6,7 @@ export const authenticateToken = async (req, res, next) => {
     try {
         // Получаем токен из заголовка Authorization
         const authHeader = req.headers.authorization;
-        const token = authHeader && authHeader.split(' ')[1];
+        const token = authHeader || authHeader.split(' ')[1];
         if (!token) {
             throw new AppErrorInvalid('No token provided');
         }
