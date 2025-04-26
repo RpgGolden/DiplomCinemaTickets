@@ -10,9 +10,18 @@ export default class Slider extends Model {
                     allowNull: false,
                     primaryKey: true,
                 },
-                images: {
+                image: {
                     type: DataTypes.STRING,
                 },
+                priority: {
+                    type: DataTypes.INTEGER,
+                    allowNull: true
+                },
+                status: {
+                    type: DataTypes.BOOLEAN,
+                    allowNull: true,
+                    defaultValue: false
+                }
             },
             {
                 sequelize,
