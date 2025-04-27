@@ -146,12 +146,13 @@ main {
 	// === Блок для таблицы билетов ===
 
 	.bonusTableWrapper {
-		max-height: 70vh;
-		overflow-y: auto;
-		background-color: #fff;
+		width: 100%;
+		max-width: 100%;
+		padding: 0;
+		background: white;
 		border-radius: 12px;
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-		padding: 16px;
+		overflow-x: auto;
+		box-sizing: border-box;
 	}
 
 	.bonusTable {
@@ -208,21 +209,36 @@ main {
 			padding-right: 120px;
 		}
 		// Стили для разных статусов
-		td.status.cancelled {
-			background-color: #ffecec;
-			color: #e74c3c;
+		td.status {
+			font-weight: 500;
+			font-size: 14px;
+			color: var(--primary-color);
+			background-color: #f6f6f6;
+			border-radius: 6px;
+			padding: 8px 12px;
+			display: inline-block;
+			min-width: 110px;
+			margin: 4px auto;
 		}
-		td.status.purchased {
-			background-color: #e0f7e9;
-			color: #27ae60;
+
+		.statusCancelled {
+			background-color: #ffebeb; /* Очень светлый розовый */
+			color: #d32f2f;
 		}
-		td.status.movie_started {
-			background-color: #e7f3ff;
-			color: #3498db;
+
+		.statusPurchased {
+			background-color: #e1f5e5; /* Очень светлый зелёный */
+			color: #2e7d32;
 		}
-		td.status.movie_ended {
-			background-color: #e0e0e0;
-			color: #606060;
+
+		.statusMovieStarted {
+			background-color: #e6f0fd; /* Очень светлый голубой */
+			color: #1976d2;
+		}
+
+		.statusMovieEnded {
+			background-color: #eeeeee; /* Очень светлый серый */
+			color: #757575;
 		}
 	}
 

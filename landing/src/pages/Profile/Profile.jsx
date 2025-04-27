@@ -87,16 +87,23 @@ function Profile() {
 	const getTicketStatusText = (status) => {
 		switch (status) {
 			case 'cancelled':
-				return 'Билет отменён';
+				return 'Билет отменен';
 			case 'purchased':
 				return 'Билет куплен';
 			case 'movie_started':
 				return 'Идет фильм';
 			case 'movie_ended':
-				return 'Просмотр завершён';
+				return 'Просмотр завершен';
 			default:
 				return 'Неизвестно';
 		}
+	};
+
+	const statusClassMap = {
+		cancelled: styles.statusCancelled,
+		purchased: styles.statusPurchased,
+		movie_started: styles.statusMovieStarted,
+		movie_ended: styles.statusMovieEnded,
 	};
 
 	const handleAddCard = async (e) => {
@@ -104,14 +111,12 @@ function Profile() {
 		console.log('нажал');
 		if (!validateCardNumber(cardNumber)) {
 			alert('Введите корректный номер карты (16 цифр без пробелов).');
-		
+
 			return;
 		}
 
 		if (!validateExpiryDate(expiryDate)) {
-			alert(
-				'Введите корректный срок действия карты в формате MM/YY.'
-			);
+			alert('Введите корректный срок действия карты в формате MM/YY.');
 			return;
 		}
 		if (!cardNumber || !expiryDate) {
@@ -234,13 +239,15 @@ function Profile() {
 
 		setSortedBonusHistory(sorted);
 	};
-
-	const handleCancelTicket = async (ticketId) => {
+	const handeConfirmCancelTicket = (ticketId) => {
 		const confirmed = window.confirm(
 			'Вы уверены, что хотите отменить билет?'
 		);
 		if (!confirmed) return;
 
+		handleCancelTicket(ticketId);
+	};
+	const handleCancelTicket = async (ticketId) => {
 		try {
 			const resp = await cancelUserTicket(ticketId);
 			if (resp?.status === 200) {
@@ -390,326 +397,355 @@ function Profile() {
 						</div>
 					</div>
 				</div>
-
 				<div className={styles.content}>
-					{activeTab === 'tickets' ? (
-						<div className={styles.section}>
-							<h2>Мои билеты</h2>
-							{sortedTickets.length > 0 ? (
-								<div className={styles.bonusTableWrapper}>
-									<table className={styles.bonusTable}>
-										<thead>
-											<tr>
-												<th
-													onClick={() =>
-														handleTicketSort(
-															'sessionTime'
-														)
-													}
-												>
-													Дата сеанса{' '}
-													{ticketSortConfig.key ===
-														'sessionTime' &&
-														(ticketSortConfig.direction ===
-														'asc'
-															? '↑'
-															: '↓')}
-												</th>
-												<th>Фильм</th>
-												<th>Ряд</th>
-												<th>Место</th>
-												<th
-													className={
-														styles.paymentMethod
-													}
-												>
-													Способ оплаты
-												</th>
-												<th
-													className={styles.price}
-													onClick={() =>
-														handleTicketSort(
-															'seatPrice'
-														)
-													}
-												>
-													Цена{' '}
-													{ticketSortConfig.key ===
-														'seatPrice' &&
-														(ticketSortConfig.direction ===
-														'asc'
-															? '↑'
-															: '↓')}
-												</th>
-												<th
-													onClick={() =>
-														handleTicketSort(
-															'ticketStatus'
-														)
-													}
-												>
-													Статус{' '}
-													{ticketSortConfig.key ===
-														'ticketStatus' &&
-														(ticketSortConfig.direction ===
-														'asc'
-															? '↑'
-															: '↓')}
-												</th>
-											</tr>
-										</thead>
-										<tbody>
-											{sortedTickets.map((ticket) => (
-												<tr key={ticket.ticketId}>
-													<td>
-														{ticket.sessionTime ||
-															'-'}
-													</td>
-													<td>
-														{ticket.movieTitle ||
-															'-'}
-													</td>
-													<td>
-														{ticket.rowNumber ||
-															'-'}
-													</td>
-													<td>
-														{ticket.seatNumber ||
-															'-'}
-													</td>
-													<td
+					<div className={styles.content}>
+						{activeTab === 'tickets' ? (
+							<div className={styles.section}>
+								<h2>Мои билеты</h2>
+								{sortedTickets.length > 0 ? (
+									<div className={styles.bonusTableWrapper}>
+										<table className={styles.bonusTable}>
+											<thead>
+												<tr>
+													<th
+														onClick={() =>
+															handleTicketSort(
+																'sessionTime'
+															)
+														}
+													>
+														Дата сеанса{' '}
+														{ticketSortConfig.key ===
+															'sessionTime' &&
+															(ticketSortConfig.direction ===
+															'asc'
+																? '↑'
+																: '↓')}
+													</th>
+													<th>Фильм</th>
+													<th>Ряд</th>
+													<th>Место</th>
+													<th
 														className={
 															styles.paymentMethod
 														}
 													>
-														{paymentMethodLabels[
-															ticket.paymentMethod
-														] || '-'}
-													</td>
-													<td
+														Способ оплаты
+													</th>
+													<th
 														className={styles.price}
+														onClick={() =>
+															handleTicketSort(
+																'seatPrice'
+															)
+														}
 													>
-														{ticket.seatPrice
-															? `${ticket.seatPrice} ₽`
-															: '-'}
-													</td>
-													<td>
-														<div
-															style={{
-																display:
-																	'inline-flex',
-																alignItems:
-																	'center',
-																justifyContent:
-																	ticket.ticketStatus ===
-																	'purchased'
-																		? 'space-between'
-																		: 'center',
-																gap: '8px',
-															}}
+														Цена{' '}
+														{ticketSortConfig.key ===
+															'seatPrice' &&
+															(ticketSortConfig.direction ===
+															'asc'
+																? '↑'
+																: '↓')}
+													</th>
+													<th
+														onClick={() =>
+															handleTicketSort(
+																'ticketStatus'
+															)
+														}
+													>
+														Статус{' '}
+														{ticketSortConfig.key ===
+															'ticketStatus' &&
+															(ticketSortConfig.direction ===
+															'asc'
+																? '↑'
+																: '↓')}
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+												{sortedTickets.map((ticket) => (
+													<tr key={ticket.ticketId}>
+														<td>
+															{ticket.sessionTime ||
+																'-'}
+														</td>
+														<td>
+															{ticket.movieTitle ||
+																'-'}
+														</td>
+														<td>
+															{ticket.rowNumber ||
+																'-'}
+														</td>
+														<td>
+															{ticket.seatNumber ||
+																'-'}
+														</td>
+														<td
+															className={
+																styles.paymentMethod
+															}
 														>
-															<span>
-																{ticket.ticketStatus
-																	? getTicketStatusText(
-																			ticket.ticketStatus
-																	  )
-																	: '-'}
-															</span>
-															{ticket.ticketStatus ===
-																'purchased' && (
-																<button
+															{paymentMethodLabels[
+																ticket
+																	.paymentMethod
+															] || '-'}
+														</td>
+														<td
+															className={
+																styles.price
+															}
+														>
+															{ticket.seatPrice
+																? `${ticket.seatPrice} ₽`
+																: '-'}
+														</td>
+														<td>
+															<div
+																style={{
+																	display:
+																		'inline-flex',
+																	alignItems:
+																		'center',
+																	justifyContent:
+																		ticket.ticketStatus ===
+																		'purchased'
+																			? 'space-between'
+																			: 'center',
+																	gap: '8px',
+																}}
+															>
+																<td
 																	className={
-																		styles.iconButton
-																	}
-																	onClick={() =>
-																		handleCancelTicket(
-																			ticket.ticketId
-																		)
+																		styles.status
 																	}
 																>
-																	<svg
-																		xmlns="http://www.w3.org/2000/svg"
-																		width="22"
-																		height="22"
-																		fill="currentColor"
-																		viewBox="0 0 16 16"
+																	<span
+																		className={
+																			statusClassMap[
+																				ticket
+																					.ticketStatus
+																			] ||
+																			''
+																		}
 																	>
-																		<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-																	</svg>
-																</button>
-															)}
-														</div>
-													</td>
+																		{ticket.ticketStatus
+																			? getTicketStatusText(
+																					ticket.ticketStatus
+																			  )
+																			: '-'}
+																	</span>
+																</td>
+																{ticket.ticketStatus ===
+																	'purchased' && (
+																	<button
+																		className={
+																			styles.iconButton
+																		}
+																		onClick={() =>
+																			handeConfirmCancelTicket(
+																				ticket.ticketId
+																			)
+																		}
+																	>
+																		<svg
+																			xmlns="http://www.w3.org/2000/svg"
+																			width="22"
+																			height="22"
+																			fill="currentColor"
+																			viewBox="0 0 16 16"
+																		>
+																			<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+																		</svg>
+																	</button>
+																)}
+															</div>
+														</td>
+													</tr>
+												))}
+											</tbody>
+										</table>
+									</div>
+								) : (
+									<p>Нет доступных билетов</p>
+								)}
+							</div>
+						) : activeTab === 'history' ? (
+							<div className={styles.section}>
+								<h2>История начисления бонусов</h2>
+								{sortedBonusHistory.length > 0 ? (
+									<div className={styles.bonusTableWrapper}>
+										<table className={styles.bonusTable}>
+											<thead>
+												<tr>
+													<th
+														onClick={() =>
+															handleSort(
+																'createdAt'
+															)
+														}
+													>
+														Дата{' '}
+														{sortConfig.key ===
+															'createdAt' &&
+															(sortConfig.direction ===
+															'asc'
+																? '↑'
+																: '↓')}
+													</th>
+													<th>Описание</th>
+													<th
+														onClick={() =>
+															handleSort(
+																'ticketPrice'
+															)
+														}
+													>
+														Цена билета{' '}
+														{sortConfig.key ===
+															'ticketPrice' &&
+															(sortConfig.direction ===
+															'asc'
+																? '↑'
+																: '↓')}
+													</th>
+													<th
+														onClick={() =>
+															handleSort('amount')
+														}
+													>
+														Бонусы{' '}
+														{sortConfig.key ===
+															'amount' &&
+															(sortConfig.direction ===
+															'asc'
+																? '↑'
+																: '↓')}
+													</th>
 												</tr>
-											))}
-										</tbody>
-									</table>
-								</div>
-							) : (
-								<p>Нет доступных билетов</p>
-							)}
-						</div>
-					) : activeTab === 'history' ? (
-						<div className={styles.section}>
-							<h2>История начисления бонусов</h2>
-							{sortedBonusHistory.length > 0 ? (
-								<div className={styles.bonusTableWrapper}>
-									<table className={styles.bonusTable}>
-										<thead>
-											<tr>
-												<th
-													onClick={() =>
-														handleSort('createdAt')
+											</thead>
+											<tbody>
+												{sortedBonusHistory.map(
+													(bonus) => (
+														<tr key={bonus.id}>
+															<td>
+																{bonus.createdAt
+																	? new Date(
+																			bonus.createdAt
+																	  ).toLocaleDateString()
+																	: '-'}
+															</td>
+															<td>
+																{bonus.description ||
+																	'-'}
+															</td>
+															<td>
+																{bonus.ticketPrice
+																	? `${bonus.ticketPrice} ₽`
+																	: '-'}
+															</td>
+															<td>
+																{bonus.amount >
+																0
+																	? `+${bonus.amount}`
+																	: bonus.amount}
+															</td>
+														</tr>
+													)
+												)}
+											</tbody>
+										</table>
+									</div>
+								) : (
+									<p>Нет начислений</p>
+								)}
+							</div>
+						) : null}
+						{activeTab === 'addCard' && (
+							<div className={styles.addCardSection}>
+								<h2>Добавить карту</h2>
+
+								<form
+									onSubmit={handleAddCard}
+									className={styles.addCardForm}
+								>
+									<input
+										type="text"
+										placeholder="Номер карты"
+										value={cardNumber}
+										onChange={handleCardNumberChange}
+										className={styles.input}
+									/>
+
+									<input
+										type="text"
+										placeholder="Срок действия (например, 09/26)"
+										value={expiryDate}
+										onChange={handleExpiryDateChange}
+										className={styles.input}
+									/>
+
+									<button type="submit">Добавить</button>
+								</form>
+
+								<h3>Ваши карты:</h3>
+								<ul className={styles.cardsList}>
+									{userPaymentMethods.length > 0 ? (
+										userPaymentMethods.map((method) => (
+											<li key={method.id}>
+												<div
+													className={
+														styles.cardDetails
 													}
 												>
-													Дата{' '}
-													{sortConfig.key ===
-														'createdAt' &&
-														(sortConfig.direction ===
-														'asc'
-															? '↑'
-															: '↓')}
-												</th>
-												<th>Описание</th>
-												<th
+													<span>
+														Карта:{' '}
+														{
+															method?.details
+																?.card_number
+														}
+													</span>
+													<span>
+														Срок действия:{' '}
+														{
+															method?.details
+																?.expiry_date
+														}
+													</span>
+												</div>
+												<button
 													onClick={() =>
-														handleSort(
-															'ticketPrice'
+														handleDeleteCardWithConfirm(
+															method
 														)
 													}
-												>
-													Цена билета{' '}
-													{sortConfig.key ===
-														'ticketPrice' &&
-														(sortConfig.direction ===
-														'asc'
-															? '↑'
-															: '↓')}
-												</th>
-												<th
-													onClick={() =>
-														handleSort('amount')
+													className={
+														styles.deleteButton
 													}
+													aria-label="Удалить карту"
 												>
-													Бонусы{' '}
-													{sortConfig.key ===
-														'amount' &&
-														(sortConfig.direction ===
-														'asc'
-															? '↑'
-															: '↓')}
-												</th>
-											</tr>
-										</thead>
-										<tbody>
-											{sortedBonusHistory.map((bonus) => (
-												<tr key={bonus.id}>
-													<td>
-														{bonus.createdAt
-															? new Date(
-																	bonus.createdAt
-															  ).toLocaleDateString()
-															: '-'}
-													</td>
-													<td>
-														{bonus.description ||
-															'-'}
-													</td>
-													<td>
-														{bonus.ticketPrice
-															? `${bonus.ticketPrice} ₽`
-															: '-'}
-													</td>
-													<td>
-														{bonus.amount > 0
-															? `+${bonus.amount}`
-															: bonus.amount}
-													</td>
-												</tr>
-											))}
-										</tbody>
-									</table>
-								</div>
-							) : (
-								<p>Нет начислений</p>
-							)}
-						</div>
-					) : null}
-					{activeTab === 'addCard' && (
-						<div className={styles.addCardSection}>
-							<h2>Добавить карту</h2>
-
-							<form
-								onSubmit={handleAddCard}
-								className={styles.addCardForm}
-							>
-								<input
-									type="text"
-									placeholder="Номер карты"
-									value={cardNumber}
-									onChange={handleCardNumberChange}
-									className={styles.input}
-								/>
-
-								<input
-									type="text"
-									placeholder="Срок действия (например, 09/26)"
-									value={expiryDate}
-									onChange={handleExpiryDateChange}
-									className={styles.input}
-								/>
-
-								<button type="submit">Добавить</button>
-							</form>
-
-							<h3>Ваши карты:</h3>
-							<ul className={styles.cardsList}>
-								{userPaymentMethods.length > 0 ? (
-									userPaymentMethods.map((method) => (
-										<li key={method.id}>
-											<div className={styles.cardDetails}>
-												<span>
-													Карта:{' '}
-													{
-														method?.details
-															?.card_number
-													}
-												</span>
-												<span>
-													Срок действия:{' '}
-													{
-														method?.details
-															?.expiry_date
-													}
-												</span>
-											</div>
-											<button
-												onClick={() =>
-													handleDeleteCardWithConfirm(
-														method
-													)
-												}
-												className={styles.deleteButton}
-												aria-label="Удалить карту"
-											>
-												<svg
-													xmlns="http://www.w3.org/2000/svg"
-													width="22"
-													height="22"
-													fill="currentColor"
-													viewBox="0 0 16 16"
-												>
-													<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-												</svg>
-											</button>
-										</li>
-									))
-								) : (
-									<li>Нет добавленных карт.</li> // <--- заменил <p> на <li> чтобы всё было валидно
-								)}
-							</ul>
-						</div>
-					)}
+													<svg
+														xmlns="http://www.w3.org/2000/svg"
+														width="22"
+														height="22"
+														fill="currentColor"
+														viewBox="0 0 16 16"
+													>
+														<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+													</svg>
+												</button>
+											</li>
+										))
+									) : (
+										<li>Нет добавленных карт.</li> // <--- заменил <p> на <li> чтобы всё было валидно
+									)}
+								</ul>
+							</div>
+						)}
+					</div>
 				</div>
 			</div>
 		</main>
