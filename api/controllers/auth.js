@@ -34,7 +34,7 @@ export default {
                 cash: { userId: user.id, methodType: 'cash' },
                 bonus: { userId: user.id, methodType: 'bonus' },
             };
-
+            const userBonus = await UserBonus.findOne({ where: { userId: user.id } });
             // Сохраняем методы оплаты в базе данных
             await UserPaymentMethod.bulkCreate(Object.values(paymentMethods));
 
@@ -52,6 +52,7 @@ export default {
                 accessToken,
                 refreshToken,
                 paymentMethods: userData.UserPaymentMethods,
+                userBonus: userBonus.bonusPoints
             });
         } catch (error) {
             console.error(error);
@@ -179,7 +180,7 @@ export default {
 
         const user = await User.findOne({
             where: { email },
-            include: [{ model: UserPaymentMethod }],
+            include: [{ model: UserPaymentMethod }, { model: UserBonus }],
         });
 
         if (!user) {
@@ -195,10 +196,9 @@ export default {
         // Генерация access и refresh токенов
         const { accessToken, refreshToken } = jwtUtils.generate({ id: user.id });
         await jwtUtils.saveToken(user.id, refreshToken);
-
         // Возврат ответа с токенами, информацией о пользователе и методами оплаты
         const authDto = new AuthDto(user);
-        return res.json({ ...authDto, accessToken, refreshToken, userPaymentMethod: user.UserPaymentMethods || null });
+        return res.json({ ...authDto, accessToken, refreshToken, userPaymentMethod: user.UserPaymentMethods || null, userBonus: user.UserBonu.bonusPoints});
     },
     async logout(req, res) {
         const { refreshToken } = req.body;

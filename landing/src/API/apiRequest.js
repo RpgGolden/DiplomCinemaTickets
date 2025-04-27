@@ -30,10 +30,12 @@ export const logout = async () => {
 export const apiRegister = async data => {
     try {
     const response = await api.post(AUTH_REGISTRATION_URL, data);
-    const { accessToken, refreshToken, role,  } = response.data;
+    const { accessToken, refreshToken, role, userBonus } = response.data;
     localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('refreshToken', refreshToken);
     localStorage.setItem('role', role);
+
+    localStorage.setItem('userBonus', userBonus)
     return response;
     } catch (error) {
     alert('Регистрация не прошла!');
@@ -44,10 +46,13 @@ export const apiRegister = async data => {
 export const apiLogin = async UserData => {
     try {
         const response = await api.post(AUTH_LOGIN_URL, UserData);
-        const { accessToken, refreshToken, role,  } = response.data;
+        const { accessToken, refreshToken, role, userBonus  } = response.data;
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('refreshToken', refreshToken);
         localStorage.setItem('role', role);
+
+        localStorage.setItem('userBonus', userBonus)
+
         return response;
     } catch (error) {
         return error;

@@ -3,11 +3,19 @@ import styles from './Header.module.scss';
 import logo from './../../assets/img/logo.svg';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/UseAuth';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import DataContext from '../../context';
 function Header() {
-      const { isAuthenticated } = useAuth();
-      const { openModalPromotions } = useContext(DataContext);
+    const { isAuthenticated } = useAuth();
+    const { openModalPromotions } = useContext(DataContext);
+    const [userBonus, setUserBonus] = useState(0);
+
+    useEffect(() => {
+        const bonus = localStorage.getItem('userBonus');
+        if (bonus) {
+            setUserBonus(bonus);
+        }
+    }, []);
 
     const navigate = useNavigate();
 
@@ -56,7 +64,7 @@ function Header() {
                 {/* <button className={styles.button} onClick={() => clickBtn()}>  
                     {isAuthenticated ? "Профиль" : <><DoorOpen />"Вход"</>}
                 </button> */}
-                <p> Бонусы: <span className={styles.colorBonuses}>123</span></p>
+                <p>Бонусы: <span className={styles.colorBonuses}>{userBonus}</span></p>
                 <CircleUser className={styles.headerIcon} onClick={() => clickBtn()}/>
                 <LogOut className={styles.headerIcon} onClick={() => logout()}/>
             </div>
