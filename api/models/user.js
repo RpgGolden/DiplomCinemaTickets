@@ -57,6 +57,10 @@ export default class User extends Model {
                     },
                     defaultValue: EnumRoles.ADMINISTRATOR,
                 },
+                avatar: {
+                    type: DataTypes.STRING,
+                    allowNull: true
+                }
             },
             {
                 sequelize,

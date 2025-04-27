@@ -51,4 +51,6 @@ app.use('/promotion', promotionRoute);
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+
+
 app.listen(PORT, () => console.log(`Listen on :${PORT}`));

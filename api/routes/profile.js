@@ -4,7 +4,7 @@ import { asyncRoute } from '../utils/errors.js';
 import { authenticateToken } from '../middlewares/checkToken.js';
 import checkRole from '../middlewares/checkRoles.js';
 import roles from '../config/roles.js';
-
+import upload from '../utils/multerConfig.js';
 const router = Router();
 
 router
@@ -37,6 +37,15 @@ router
         authenticateToken,
         asyncRoute(checkRole([roles.ADMINISTRATOR, roles.SUPERADMIN])),
         asyncRoute(profileController.getAllUsers)
+    );
+
+router
+    .route('/uploadAvatar')
+    .post(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.SUPERADMIN, roles.CLIENT])),
+        upload.single('image'),
+        asyncRoute(profileController.uploadAvatar)
     );
 
 export default router;

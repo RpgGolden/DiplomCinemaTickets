@@ -13,7 +13,11 @@ import { AUTH_LOGIN_URL,
         MOVIE_GET_HITS_URL,
         GET_USER_BONUS_URL,
         GET_ALL_POSTERS_URL,
-        GET_DATA_PROFILE
+        GET_DATA_PROFILE,
+        GET_BONUS_HISTORY_URL,
+        UPLOAD_PROFILE_IMAGE_URL,
+        GET_USER_TICKETS_URL,
+        CANCEL_USER_TICKET_URL
      } from './ApiUrl';
 import api from './axios';
 
@@ -184,6 +188,42 @@ export const getUserBonus = async () =>{
 export const getDataProfile = async () => {
     try {
         const response = await api.get(GET_DATA_PROFILE);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+export const getBonusHistory = async () => {
+    try {
+        const response = await api.get(GET_BONUS_HISTORY_URL);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+export const uploadProfileImage = async data => {
+    try {
+        const response = await api.post(UPLOAD_PROFILE_IMAGE_URL, data);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+export const getUserTickets = async () => {
+    try {
+        const response = await api.get(GET_USER_TICKETS_URL);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+export const cancelUserTicket = async id => {
+    try {
+        const response = await api.delete(`${CANCEL_USER_TICKET_URL}/${id}`);
         return response;
     } catch (error) {
         return error;

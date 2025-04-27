@@ -7,6 +7,7 @@ class UserDto {
     email;
     role;
     paymentMethods;
+    avatar
 
     constructor(user, paymentMethods = [] || null) {
         this.id = user.id;
@@ -16,6 +17,7 @@ class UserDto {
         this.email = user.email;
         this.role = rolesMap[user.role];
         this.paymentMethods = paymentMethods || null;
+        this.avatar = user.avatar ? `${process.env.HOST}/${user.avatar}` : null;
     }
 }
 

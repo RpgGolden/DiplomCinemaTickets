@@ -1,5 +1,6 @@
 import { AppErrorAlreadyExists, AppErrorMissing } from '../utils/errors.js';
 import User from '../models/user.js';
+import path from 'path';
 
 import 'dotenv/config';
 import UserPaymentMethod from '../models/user-payment-methods.js';
@@ -73,16 +74,43 @@ export default {
             if (!user) {
                 throw new AppErrorAlreadyExists('User not found');
             }
-
+            console.log(user)
             let userDto = '';
             // Создаем DTO для пользователя
             if (user.role === roles.CLIENT) {
+                console.log('tyt')
                 userDto = new UserDto(user, user.UserPaymentMethods);
             } else {
                 userDto = new ProfileAdminDto(user);
             }
 
             return res.status(200).json(userDto);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    },
+
+    async uploadAvatar(req, res) {
+        try {
+            const userId = req.user.id;
+            const image = req.file ? path.posix.join('uploads', 'avatar', req.file.filename) : null;
+
+            if (!userId || !image) {
+                throw new AppErrorMissing('User ID and image are required');
+            }
+
+            // Проверяем, существует ли пользователь
+            const user = await User.findByPk(userId);
+
+            if (!user) {
+                throw new AppErrorMissing('User not found');
+            }
+
+            // Обновляем информацию о пользователе
+            await user.update({ avatar: image });
+
+            return res.status(200).json({ message: 'Avatar uploaded successfully' });
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Internal server error' });

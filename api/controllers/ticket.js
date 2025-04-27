@@ -58,6 +58,7 @@ export default {
                     throw new AppErrorInvalid('Not enough bonus points to complete the purchase');
                 }
             }
+
             let totalEarnedBonusPoints;
             const ticketPromises = availableSeats.map(async seat => {
                 const seatPrice = seat.SeatPriceCategory.price;
@@ -71,11 +72,12 @@ export default {
                 });
 
                 // Обновляем статус места на "занято"
-                seat.isAvailable = false; // Должно быть false, а не true
+                seat.isAvailable = false;
                 await seat.save();
 
                 totalEarnedBonusPoints = Math.floor(totalTicketPrice * 0.1);
-                // Создаем запись в UserBonusHistory
+
+                // Создаем запись в UserBonusHistory для начисления бонусов
                 await UserBonusHistory.create({
                     userId,
                     ticketId: ticket.id,
@@ -89,16 +91,28 @@ export default {
 
             const ticketsInfo = await Promise.all(ticketPromises);
 
-            // Начисляем бонусы пользователю
-
-            // Если способ оплаты - бонус, списываем бонусы
+            // Списание или начисление бонусов в зависимости от способа оплаты
             if (userPaymentMethod.methodType === 'bonus') {
+                // Списание бонусов
                 await UserBonus.update(
                     { bonusPoints: userData.UserBonu.bonusPoints - totalTicketPrice },
                     { where: { userId } }
                 );
+
+                // Добавление записи в UserBonusHistory для списания
+                await Promise.all(
+                    ticketsInfo.map(info =>
+                        UserBonusHistory.create({
+                            userId,
+                            ticketId: info.ticket.id,
+                            amount: -info.seatPrice,
+                            ticketPrice: info.seatPrice,
+                            description: 'Списание бонусов за покупку билета',
+                        })
+                    )
+                );
             } else {
-                // Если не бонус, просто начисляем бонусы
+                // Начисление бонусов
                 await UserBonus.update(
                     { bonusPoints: userData.UserBonu.bonusPoints + totalEarnedBonusPoints },
                     { where: { userId } }
@@ -110,17 +124,17 @@ export default {
             // Отправляем подтверждение на почту для каждого билета
             await Promise.all(
                 ticketsInfo.map((info, index) => {
-                    const seat = availableSeats[index]; // Получаем соответствующее место
+                    const seat = availableSeats[index];
                     return sendTicketConfirmationEmail(
-                        userData.email, // Email пользователя
-                        userData.name, // Имя пользователя
-                        info.ticket.id, // ID билета
-                        session.Movie.title, // Название фильма
-                        seat.seatNumber, // Номер места
-                        seat.rowNumber, // Номер ряда
-                        formattedSessionTime, // Дата мероприятия
-                        info.seatPrice, // Цена места
-                        info.ticket.paymentMethod // Способ оплаты
+                        userData.email,
+                        userData.name,
+                        info.ticket.id,
+                        session.Movie.title,
+                        seat.seatNumber,
+                        seat.rowNumber,
+                        formattedSessionTime,
+                        info.seatPrice,
+                        info.ticket.paymentMethod
                     );
                 })
             );

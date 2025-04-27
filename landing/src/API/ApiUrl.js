@@ -38,5 +38,10 @@ export const GET_ALL_NEWS_URL = '/news/getAllNewsForSite';
 export const GET_NEWS_URL = '/news/getNews';
 
 export const GET_ALL_POSTERS_URL = 'slider/getSliderForSite';
+//Профиль
 export const GET_USER_BONUS_URL = 'userBonus/getUserBonus';
 export const GET_DATA_PROFILE = 'profile/getProfile';
+export const GET_BONUS_HISTORY_URL = 'userBonus/getBonusHistory';
+export const UPLOAD_PROFILE_IMAGE_URL = 'profile/uploadAvatar';
+export const GET_USER_TICKETS_URL = 'tickets/getAllTicketsUser';
+export const CANCEL_USER_TICKET_URL = 'tickets/cancelTicket';

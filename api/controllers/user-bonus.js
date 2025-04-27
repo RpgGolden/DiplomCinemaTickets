@@ -13,7 +13,6 @@ export default {
         try {
             const userId = req.user.id;
             const history = await UserBonusHistory.findAll({ where: { userId }, order: [['createdAt', 'DESC']] });
-
             // Получаем информацию о билетах для каждого элемента истории
             const historyDto = await Promise.all(
                 history.map(async item => {

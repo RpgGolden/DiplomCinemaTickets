@@ -1,9 +1,272 @@
-@import "./../../styles/colors.scss";
-@import "./../../styles/mixin.scss";
+@import './../../styles/colors.scss';
+@import './../../styles/mixin.scss';
 
-.Profile{
-    p{
-        color: var(--primary-color);
-        font-size: 20px;
-    }
+main {
+	background-color: var(--color-gray);
+}
+
+.Profile {
+	display: flex;
+	height: calc(100vh - 95px);
+	overflow: hidden;
+
+	.sidebar {
+		width: 250px;
+		background-color: var(--primary-color);
+		padding: 20px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 20px;
+
+		.userInfo {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			text-align: center;
+
+			.avatarUpload {
+				cursor: pointer;
+				position: relative;
+				width: 68px;
+				height: 68px;
+				background-color: var(--secondary-color);
+				border: 2px solid var(--background-color);
+				border-radius: 50%;
+				overflow: hidden;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+
+				input {
+					display: none;
+				}
+
+				&:hover .hoverOverlay {
+					opacity: 1;
+					transform: scale(1.05);
+				}
+			}
+
+			.avatar,
+			.avatarPlaceholder {
+				width: 100%;
+				height: 100%;
+				border-radius: 50%;
+				object-fit: cover;
+				@include flex-center;
+				overflow: hidden;
+				position: relative;
+				background: none;
+			}
+
+			.avatarPlaceholder {
+				color: var(--background-color);
+				font-size: 24px;
+				font-weight: bold;
+				text-transform: uppercase;
+			}
+
+			.hoverOverlay {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background-color: rgba(0, 0, 0, 0.4);
+				color: #ffffff;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 12px;
+				font-weight: bold;
+				border-radius: 50%;
+				opacity: 0;
+				transition: opacity 0.3s, transform 0.3s;
+				pointer-events: none;
+				text-align: center;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+
+			p {
+				color: var(--background-color);
+				font-size: 16px;
+				word-break: break-word;
+				margin: 4px 0;
+			}
+		}
+
+		.menu {
+			width: 100%;
+			margin-top: 30px;
+
+			.menuItem {
+				padding: 12px;
+				color: var(--background-color);
+				font-size: 18px;
+				border-radius: 8px;
+				text-align: center;
+				@include hover-opacity;
+
+				&.active {
+					background-color: var(--secondary-color);
+				}
+			}
+		}
+	}
+
+	.content {
+		flex-grow: 1;
+		background-color: var(--background-color);
+		padding: 20px;
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+
+		.section {
+			flex-grow: 1;
+			overflow-y: auto;
+			background: var(--color-gray);
+			padding: 20px;
+			border-radius: 8px;
+
+			h2 {
+				color: var(--primary-color);
+				margin-bottom: 20px;
+			}
+
+			p {
+				color: var(--text-color);
+			}
+		}
+	}
+
+	// === Блок для таблицы билетов ===
+
+	.bonusTableWrapper {
+		max-height: 70vh;
+		overflow-y: auto;
+		background-color: #fff;
+		border-radius: 12px;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+		padding: 16px;
+	}
+
+	.bonusTable {
+		width: 100%;
+		border-collapse: collapse;
+		min-width: 600px;
+
+		thead {
+			background-color: #f9f9f9;
+		}
+
+		th,
+		td {
+			padding: 12px 16px;
+			text-align: left;
+			border-bottom: 1px solid #eee;
+		}
+
+		tbody tr:last-child td {
+			border-bottom: none;
+		}
+
+		// Специально для столбца Статус
+		th.status,
+		td.status {
+			width: 140px;
+			text-align: center;
+			white-space: nowrap;
+		}
+
+		td.status {
+			font-weight: 500;
+			font-size: 14px;
+			color: var(--primary-color);
+			background-color: #f6f6f6;
+			border-radius: 6px;
+			padding: 8px 12px;
+			display: inline-block;
+			min-width: 110px;
+			margin: 4px auto;
+		}
+
+		th.paymentMethod,
+		td.paymentMethod {
+			width: 160px;
+			text-align: center;
+			white-space: nowrap;
+		}
+
+		th.price,
+		td.price {
+			width: 100px;
+			text-align: center;
+			padding-right: 120px;
+		}
+		// Стили для разных статусов
+		td.status.cancelled {
+			background-color: #ffecec;
+			color: #e74c3c;
+		}
+		td.status.purchased {
+			background-color: #e0f7e9;
+			color: #27ae60;
+		}
+		td.status.movie_started {
+			background-color: #e7f3ff;
+			color: #3498db;
+		}
+		td.status.movie_ended {
+			background-color: #e0e0e0;
+			color: #606060;
+		}
+	}
+
+	// Стилизация скроллбара
+	.bonusTableWrapper::-webkit-scrollbar {
+		width: 8px;
+	}
+	.bonusTableWrapper::-webkit-scrollbar-thumb {
+		background-color: rgba(0, 0, 0, 0.2);
+		border-radius: 8px;
+	}
+	.bonusTableWrapper::-webkit-scrollbar-track {
+		background: transparent;
+	}
+	.cancelButton {
+		background-color: #ff4d4f;
+		color: white;
+		border: none;
+		padding: 6px 12px;
+		border-radius: 4px;
+		cursor: pointer;
+		transition: background-color 0.2s;
+
+		&:hover {
+			background-color: #d9363e;
+		}
+	}
+
+	.cancelButton {
+		margin-top: 8px;
+	}
+	.iconButton {
+		background: transparent;
+		border: none;
+		padding: 0;
+		margin-left: 8px;
+		color: #ff4d4f;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		&:hover {
+			color: #ff7875;
+		}
+	}
 }
