@@ -59,7 +59,7 @@ export default {
                     id,
                     methodType: 'cards',
                     userId,
-                }
+                },
             });
 
             if (!paymentMethod) {
@@ -151,6 +151,25 @@ export default {
         }
     },
 
+    async getAllUserPaymentMethods(req, res) {
+        try {
+            const userId = req.user.id;
+
+            // Проверяем, существует ли пользователь
+            const user = await User.findByPk(userId);
+
+            if (!user) {
+                throw new AppErrorAlreadyExists('User not found');
+            }
+
+            const paymentMethods = await UserPaymentMethod.findAll({ where: { userId } });
+
+            return res.status(200).json(paymentMethods);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    },
     async uploadAvatar(req, res) {
         try {
             const userId = req.user.id;

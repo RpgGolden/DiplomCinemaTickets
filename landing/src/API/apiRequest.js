@@ -20,7 +20,8 @@ import { AUTH_LOGIN_URL,
         CANCEL_USER_TICKET_URL,
         GET_PAYMENT_METHODS_URL,
         CREATE_PAYMENT_METHODS_URL,
-        DELETE_PAYMENT_METHOD_URL
+        DELETE_PAYMENT_METHOD_URL,
+        GET_ALL_PAYMENT_METHODS_URL
      } from './ApiUrl';
 import api from './axios';
 
@@ -254,6 +255,15 @@ export const createPaymentMethods = async data => {
 export const deletePaymentMethod = async id => {
     try {
         const response = await api.delete(`${DELETE_PAYMENT_METHOD_URL}/${id}`);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+export const getAllUserPaymentMethods = async () => {
+    try {
+        const response = await api.get(GET_ALL_PAYMENT_METHODS_URL);
         return response;
     } catch (error) {
         return error;

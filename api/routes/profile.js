@@ -48,6 +48,13 @@ router
     );
 
 router
+    .route('/getAllUserPaymentMethods')
+    .get(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.SUPERADMIN, roles.CLIENT])),
+        asyncRoute(profileController.getAllUserPaymentMethods)
+    );
+router
     .route('/deletePaymentMethod/:id')
     .delete(
         authenticateToken,

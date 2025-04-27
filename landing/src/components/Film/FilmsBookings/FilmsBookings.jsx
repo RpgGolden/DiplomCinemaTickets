@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styles from "./FilmBookings.module.scss";
-import { getOneSession, bookingTickets } from "../../../API/apiRequest";
+import { getOneSession, bookingTickets, getAllUserPaymentMethods  } from "../../../API/apiRequest";
 import { useContext } from "react";
 import DataContext from "../../../context";
 import Loader from "../../Loader/Loader";
@@ -34,13 +34,18 @@ function FilmBookings(props) {
           }))
         );
       }
+
+      getAllUserPaymentMethods().then((res) => {
+        if (res.status === 200) {
+          setPaymentMethods(res.data);
+        } else {
+          console.error('Ошибка при получении способов оплаты');
+        }
+      }).catch((error) => {
+        console.error('Ошибка при получении способов оплаты:', error);
+      });
     });
 
-    // Load payment methods from local storage
-    const storedPaymentMethods = localStorage.getItem('userPaymentMethod');
-    if (storedPaymentMethods) {
-      setPaymentMethods(JSON.parse(storedPaymentMethods));
-    }
   }, [props.session]);
 
   useEffect(() => {
@@ -181,7 +186,7 @@ function FilmBookings(props) {
           <strong>Итоговая стоимость:</strong> {totalPrice} руб.
         </div>
 
-        {/* Payment Method Dropdown */}
+       {/* Payment Method Dropdown */}
         <div className={styles.selection}>
           <strong className={styles.label}>Способ оплаты:</strong>
           <select

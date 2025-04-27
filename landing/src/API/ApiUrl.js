@@ -46,6 +46,8 @@ export const UPLOAD_PROFILE_IMAGE_URL = 'profile/uploadAvatar';
 export const GET_USER_TICKETS_URL = 'tickets/getAllTicketsUser';
 export const CANCEL_USER_TICKET_URL = 'tickets/cancelTicket';
 export const GET_PAYMENT_METHODS_URL = 'profile/getPaymentMethods'
+export const GET_ALL_PAYMENT_METHODS_URL = 'profile/getAllUserPaymentMethods'
+
 export const CREATE_PAYMENT_METHODS_URL = 'profile/addPaymentMethod'
 
 export const DELETE_PAYMENT_METHOD_URL = 'profile/deletePaymentMethod'
