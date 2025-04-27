@@ -11,15 +11,16 @@ import {
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import basicSlice from "./basicSlice/basic.Slice.js";
-
+import userDataSlice from "./userDataSlice/userDataSlice.js";
 const rootReducer = combineReducers({
   BasicSlice: basicSlice,
+  userDataSlice: userDataSlice,
 });
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["BasicSlice",],
+  whitelist: ["BasicSlice", "userDataSlice"],
   // blacklist: ["editColumTableSlice", "isCheckedSlice"],
 };
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -5,16 +5,17 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/UseAuth';
 import { useContext, useEffect, useState } from 'react';
 import DataContext from '../../context';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUserBonuses } from '../../store/userDataSlice/userDataSlice';
 function Header() {
     const { isAuthenticated } = useAuth();
     const { openModalPromotions } = useContext(DataContext);
     const [userBonus, setUserBonus] = useState(0);
-
+    const UserData = useSelector((state) => state.userDataSlice);
+    const dispatch = useDispatch();
     useEffect(() => {
-        const bonus = localStorage.getItem('userBonus');
-        if (bonus) {
-            setUserBonus(bonus);
-        }
+        dispatch(fetchUserBonuses());
+      console.log('UserData', UserData)
     }, []);
 
     const navigate = useNavigate();
@@ -64,7 +65,7 @@ function Header() {
                 {/* <button className={styles.button} onClick={() => clickBtn()}>  
                     {isAuthenticated ? "Профиль" : <><DoorOpen />"Вход"</>}
                 </button> */}
-                <p>Бонусы: <span className={styles.colorBonuses}>{userBonus}</span></p>
+                <p>Бонусы: <span className={styles.colorBonuses}>{UserData?.userBonuses}</span></p>
                 <CircleUser className={styles.headerIcon} onClick={() => clickBtn()}/>
                 <LogOut className={styles.headerIcon} onClick={() => logout()}/>
             </div>

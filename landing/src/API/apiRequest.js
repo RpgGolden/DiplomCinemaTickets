@@ -11,7 +11,9 @@ import { AUTH_LOGIN_URL,
         GET_NEWS_URL,
         MOVIE_GET_COMING_SOON_URL,
         MOVIE_GET_HITS_URL,
-        GET_ALL_POSTERS_URL
+        GET_USER_BONUS_URL,
+        GET_ALL_POSTERS_URL,
+        GET_DATA_PROFILE
      } from './ApiUrl';
 import api from './axios';
 
@@ -164,6 +166,24 @@ export const getOneNews = async id => {
 export const getAllPosters = async () => {
     try {
         const response = await api.get(GET_ALL_POSTERS_URL);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+export const getUserBonus = async () =>{
+    try {
+        const response = await api.get(GET_USER_BONUS_URL);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+export const getDataProfile = async () => {
+    try {
+        const response = await api.get(GET_DATA_PROFILE);
         return response;
     } catch (error) {
         return error;

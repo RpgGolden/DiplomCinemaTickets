@@ -1,0 +1,9 @@
+@import "./../../styles/colors.scss";
+@import "./../../styles/mixin.scss";
+
+.Profile{
+    p{
+        color: var(--primary-color);
+        font-size: 20px;
+    }
+}

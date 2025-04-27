@@ -5,6 +5,8 @@ import { useContext } from "react";
 import DataContext from "../../../context";
 import Loader from "../../Loader/Loader";
 import { Trash2 } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { fetchUserBonuses } from "../../../store/userDataSlice/userDataSlice";
 
 function FilmBookings(props) {
   const [sessionInfo, setSessionInfo] = useState(null);
@@ -71,7 +73,7 @@ function FilmBookings(props) {
       }
     });
   };
-
+  const dispatch = useDispatch();
   const handleConfirmBooking = () => {
     setIsLoading(true);
     const bookingData = {
@@ -86,6 +88,7 @@ function FilmBookings(props) {
         setBookingConfirmed(true);
         setViziblePopUp("bookingConfirmed");
         props.setSelectedFilm(null);
+        dispatch(fetchUserBonuses());
       }
     });
   };
