@@ -209,16 +209,17 @@ main {
 			padding-right: 120px;
 		}
 		// Стили для разных статусов
-		td.status {
+		.status {
 			font-weight: 500;
-			font-size: 14px;
+			font-size: 15px; /* Чуть больше шрифт */
 			color: var(--primary-color);
 			background-color: #f6f6f6;
-			border-radius: 6px;
-			padding: 8px 12px;
+			border-radius: 10px; /* Меньшее скругление для более "квадратной" формы */
+			padding: 8px 8px; /* Больше внутренние отступы */
 			display: inline-block;
-			min-width: 110px;
-			margin: 4px auto;
+			min-width: 140px; /* Увеличил минимальную ширину */
+			text-align: center;
+			margin: 6px auto; /* Чуть больше отступ сверху и снизу */
 		}
 
 		.statusCancelled {
