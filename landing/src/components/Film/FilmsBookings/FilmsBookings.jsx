@@ -1,102 +1,117 @@
 import { useEffect, useState } from "react";
 import styles from "./FilmBookings.module.scss";
-import { getOneSession, bookingTickets } from "../../../API/apiRequest"; // Добавьте функцию для подтверждения бронирования
+import { getOneSession, bookingTickets } from "../../../API/apiRequest";
 import { useContext } from "react";
 import DataContext from "../../../context";
 import Loader from "../../Loader/Loader";
-import { Trash, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 
 function FilmBookings(props) {
   const [sessionInfo, setSessionInfo] = useState(null);
   const [seats, setSeats] = useState([]);
-  const [selectedSeats, setSelectedSeats] = useState([]); // Массив выбранных мест
+  const [selectedSeats, setSelectedSeats] = useState([]);
   const [userPaymentMethodId, setUserPaymentMethodId] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const { setViziblePopUp } = useContext(DataContext);
-  const [isLoading, setIsLoading] = useState(false); // Стейт для лоадера
+  const [isLoading, setIsLoading] = useState(false);
+  const [paymentMethods, setPaymentMethods] = useState([]);
 
   useEffect(() => {
-    // Загружаем информацию о сессии
+    // Load session information
     getOneSession(props.session.id).then((res) => {
       if (res.status === 200) {
-        console.log("sessionInfo", res.data);
         setSessionInfo(res.data);
-        console.log("seats", res.data);
         setSeats(
           res.data.seats.map((seat) => ({
             id: seat.id,
             row: seat.rowNumber,
             number: seat.seatNumber,
-            isBooked: !seat.isAvailable, // Если место не доступно, считаем его забронированным
+            isBooked: !seat.isAvailable,
             seatPriceCategory: seat.seatPriceCategory,
           }))
         );
       }
     });
+
+    // Load payment methods from local storage
+    const storedPaymentMethods = localStorage.getItem('userPaymentMethod');
+    if (storedPaymentMethods) {
+      setPaymentMethods(JSON.parse(storedPaymentMethods));
+    }
   }, [props.session]);
 
   useEffect(() => {
-    if (!seats || seats.length === 0 || selectedSeats.length === 0) return; // Предотвратить пересчет, если нет мест
-  
-    // Фильтруем выбранные места
+    if (!seats || seats.length === 0 || selectedSeats.length === 0) {
+      setTotalPrice(0); 
+      return;
+    }
+
     const selectedSeatsData = seats.filter((seat) => selectedSeats.includes(seat.id));
-  
-    // Проверка на наличие цен
+
     const total = selectedSeatsData.reduce((total, seat) => {
       if (seat.seatPriceCategory && seat.seatPriceCategory.price) {
-        return total + seat.seatPriceCategory.price; // Если есть цена, добавляем
+        return total + seat.seatPriceCategory.price;
       }
       return total;
     }, 0);
-  
-    setTotalPrice(total); // Устанавливаем итоговую стоимость
-  }, [selectedSeats, seats]); // Обновление при изменении выбранных мест или списка мест
-  
+
+    setTotalPrice(total);
+  }, [selectedSeats, seats]);
 
   const toggleSeat = (id) => {
     const seat = seats.find((s) => s.id === id);
-    console.log("seat", seat)
-    if (seat?.isBooked) return; // Если место забронировано, ничего не делаем
+    if (seat?.isBooked) return;
 
     setSelectedSeats((prevSelectedSeats) => {
       if (prevSelectedSeats.includes(id)) {
-        return prevSelectedSeats.filter((s) => s !== id); // Если место уже выбрано, удаляем его
+        return prevSelectedSeats.filter((s) => s !== id);
       } else {
-        return [...prevSelectedSeats, id]; // Иначе добавляем в выбранные
+        return [...prevSelectedSeats, id];
       }
     });
   };
 
   const handleConfirmBooking = () => {
-    setIsLoading(true); // Включаем лоадер
+    setIsLoading(true);
     const bookingData = {
       sessionId: props.session.id,
-      seatIds: selectedSeats, // Отправляем массив id мест
-      userPaymentMethodId: 1,
+      seatIds: selectedSeats,
+      userPaymentMethodId: userPaymentMethodId,
     };
 
     bookingTickets(bookingData).then((res) => {
-      setIsLoading(false); // Отключаем лоадер
+      setIsLoading(false);
       if (res.status === 200 || res.status === 201) {
         setBookingConfirmed(true);
         setViziblePopUp("bookingConfirmed");
         props.setSelectedFilm(null);
-        console.log("Бронирование подтверждено", res.data);
       }
     });
   };
 
   const handleRemoveSeat = (id) => {
-    // Удаляем место из массива выбранных мест
     setSelectedSeats((prevSelectedSeats) => prevSelectedSeats.filter((seatId) => seatId !== id));
+  };
+
+  // Function to map payment method types to display names
+  const getPaymentMethodName = (methodType) => {
+    switch (methodType) {
+      case 'cash':
+        return 'Наличными';
+      case 'bonus':
+        return 'Оплата бонусами';
+      case 'cards':
+        return 'Картой';
+      default:
+        return methodType;
+    }
   };
 
   return (
     <div className={styles.container}>
       <h2 className={styles.title}>Выберите места</h2>
 
-      {/* Экран */}
       <div className={styles.screen}>
         <img src="/img/hallplan_ekran.png" alt="Экран" />
       </div>
@@ -104,12 +119,10 @@ function FilmBookings(props) {
       <div className={styles.cinema}>
         {[...Array(props.session.hall.rowCount)].map((_, rowIdx) => (
           <div key={rowIdx} className={styles.rowWrapper}>
-            {/* Номер ряда слева */}
             <div className={styles.rowNumber}>
               <p>ряд {rowIdx + 1}</p>
             </div>
 
-            {/* Ряд с местами */}
             <div className={styles.row}>
               {seats
                 .filter((seat) => seat.row === rowIdx + 1)
@@ -159,13 +172,28 @@ function FilmBookings(props) {
           </div>
         </div>
 
-        {/* Подытог */}
         <div className={styles.selection}>
           <strong>Итоговая стоимость:</strong> {totalPrice} руб.
         </div>
+
+        {/* Payment Method Dropdown */}
+        <div className={styles.selection}>
+          <strong className={styles.label}>Способ оплаты:</strong>
+          <select
+            className={styles.paymentMethodDropdown}
+            value={userPaymentMethodId}
+            onChange={(e) => setUserPaymentMethodId(e.target.value)}
+          >
+            <option value="">Выберите способ оплаты</option>
+            {paymentMethods.map((method) => (
+              <option key={method.id} value={method.id}>
+                {getPaymentMethodName(method.methodType)}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
-      {/* Кнопка подтверждения */}
       {!bookingConfirmed && (
         <div className={styles.actions}>
           <button className={styles.buttonBack} onClick={props.handleBackToSessions}>
@@ -174,16 +202,14 @@ function FilmBookings(props) {
           <button
             className={styles.buttonConfirm}
             onClick={() => handleConfirmBooking()}
+            disabled={!userPaymentMethodId} // Дизейбл если не выбран метод
           >
             Подтвердить
           </button>
         </div>
       )}
 
-      {/* Лоадер */}
-      {isLoading && (
-       <Loader/>
-      )}
+      {isLoading && <Loader />}
     </div>
   );
 }
