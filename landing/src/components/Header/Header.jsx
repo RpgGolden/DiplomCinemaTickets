@@ -45,7 +45,7 @@ function Header() {
             </div> */}
             <nav className={styles.nav}>
                     <ul className={styles.list}>
-                        <li onClick={() => navigate('/')}>Главная</li>
+                        <li onClick={() => navigate('/HomePage')}>Главная</li>
                         <li onClick={() => navigate('/catalog')}>Каталог</li>
                         <li onClick={() => openModalPromotions()} >Акции</li>
                     </ul>
