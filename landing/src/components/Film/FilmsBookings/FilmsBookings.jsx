@@ -89,6 +89,8 @@ function FilmBookings(props) {
         setViziblePopUp("bookingConfirmed");
         props.setSelectedFilm(null);
         dispatch(fetchUserBonuses());
+      } else {
+        alert("Ошибка при бронировании билетов");
       }
     });
   };
@@ -190,7 +192,9 @@ function FilmBookings(props) {
             <option value="">Выберите способ оплаты</option>
             {paymentMethods.map((method) => (
               <option key={method.id} value={method.id}>
-                {getPaymentMethodName(method.methodType)}
+                {method.methodType === 'cards' && method.details?.card_number
+                  ? `Карта **** **** **** ${String(method.details.card_number).slice(-4)}`
+                  : getPaymentMethodName(method.methodType)}
               </option>
             ))}
           </select>

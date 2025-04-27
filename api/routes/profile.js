@@ -40,6 +40,22 @@ router
     );
 
 router
+    .route('/getPaymentMethods')
+    .get(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.SUPERADMIN, roles.CLIENT])),
+        asyncRoute(profileController.getUserPaymentMethods)
+    );
+
+router
+    .route('/deletePaymentMethod/:id')
+    .delete(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.SUPERADMIN, roles.CLIENT])),
+        asyncRoute(profileController.deletePaymentMethod)
+    );
+
+router
     .route('/uploadAvatar')
     .post(
         authenticateToken,

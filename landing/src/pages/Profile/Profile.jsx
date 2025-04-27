@@ -6,6 +6,9 @@ import {
 	uploadProfileImage,
 	getUserTickets,
 	cancelUserTicket,
+	getPaymentMethods,
+	createPaymentMethods,
+	deletePaymentMethod,
 } from '../../API/apiRequest';
 import Header from '../../components/Header/Header';
 import { toast } from 'react-toastify';
@@ -18,6 +21,11 @@ function Profile() {
 		key: null,
 		direction: 'asc',
 	});
+
+	const [paymentMethods, setPaymentMethods] = useState([]);
+	const [cardNumber, setCardNumber] = useState('');
+	const [expiryDate, setExpiryDate] = useState('');
+	const [userPaymentMethods, setUserPaymentMethods] = useState([]);
 
 	const [userTickets, setUserTickets] = useState([]);
 	const [sortedTickets, setSortedTickets] = useState([]);
@@ -50,8 +58,32 @@ function Profile() {
 				setSortedTickets(data);
 			}
 		});
+
+		getPaymentMethods().then((resp) => {
+			if (resp?.status === 200) {
+				const data = Array.isArray(resp.data) ? resp.data : [];
+				setUserPaymentMethods(data);
+				setPaymentMethods(data);
+			}
+		});
 	}, []);
 
+	const handleDelete = async (card) => {
+		const response = await deletePaymentMethod(card.id);
+		if (response?.status === 200) {
+			toast.success('Карта успешно удалена!');
+			getPaymentMethods().then((resp) => {
+				if (resp?.status === 200) {
+					const data = Array.isArray(resp.data) ? resp.data : [];
+					setUserPaymentMethods(data);
+					setPaymentMethods(data);
+				}
+			});
+		} else {
+			console.error('Ошибка при удалении карты:', response);
+			toast.error('Ошибка при удалении карты');
+		}
+	};
 	const getTicketStatusText = (status) => {
 		switch (status) {
 			case 'cancelled':
@@ -65,6 +97,89 @@ function Profile() {
 			default:
 				return 'Неизвестно';
 		}
+	};
+
+	const handleAddCard = async (e) => {
+		e.preventDefault();
+		console.log('нажал');
+		if (!validateCardNumber(cardNumber)) {
+			alert('Введите корректный номер карты (16 цифр без пробелов).');
+		
+			return;
+		}
+
+		if (!validateExpiryDate(expiryDate)) {
+			alert(
+				'Введите корректный срок действия карты в формате MM/YY.'
+			);
+			return;
+		}
+		if (!cardNumber || !expiryDate) {
+			alert('Введите номер карты и срок действия!');
+			return;
+		}
+
+		const payload = {
+			methodType: 'cards',
+			details: {
+				card_number: cardNumber,
+				expiry_date: expiryDate,
+			},
+		};
+
+		try {
+			const resp = await createPaymentMethods(payload);
+			if (resp?.status === 200 || resp?.status === 201) {
+				toast.success('Карта успешно добавлена!');
+				setCardNumber('');
+				setExpiryDate('');
+				getPaymentMethods().then((resp) => {
+					if (resp?.status === 200) {
+						const data = Array.isArray(resp.data) ? resp.data : [];
+						setUserPaymentMethods(data);
+						setPaymentMethods(data);
+					}
+				});
+			} else {
+				alert('Такая карта уже существует');
+				toast.error('Ошибка при добавлении карты');
+			}
+		} catch (error) {
+			alert('Произошла ошибка при добавлении карты');
+			toast.error('Произошла ошибка при добавлении карты');
+		}
+	};
+
+	const validateCardNumber = (number) => {
+		const cleaned = number.replace(/\s+/g, '');
+		return /^\d{16}$/.test(cleaned);
+	};
+
+	const validateExpiryDate = (date) => {
+		if (!/^\d{2}\/\d{2}$/.test(date)) {
+			return false;
+		}
+
+		const [monthStr, yearStr] = date.split('/');
+		const month = parseInt(monthStr, 10);
+		const year = parseInt(yearStr, 10);
+
+		if (month < 1 || month > 12) {
+			return false;
+		}
+
+		const currentDate = new Date();
+		const currentMonth = currentDate.getMonth() + 1;
+		const currentYear = currentDate.getFullYear() % 100;
+
+		if (
+			year < currentYear ||
+			(year === currentYear && month < currentMonth)
+		) {
+			return false;
+		}
+
+		return true;
 	};
 
 	const handleFileUpload = async (e) => {
@@ -130,7 +245,6 @@ function Profile() {
 			const resp = await cancelUserTicket(ticketId);
 			if (resp?.status === 200) {
 				toast.success('Билет успешно отменён!');
-				// Обновляем список билетов
 				getUserTickets().then((resp) => {
 					if (resp?.status === 200) {
 						const data = Array.isArray(resp.data) ? resp.data : [];
@@ -145,13 +259,36 @@ function Profile() {
 			toast.error('Произошла ошибка.');
 		}
 	};
-
-	const paymentMethodLabels = {
-		cards: 'Картой',
-		cash: 'Наличными',
-		bonus: 'Бонусами',
+	const handleDeleteCardWithConfirm = async (card) => {
+		const confirmDelete = window.confirm(
+			'Вы точно хотите удалить эту карту?'
+		);
+		if (confirmDelete) {
+			await handleDelete(card);
+		}
 	};
 
+	const handleCardNumberChange = (e) => {
+		let value = e.target.value.replace(/\D/g, ''); // Убираем все нецифры
+		value = value.slice(0, 16); // Ограничиваем 16 цифрами
+
+		// Добавляем пробелы после каждых 4 цифр
+		const formattedValue = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+
+		setCardNumber(formattedValue);
+	};
+
+	const handleExpiryDateChange = (e) => {
+		let value = e.target.value.replace(/\D/g, ''); // Только цифры
+		value = value.slice(0, 4); // Ограничиваем 4 цифрами
+
+		// Добавляем слэш после 2 цифр
+		if (value.length > 2) {
+			value = `${value.slice(0, 2)}/${value.slice(2)}`;
+		}
+
+		setExpiryDate(value);
+	};
 	const handleTicketSort = (key) => {
 		let direction = 'asc';
 		if (
@@ -189,6 +326,12 @@ function Profile() {
 		setSortedTickets(sorted);
 	};
 
+	const paymentMethodLabels = {
+		cards: 'Картой',
+		cash: 'Наличными',
+		bonus: 'Бонусами',
+	};
+
 	return (
 		<main>
 			<Header />
@@ -216,7 +359,6 @@ function Profile() {
 								onChange={handleFileUpload}
 							/>
 						</label>
-
 						<p>{userData?.name}</p>
 						<p>{userData?.email}</p>
 					</div>
@@ -276,8 +418,15 @@ function Profile() {
 												<th>Фильм</th>
 												<th>Ряд</th>
 												<th>Место</th>
-												<th className={styles.paymentMethod}>Способ оплаты</th>
-												<th className={styles.price}
+												<th
+													className={
+														styles.paymentMethod
+													}
+												>
+													Способ оплаты
+												</th>
+												<th
+													className={styles.price}
 													onClick={() =>
 														handleTicketSort(
 															'seatPrice'
@@ -485,12 +634,82 @@ function Profile() {
 								<p>Нет начислений</p>
 							)}
 						</div>
-					) : activeTab === 'addCard' ? (
-						<div className={styles.section}>
-							<h2>Добавить карту</h2>
-							<p>Форма для добавления карты будет здесь</p>
-						</div>
 					) : null}
+					{activeTab === 'addCard' && (
+						<div className={styles.addCardSection}>
+							<h2>Добавить карту</h2>
+
+							<form
+								onSubmit={handleAddCard}
+								className={styles.addCardForm}
+							>
+								<input
+									type="text"
+									placeholder="Номер карты"
+									value={cardNumber}
+									onChange={handleCardNumberChange}
+									className={styles.input}
+								/>
+
+								<input
+									type="text"
+									placeholder="Срок действия (например, 09/26)"
+									value={expiryDate}
+									onChange={handleExpiryDateChange}
+									className={styles.input}
+								/>
+
+								<button type="submit">Добавить</button>
+							</form>
+
+							<h3>Ваши карты:</h3>
+							<ul className={styles.cardsList}>
+								{userPaymentMethods.length > 0 ? (
+									userPaymentMethods.map((method) => (
+										<li key={method.id}>
+											<div className={styles.cardDetails}>
+												<span>
+													Карта:{' '}
+													{
+														method?.details
+															?.card_number
+													}
+												</span>
+												<span>
+													Срок действия:{' '}
+													{
+														method?.details
+															?.expiry_date
+													}
+												</span>
+											</div>
+											<button
+												onClick={() =>
+													handleDeleteCardWithConfirm(
+														method
+													)
+												}
+												className={styles.deleteButton}
+												aria-label="Удалить карту"
+											>
+												<svg
+													xmlns="http://www.w3.org/2000/svg"
+													width="22"
+													height="22"
+													fill="currentColor"
+													viewBox="0 0 16 16"
+												>
+													<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+												</svg>
+											</button>
+										</li>
+									))
+								) : (
+									<li>Нет добавленных карт.</li> // <--- заменил <p> на <li> чтобы всё было валидно
+								)}
+							</ul>
+						</div>
+					)}
 				</div>
 			</div>
 		</main>

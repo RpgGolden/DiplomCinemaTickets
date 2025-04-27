@@ -25,11 +25,51 @@ export default {
             if (!user) {
                 throw new AppErrorAlreadyExists('User not found');
             }
+            const existingCard = await UserPaymentMethod.findOne({
+                where: {
+                    userId,
+                    methodType: 'cards',
+                    details: {
+                        card_number: details.card_number,
+                        expiry_date: details.expiry_date,
+                    },
+                },
+            });
 
+            if (existingCard) {
+                throw new AppErrorAlreadyExists('Card already exists for this user');
+            }
             // Создаем новый метод оплаты
             await UserPaymentMethod.create({ userId, methodType, details });
 
             return res.status(201).json({ message: 'Payment method added successfully' });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    },
+
+    async deletePaymentMethod(req, res) {
+        try {
+            const { id } = req.params;
+            const userId = req.user.id;
+            // Проверяем, существует ли метод оплаты
+            const paymentMethod = await UserPaymentMethod.findOne({
+                where: {
+                    id,
+                    methodType: 'cards',
+                    userId,
+                }
+            });
+
+            if (!paymentMethod) {
+                throw new AppErrorAlreadyExists('Payment method not found');
+            }
+
+            // Удаляем метод оплаты
+            await paymentMethod.destroy();
+
+            return res.status(200).json({ message: 'Карта успешно удалена' });
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Internal server error' });
@@ -74,17 +114,37 @@ export default {
             if (!user) {
                 throw new AppErrorAlreadyExists('User not found');
             }
-            console.log(user)
+            console.log(user);
             let userDto = '';
             // Создаем DTO для пользователя
             if (user.role === roles.CLIENT) {
-                console.log('tyt')
+                console.log('tyt');
                 userDto = new UserDto(user, user.UserPaymentMethods);
             } else {
                 userDto = new ProfileAdminDto(user);
             }
 
             return res.status(200).json(userDto);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    },
+
+    async getUserPaymentMethods(req, res) {
+        try {
+            const userId = req.user.id;
+
+            // Проверяем, существует ли пользователь
+            const user = await User.findByPk(userId);
+
+            if (!user) {
+                throw new AppErrorAlreadyExists('User not found');
+            }
+
+            const paymentMethods = await UserPaymentMethod.findAll({ where: { userId, methodType: 'cards' } });
+
+            return res.status(200).json(paymentMethods);
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Internal server error' });
