@@ -38,6 +38,20 @@ router
         asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
         asyncRoute(sessionController.changeStatusSession)
     );
+router
+    .route('/updateDataSeatPrice/:id')
+    .patch(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
+        asyncRoute(sessionController.updateDataSeatCategory)
+    );
+router
+    .route('/deleteSeatPrice/:id')
+    .delete(
+        authenticateToken,
+        asyncRoute(checkRole([roles.ADMINISTRATOR, roles.CLIENT, roles.SUPERADMIN])),
+        asyncRoute(sessionController.deleteSeatPriceCategory)
+    );
 
 router
     .route('/changeSeatCategory/:id')

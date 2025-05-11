@@ -306,6 +306,53 @@ export default {
         }
     },
 
+    async deleteSeatPriceCategory(req, res) {
+        try {
+            const { id } = req.params; // ID категории цен мест
+
+            // Находим категорию
+            const seatPriceCategory = await SeatPriceCategory.findByPk(id);
+            if (!seatPriceCategory) {
+                throw new AppErrorNotExist('Seat price category not found');
+            }
+
+            // Обнуляем seatPriceCategoryId у связанных мест
+            await Seat.update({ seatPriceCategoryId: null }, { where: { seatPriceCategoryId: id } });
+
+            // Удаляем категорию
+            await seatPriceCategory.destroy();
+
+            res.json({ message: 'Seat price category deleted successfully' });
+        } catch (error) {
+            console.error('Ошибка при удалении категории цен мест:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+
+    async updateDataSeatCategory(req, res) {
+        try {
+            const { id } = req.params; // ID категории цен мест
+            const { categoryName, price } = req.body; // Новые данные
+
+            // Находим категорию
+            const seatPriceCategory = await SeatPriceCategory.findByPk(id);
+            if (!seatPriceCategory) {
+                throw new AppErrorNotExist('Seat price category not found');
+            }
+
+            // Обновляем данные
+            await seatPriceCategory.update({
+                categoryName,
+                price,
+            });
+
+            res.json(seatPriceCategory); // Возвращаем обновленную категорию
+        } catch (error) {
+            console.error('Ошибка при обновлении категории цен мест:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+
     async createSessionSeatCategory(req, res) {
         try {
             const { categoryName, price } = req.body;
