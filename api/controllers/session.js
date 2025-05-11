@@ -12,15 +12,18 @@ export default {
         try {
             const { hallId, sessionTime, movieId, repeatDaily } = req.body;
             const hall = await Hall.findByPk(hallId, {
-                include: [{
-                    model: Seat
-                }]
+                include: [
+                    {
+                        model: Seat,
+                    },
+                ],
             });
             if (!hall) {
                 throw new AppErrorNotExist('Hall not found');
             }
 
-            const defaultSeatPriceCategoryId = hall.Seats[0]?.seatPriceCategoryId || null;
+            const seatWithCategory = hall.Seats.find(seat => seat.seatPriceCategoryId !== null);
+            const defaultSeatPriceCategoryId = seatWithCategory?.seatPriceCategoryId || null;
 
             // Форматируем время сессии, добавляя 3 часа
             const sessionTimeObj = new Date(sessionTime);
