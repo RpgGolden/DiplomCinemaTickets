@@ -308,24 +308,26 @@ export default {
 
     async deleteSeatPriceCategory(req, res) {
         try {
-            const { id } = req.params; // ID категории цен мест
-
-            // Находим категорию
-            const seatPriceCategory = await SeatPriceCategory.findByPk(id);
-            if (!seatPriceCategory) {
-                throw new AppErrorNotExist('Seat price category not found');
-            }
-
-            // Обнуляем seatPriceCategoryId у связанных мест
-            await Seat.update({ seatPriceCategoryId: null }, { where: { seatPriceCategoryId: id } });
+            const { id } = req.params;
 
             // Удаляем категорию
-            await seatPriceCategory.destroy();
+            const deletedCategory = await SeatPriceCategory.destroy({ where: { id } });
+            if (!deletedCategory) {
+                throw new AppErrorNotExist('Категория не найдена');
+            }
 
-            res.json({ message: 'Seat price category deleted successfully' });
+            // Обнуляем привязку в местах и получаем ID затронутых сессий
+            const seats = await Seat.findAll({ where: { seatPriceCategoryId: id } });
+            const sessionIds = [...new Set(seats.map(seat => seat.sessionId))];
+
+            // Обновляем записи
+            await Seat.update({ seatPriceCategoryId: null }, { where: { seatPriceCategoryId: id } });
+            await Session.update({ isActive: false }, { where: { id: sessionIds } });
+
+            res.json({ message: 'Категория удалена, сессии отключены' });
         } catch (error) {
-            console.error('Ошибка при удалении категории цен мест:', error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            console.error('Ошибка:', error);
+            res.status(500).json({ error: error.message || 'Ошибка сервера' });
         }
     },
 
