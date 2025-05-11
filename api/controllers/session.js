@@ -11,10 +11,16 @@ export default {
     async createSessionWithSeats(req, res) {
         try {
             const { hallId, sessionTime, movieId, repeatDaily } = req.body;
-            const hall = await Hall.findByPk(hallId);
+            const hall = await Hall.findByPk(hallId, {
+                include: [{
+                    model: Seat
+                }]
+            });
             if (!hall) {
                 throw new AppErrorNotExist('Hall not found');
             }
+
+            const defaultSeatPriceCategoryId = hall.Seats[0]?.seatPriceCategoryId || null;
 
             // Форматируем время сессии, добавляя 3 часа
             const sessionTimeObj = new Date(sessionTime);
@@ -44,7 +50,6 @@ export default {
                     sessionId: null,
                 },
             });
-
             // Обновляем места, добавляя sessionId для оригинальной сессии
             await Promise.all(
                 seatsWithoutSession.map(seat => Seat.update({ sessionId: newSession.id }, { where: { id: seat.id } }))
@@ -60,7 +65,7 @@ export default {
                         if (newSeats.length < additionalSeatsNeeded) {
                             newSeats.push({
                                 hallId: hall.id,
-                                seatPriceCategoryId: null, // Укажите нужное значение
+                                seatPriceCategoryId: defaultSeatPriceCategoryId, // Укажите нужное значение
                                 rowNumber: row,
                                 seatNumber,
                                 isAvailable: true, // Укажите нужное значение
@@ -103,7 +108,7 @@ export default {
                         for (let seatNumber = 1; seatNumber <= hall.seatCount; seatNumber++) {
                             newSeatsForAdditionalSession.push({
                                 hallId: hall.id,
-                                seatPriceCategoryId: null, // Укажите нужное значение
+                                seatPriceCategoryId: defaultSeatPriceCategoryId, // Укажите нужное значение
                                 rowNumber: row,
                                 seatNumber,
                                 isAvailable: true, // Укажите нужное значение
