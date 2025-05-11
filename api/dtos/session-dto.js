@@ -3,6 +3,9 @@ export default class SessionDto {
     sessionTime;
     isActive;
     repeatDaily;
+    seatPriceCategoryId; // Новое поле
+    categoryName; // Новое поле
+    price; // Новое поле
     hall;
     movie;
     seats;
@@ -27,5 +30,15 @@ export default class SessionDto {
                   }
                 : null,
         }));
+
+        if (this.seats.length > 0 && this.seats[0].seatPriceCategory) {
+            this.seatPriceCategoryId = this.seats[0].seatPriceCategory.id;
+            this.categoryName = this.seats[0].seatPriceCategory.categoryName;
+            this.price = this.seats[0].seatPriceCategory.price;
+        } else {
+            this.seatPriceCategoryId = null;
+            this.categoryName = 'Не указано';
+            this.price = 0;
+        }
     }
 }
