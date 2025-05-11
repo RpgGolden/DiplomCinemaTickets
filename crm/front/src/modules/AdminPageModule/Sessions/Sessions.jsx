@@ -78,7 +78,6 @@ function Sessions() {
         hallId: formData.hallId,
         movieId: formData.movieId,
         sessionTime: formData.startTime,
-        price: formData.price
       }
       createSession(data).then((resp) => {
         if (resp?.status === 200) {

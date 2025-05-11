@@ -1,6 +1,7 @@
 import { useDispatch } from "react-redux";
 import { openImageModal } from "../store/MoviesSlice/MoviesSlice";
-import { methodType, roleClient, ticketStatus, typeFilm } from "./Enums";
+import { methodType, roleClient, ticketStatus, typeFilm, genres} from "./Enums";
+
 export const movieColumns = [
   {
     accessorKey: 'id',
@@ -23,7 +24,10 @@ export const movieColumns = [
   {
     accessorKey: 'genres',
     header: 'Жанры',
-    Cell: ({ cell }) => cell.getValue().join(', '),
+    Cell: ({ cell }) => {
+      const genresArray = cell.getValue();
+      return genresArray.map(genre => genres[genre] || genre).join(', ');
+    },
   },
   {
     accessorKey: 'actors',
@@ -50,14 +54,17 @@ export const movieColumns = [
   {
     accessorKey: 'typeFilm',
     header: 'Тип',
-    Cell: ({ cell }) => typeFilm[cell.getValue()],
+    Cell: ({ cell }) => {
+      const type = cell.getValue();
+      return typeFilm[type] || type; // Check if type exists in typeFilm enum
+    },
   },
   {
     accessorKey: "imageUrls",
     header: "Изображения",
     Cell: ({ cell }) => {
       const images = cell.getValue();
-      const dispatch = useDispatch();  // Используем dispatch внутри компонента
+      const dispatch = useDispatch();
       return (
         <div style={{ display: "flex", gap: 8 }}>
           {images?.slice(0, 2).map((url, index) => (
@@ -72,7 +79,7 @@ export const movieColumns = [
                 borderRadius: 4,
                 cursor: "pointer",
               }}
-              onClick={() => dispatch(openImageModal(url))} // Открываем модалку по клику на изображение
+              onClick={() => dispatch(openImageModal(url))}
             />
           ))}
         </div>
@@ -80,6 +87,7 @@ export const movieColumns = [
     },
   },
 ];
+
 
 export const hallColumns = [
   {
@@ -399,4 +407,19 @@ export const bonusesColumns = [
     accessorKey: "bonusPoints",
     header: "Кол-во бонусов",
   }
+]
+
+export const placeColums = [
+  {
+    accessorKey: "id",
+    header: "ID",
+  },
+  {
+    accessorKey: "categoryName",
+    header: "Название категории",
+  },
+  {
+    accessorKey: "price",
+    header: "Стоимость",
+  },
 ]

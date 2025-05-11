@@ -1,15 +1,14 @@
-.cardFilms{
+.CardFimsMovie{
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
     justify-content: center;
-    align-items: start;
-    
+    align-items: center;
      .card{
          width:  250px;
+         height: 350px;
          overflow: hidden;
          cursor: pointer;
-        
          &:hover{
              img{
                  transform: scale(1.05);
@@ -28,10 +27,10 @@
          }
       
          .cardContent{
-            padding: 10px 0px;
              display: flex;
              justify-content: space-between;
              position: relative;
+             gap: 10px;
              h1{
                  font-size: 24px;
                  font-weight: 700;

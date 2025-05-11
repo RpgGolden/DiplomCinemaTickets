@@ -30,6 +30,11 @@ export const SESSION_GET_ALL_URL = '/session/getAllSession';
 export const SESSION_GET_URL = '/session/getSession';
 export const SESSION_UPDATE_URL = '/session/updateSession';
 export const SESSION_CHANGE_SEAT_CATEGORY_URL = '/session/changeSeatCategory';
+export const SESSION_CREATE_SEAT_CATEGORY_URL = "session/createSessionSeatCategory";
+export const SESSION_UPDATE_SEAT_CATEGORY_URL = "session/updateDataSeatPrice";
+export const SESSION_DELETE_SEAT_CATEGORY_URL = "session/deleteSeatPrice";
+
+export const GET_SEAT_CATEGORY_URL = "session/getSeatCategories";
 export const SESSION_DELETE_URL = '/session/deleteSession';
 export const SESSION_SVITCH_STATUS_URL = 'session/updateSession';
 export const TICKET_BOOKING_URL = '/tickets/bookingTickets';

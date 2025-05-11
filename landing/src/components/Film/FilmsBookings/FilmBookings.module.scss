@@ -1,95 +1,103 @@
 @import "../../../styles/mixin.scss";
 
 .container {
-    font-family: sans-serif;
-  }
-  
-  .title {
-    font-size: 24px;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  
-  .screen {
+  font-family: sans-serif;
+}
+
+.title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.screen {
+  width: 100%;
+  margin: 0 auto 30px auto;
+  border-radius: 10px;
+  text-align: center;
+  line-height: 30px;
+  font-weight: bold;
+  img {
     width: 100%;
-    margin: 0 auto 30px auto;
-    border-radius: 10px;
-    text-align: center;
-    line-height: 30px;
-    font-weight: bold;
-    img{
-        width: 100%;
-    }
   }
-  
-  .cinema {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    align-items: center;
-  }
-  
-  .rowWrapper {
-    display: flex;
-    align-items: center;
-  }
-  
-  .rowNumber {
-    text-align: right;
-    margin-right: 10px;
-    font-weight: bold;
-  }
-  
-  .row {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .seat {
-    width: 30px;
-    height: 30px;
-    background-color: var(--accent-color);
-    border-radius: 4px;
-    cursor: pointer;
-    transition: 0.2s;
-  
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 12px;
-    font-weight: bold;
-    user-select: none;
-  }
-  
-  .seat:hover {
+}
+
+.cinema {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.rowWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.rowNumber {
+  text-align: right;
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+}
+
+.seat {
+  width: 30px;
+  height: 30px;
+  background-color: var(--accent-color);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  user-select: none;
+
+  &:hover {
     opacity: 0.8;
   }
+}
+
+.booked {
+  background-color: #9e9e9e !important;
+  cursor: not-allowed;
+}
+
+.selected {
+  background-color: var(--primary-color) !important;
+}
+
+.infoSelected {
+  background-color: #f7f7f7;
+  margin-top: 20px;
+  padding: 20px;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
   
-  .booked {
-    background-color: #9e9e9e !important;
-    cursor: not-allowed;
-  }
-  
-  .selected {
-    background-color: var(--primary-color) !important;
-  }
-  .infoSelected{
-    background-color: #f7f7f7;
-    margin-top: 20px;
-    padding: 10px;
-    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    .selection {
-      font-size: 16px;
-      text-align: start;
-    }
+  .selection {
+    font-size: 16px;
+    text-align: start;
+    margin-bottom: 15px;
     display: flex;
-    flex-direction: column;
-    gap: 10px;
+    align-items: center;
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
- 
-  .legend {
+  
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.legend {
   margin-top: 30px;
   display: flex;
   justify-content: center;
@@ -110,13 +118,14 @@
   border-radius: 4px;
 }
 
-/* Цвета для подсказки */
 .free {
   background-color: var(--accent-color);
 }
+
 .selectedLegend {
   background-color: var(--primary-color);
 }
+
 .bookedLegend {
   background-color: #9e9e9e;
 }
@@ -125,7 +134,7 @@
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
-  gap: 20px
+  gap: 20px;
 }
 
 .buttonConfirm {
@@ -141,10 +150,12 @@
     background-color: #aaa;
   }
 }
+
 .selectedSeats {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  margin-top: 10px;
 }
 
 .seatTile {
@@ -170,40 +181,89 @@
     opacity: 0.6;
     transition: all 0.2s ease;
     cursor: pointer;
+    margin-left: 8px;
 
     &:hover {
       opacity: 1;
+      color: var(--primary-color);
     }
   }
+}
 
-  // Когда наводим на иконку — красим весь .seatTile
-  .trashIcon:hover ~ &,
-  &:has(.trashIcon:hover) {
-    background-color: var(--light-red); // светло-красный
+
+.paymentMethodDropdownContainer {
+  position: relative;
+  flex: 1;
+  margin-left: 15px;
+  margin-top: 10px;
+}
+
+.paymentMethodDropdownHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  
+  &:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
+}
 
-    .paymentMethodDropdown {
-      width: 100%;
-      padding: 10px; 
-      margin-top: 10px; 
-      border-radius: 5px; 
-      border: 1px solid #ccc; 
-      font-size: 14px;
-      background-color: #fff;
-      transition: border-color 0.3s ease;
-      margin-left: 10px;
-      &:focus {
-        border-color: var(--primary-color); 
-        outline: none;
-      }
+.dropdownIcon {
+  transition: transform 0.3s ease;
+  margin-left: 8px;
+  color: #666;
+  
+  &.rotate {
+    transform: rotate(180deg);
+  }
+}
 
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.paymentMethodDropdownList {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  z-index: 100;
+  max-height: 250px;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-top: 5px;
+}
 
-      cursor: pointer;
-    }
+.paymentMethodItem {
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid #f0f0f0;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  &:hover {
+    background-color: #f8f8f8;
+    color: var(--primary-color);
+  }
+  
+  &.selected {
+    font-weight: 500;
+    color: #fff;
+  }
+}
 
-    .label {
-      margin-right: 10px; // Отступ справа от текста
-    }
-    
+.label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
 }

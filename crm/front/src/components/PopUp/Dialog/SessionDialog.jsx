@@ -31,7 +31,6 @@ const SessionDialog = ({ open, onClose, sessionData, onSave, onDelete, movies, h
     if (!data.movieId) newErrors.movieId = "Фильм обязателен.";
     if (!data.hallId) newErrors.hallId = "Зал обязателен.";
     if (!data.startTime) newErrors.startTime = "Время начала обязательно.";
-    if (!data.price) newErrors.price = "Цена обязательна.";
     return newErrors;
   };
 
@@ -140,17 +139,6 @@ const SessionDialog = ({ open, onClose, sessionData, onSave, onDelete, movies, h
           InputLabelProps={{ shrink: true }}
           error={!!errors.startTime}
           helperText={errors.startTime}
-        />
-        <TextField
-          label="Цена"
-          name="price"
-          type="number"
-          value={formData.price || ""}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          error={!!errors.price}
-          helperText={errors.price}
         />
       </DialogContent>
       <DialogActions>

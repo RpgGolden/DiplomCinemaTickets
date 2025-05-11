@@ -37,7 +37,11 @@ import {
     GET_ALL_POSTERS_URL,
     CREATE_POSTER_URL,
     DELETE_POSTER_URL,
-    SVITCH_STATUS_POSTER_URL
+    SVITCH_STATUS_POSTER_URL,
+    SESSION_CREATE_SEAT_CATEGORY_URL,
+    GET_SEAT_CATEGORY_URL,
+    SESSION_UPDATE_SEAT_CATEGORY_URL,
+    SESSION_DELETE_SEAT_CATEGORY_URL
 } from './ApiUrl';
 import api from './axios';
 
@@ -425,4 +429,40 @@ try {
 } catch (error) {
     return error;
 }
+}
+
+export const getPlaceCategory = async () => {
+    try {
+        const response = await api.get(GET_SEAT_CATEGORY_URL);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+export const createPlaceCategory = async data => {
+    try {
+        const response = await api.post(SESSION_CREATE_SEAT_CATEGORY_URL, data);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+export const deletePlace = async id => {
+    try {
+        const response = await api.delete(`${SESSION_DELETE_SEAT_CATEGORY_URL}/${id}`);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+export const updatePlace = async (id, data) => {
+    try {
+        const response = await api.patch(`${SESSION_UPDATE_SEAT_CATEGORY_URL}/${id}`, data);
+        return response;
+    } catch (error) {
+        return error;
+    }
 }
