@@ -59,7 +59,7 @@ export default {
                 }
             }
 
-            let totalEarnedBonusPoints;
+            const totalEarnedBonusPoints = Math.round(totalTicketPrice * 0.1); // Округляем бонусы до целого
             const ticketPromises = availableSeats.map(async seat => {
                 const seatPrice = seat.SeatPriceCategory.price;
 
@@ -75,13 +75,11 @@ export default {
                 seat.isAvailable = false;
                 await seat.save();
 
-                totalEarnedBonusPoints = Math.floor(totalTicketPrice * 0.1);
-
-                // Создаем запись в UserBonusHistory для начисления бонусов
+                // Создаем запись в UserBonusHistory
                 await UserBonusHistory.create({
                     userId,
                     ticketId: ticket.id,
-                    amount: totalEarnedBonusPoints / 2,
+                    amount: Math.round(totalEarnedBonusPoints / 2), // Округляем бонусы до целого
                     ticketPrice: seat.SeatPriceCategory.price,
                     description: 'Билет успешно забронирован',
                 });
