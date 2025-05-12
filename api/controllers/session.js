@@ -310,9 +310,9 @@ export default {
         try {
             const { id } = req.params;
 
-            // Удаляем категорию
-            const deletedCategory = await SeatPriceCategory.destroy({ where: { id } });
-            if (!deletedCategory) {
+            // Находим категорию (правильный синтаксис для findByPk)
+            const seatPriceCategory = await SeatPriceCategory.findByPk(id);
+            if (!seatPriceCategory) {
                 throw new AppErrorNotExist('Категория не найдена');
             }
 
@@ -320,14 +320,23 @@ export default {
             const seats = await Seat.findAll({ where: { seatPriceCategoryId: id } });
             const sessionIds = [...new Set(seats.map(seat => seat.sessionId))];
 
-            // Обновляем записи
+            // Обновляем записи (сначала места, потом сессии)
             await Seat.update({ seatPriceCategoryId: null }, { where: { seatPriceCategoryId: id } });
-            await Session.update({ isActive: false }, { where: { id: sessionIds } });
+
+            if (sessionIds.length > 0) {
+                await Session.update({ isActive: false }, { where: { id: sessionIds } });
+            }
+
+            // Удаляем категорию (правильный синтаксис для destroy)
+            await seatPriceCategory.destroy();
 
             res.json({ message: 'Категория удалена, сессии отключены' });
         } catch (error) {
             console.error('Ошибка:', error);
-            res.status(500).json({ error: error.message || 'Ошибка сервера' });
+            res.status(500).json({
+                error: error.message || 'Ошибка сервера',
+                stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
+            });
         }
     },
 
