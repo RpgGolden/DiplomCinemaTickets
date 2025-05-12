@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import styles from "./FilmBookings.module.scss";
-import { getOneSession, bookingTickets, getAllUserPaymentMethods  } from "../../../API/apiRequest";
+import { getOneSession, bookingTickets, getAllUserPaymentMethods } from "../../../API/apiRequest";
 import { useContext } from "react";
 import DataContext from "../../../context";
 import Loader from "../../Loader/Loader";
-import { Trash2 } from "lucide-react";
+import { Trash2, ChevronDown } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { fetchUserBonuses } from "../../../store/userDataSlice/userDataSlice";
 
@@ -18,9 +18,9 @@ function FilmBookings(props) {
   const { setViziblePopUp } = useContext(DataContext);
   const [isLoading, setIsLoading] = useState(false);
   const [paymentMethods, setPaymentMethods] = useState([]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
-    // Load session information
     getOneSession(props.session.id).then((res) => {
       if (res.status === 200) {
         setSessionInfo(res.data);
@@ -45,7 +45,6 @@ function FilmBookings(props) {
         console.error('Ошибка при получении способов оплаты:', error);
       });
     });
-
   }, [props.session]);
 
   useEffect(() => {
@@ -55,7 +54,6 @@ function FilmBookings(props) {
     }
 
     const selectedSeatsData = seats.filter((seat) => selectedSeats.includes(seat.id));
-
     const total = selectedSeatsData.reduce((total, seat) => {
       if (seat.seatPriceCategory && seat.seatPriceCategory.price) {
         return total + seat.seatPriceCategory.price;
@@ -78,6 +76,7 @@ function FilmBookings(props) {
       }
     });
   };
+
   const dispatch = useDispatch();
   const handleConfirmBooking = () => {
     setIsLoading(true);
@@ -104,7 +103,6 @@ function FilmBookings(props) {
     setSelectedSeats((prevSelectedSeats) => prevSelectedSeats.filter((seatId) => seatId !== id));
   };
 
-  // Function to map payment method types to display names
   const getPaymentMethodName = (methodType) => {
     switch (methodType) {
       case 'cash':
@@ -186,23 +184,42 @@ function FilmBookings(props) {
           <strong>Итоговая стоимость:</strong> {totalPrice} руб.
         </div>
 
-       {/* Payment Method Dropdown */}
         <div className={styles.selection}>
           <strong className={styles.label}>Способ оплаты:</strong>
-          <select
-            className={styles.paymentMethodDropdown}
-            value={userPaymentMethodId}
-            onChange={(e) => setUserPaymentMethodId(e.target.value)}
+          <div className={styles.paymentMethodDropdownContainer}>
+          <div 
+            className={styles.paymentMethodDropdownHeader}
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
-            <option value="">Выберите способ оплаты</option>
-            {paymentMethods.map((method) => (
-              <option key={method.id} value={method.id}>
-                {method.methodType === 'cards' && method.details?.card_number
-                  ? `Карта **** **** **** ${String(method.details.card_number).slice(-4)}`
-                  : getPaymentMethodName(method.methodType)}
-              </option>
-            ))}
-          </select>
+            <span>
+              {userPaymentMethodId 
+                ? paymentMethods.find(m => m.id === userPaymentMethodId)?.methodType === 'cards' 
+                  ? `Карта **** **** **** ${String(paymentMethods.find(m => m.id === userPaymentMethodId)?.details?.card_number?.slice(-4)) || ''}`
+                  : getPaymentMethodName(paymentMethods.find(m => m.id === userPaymentMethodId)?.methodType)
+                : "Выберите способ оплаты"}
+            </span>
+            <ChevronDown className={`${styles.dropdownIcon} ${isDropdownOpen ? styles.rotate : ''}`} />
+          </div>
+            
+            {isDropdownOpen && (
+              <div className={styles.paymentMethodDropdownList}>
+                {paymentMethods.map((method) => (
+                  <div
+                    key={method.id}
+                    className={`${styles.paymentMethodItem} ${userPaymentMethodId === method.id ? styles.selected : ''}`}
+                    onClick={() => {
+                      setUserPaymentMethodId(method.id);
+                      setIsDropdownOpen(false);
+                    }}
+                  >
+                    {method.methodType === 'cards' && method.details?.card_number
+                      ? `Карта **** **** **** ${String(method.details.card_number).slice(-4)}`
+                      : getPaymentMethodName(method.methodType)}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -214,7 +231,7 @@ function FilmBookings(props) {
           <button
             className={styles.buttonConfirm}
             onClick={() => handleConfirmBooking()}
-            disabled={!userPaymentMethodId} // Дизейбл если не выбран метод
+            disabled={!userPaymentMethodId || selectedSeats.length === 0}
           >
             Подтвердить
           </button>

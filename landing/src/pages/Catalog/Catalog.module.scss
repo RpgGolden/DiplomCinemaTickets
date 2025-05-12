@@ -68,4 +68,46 @@
         }
       
     }
+    .genreButtons {
+        margin: 20px 0;
+        
+        h3 {
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+    }
+    
+    .buttonsContainer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .genreButton {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 25px;
+        background-color: var(--color-bg-secondary);
+        color: var(--color-text);
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        &:hover {
+            background: #e0e0e0;
+        }
+    
+        &.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+    }
+    .noResults {
+        text-align: center;
+        font-size: 18px;
+        color:var(--primary-color);
+        display: flex;
+    }
 }

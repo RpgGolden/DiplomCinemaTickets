@@ -6,11 +6,17 @@ import {
   DialogTitle,
   Button,
   TextField,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+  CircularProgress,
 } from "@mui/material";
 
-const HallDialog = ({ open, onClose, hallData, onSave, onDelete }) => {
+const HallDialog = ({ open, onClose, hallData, onSave, onDelete, seatCategories }) => {
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setFormData(hallData ? { ...hallData } : {});
@@ -19,7 +25,7 @@ const HallDialog = ({ open, onClose, hallData, onSave, onDelete }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const updatedValue = name === "rowCount" || name === "seatCount" || name === "price"
+    const updatedValue = name === "rowCount" || name === "seatCount"
       ? value.replace(/\D/g, "") // удалим все, кроме цифр
       : value;
 
@@ -35,6 +41,18 @@ const HallDialog = ({ open, onClose, hallData, onSave, onDelete }) => {
     }));
   };
 
+  const handleCategoryChange = (e) => {
+    const selectedCategoryId = e.target.value;
+    const selectedCategory = seatCategories.find(cat => cat.id === selectedCategoryId);
+    
+    setFormData((prev) => ({
+      ...prev,
+      seatCategoryId: selectedCategoryId,
+      categoryName: selectedCategory.categoryName,
+      price: selectedCategory.price
+    }));
+  };
+
   const validateFields = () => {
     const newErrors = {};
 
@@ -43,10 +61,8 @@ const HallDialog = ({ open, onClose, hallData, onSave, onDelete }) => {
       newErrors.rowCount = "Количество рядов обязательно.";
     if (!formData.seatCount || Number(formData.seatCount) <= 0)
       newErrors.seatCount = "Количество мест обязательно.";
-    if (!formData.categoryName?.trim())
-      newErrors.categoryName = "Категория места обязательна.";
-    if (!formData.price || Number(formData.price) <= 0)
-      newErrors.price = "Цена обязательна.";
+    if (!formData.seatCategoryId)
+      newErrors.seatCategory = "Категория места обязательна.";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -60,19 +76,29 @@ const HallDialog = ({ open, onClose, hallData, onSave, onDelete }) => {
       ...formData,
       rowCount: Number(formData.rowCount),
       seatCount: Number(formData.seatCount),
-      price: Number(formData.price),
+      // categoryName и price берутся автоматически из выбранной категории
     };
 
     onSave(processedData);
     onClose();
   };
 
+  if (loading) {
+    return (
+      <Dialog open={open} onClose={onClose}>
+        <DialogContent>
+          <CircularProgress />
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>{hallData ? "Редактировать зал" : "Добавить новый зал"}</DialogTitle>
       <DialogContent>
         <TextField
-          label="Название"
+          label="Название зала"
           name="name"
           value={formData.name || ""}
           onChange={handleChange}
@@ -91,9 +117,10 @@ const HallDialog = ({ open, onClose, hallData, onSave, onDelete }) => {
           margin="normal"
           error={!!errors.rowCount}
           helperText={errors.rowCount}
+          inputProps={{ min: 1 }}
         />
         <TextField
-          label="Количество мест"
+          label="Количество мест в ряду"
           name="seatCount"
           type="number"
           value={formData.seatCount || ""}
@@ -102,34 +129,48 @@ const HallDialog = ({ open, onClose, hallData, onSave, onDelete }) => {
           margin="normal"
           error={!!errors.seatCount}
           helperText={errors.seatCount}
+          inputProps={{ min: 1 }}
         />
-        <TextField
-          label="Категория места"
-          name="categoryName"
-          value={formData.categoryName || ""}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          error={!!errors.categoryName}
-          helperText={errors.categoryName}
-        />
-        <TextField
-          label="Цена"
-          name="price"
-          type="number"
-          value={formData.price || ""}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          error={!!errors.price}
-          helperText={errors.price}
-        />
+        
+        <FormControl fullWidth margin="normal" error={!!errors.seatCategory}>
+          <InputLabel>Категория мест</InputLabel>
+          <Select
+            label="Категория мест"
+            name="seatCategoryId"
+            value={formData.seatCategoryId || ""}
+            onChange={handleCategoryChange}
+          >
+            {seatCategories?.map((category) => (
+              <MenuItem key={category.id} value={category.id}>
+                {category.categoryName} ({category.price} руб.)
+              </MenuItem>
+            ))}
+          </Select>
+          {errors.seatCategory && (
+            <div style={{ color: '#f44336', fontSize: '0.75rem', margin: '3px 14px 0' }}>
+              {errors.seatCategory}
+            </div>
+          )}
+        </FormControl>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} variant="outlined" color="primary">
           Отмена
         </Button>
-        <Button onClick={handleSave} variant="contained" color="primary">
+        {hallData && (
+          <Button 
+            onClick={() => onDelete(hallData.id)} 
+            variant="contained" 
+            color="error"
+          >
+            Удалить
+          </Button>
+        )}
+        <Button 
+          onClick={handleSave} 
+          variant="contained" 
+          color="primary"
+        >
           {hallData ? "Обновить" : "Добавить"}
         </Button>
       </DialogActions>

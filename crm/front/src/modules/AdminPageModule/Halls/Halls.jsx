@@ -4,7 +4,7 @@ import UniversalTable from "../../../components/UniversalTable/UniversalTable"; 
 import { hallColumns } from "../../../utils/ColumnsTable"; // Столбцы для таблицы
 import { getandSetHallData, setHallData } from "../../../store/HallsSlice/HallsSlice"; // Redux для залов
 import styles from "./Halls.module.scss";
-import { createHall, deleteHall, updateHall } from "../../../API/apiRequest";
+import { createHall, deleteHall, getPlaceCategory, updateHall } from "../../../API/apiRequest";
 import HallDialog from "../../../components/PopUp/Dialog/HallDialog";
 
 function Halls() {
@@ -12,10 +12,15 @@ function Halls() {
   const { hallData } = useSelector((state) => state.HallsSlice); // Извлекаем данные о залах из Redux
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedHall, setSelectedHall] = useState(null);
-
+  const [seatCategories, setSeatCategories] = useState(null)
   // Загружаем данные о залах при монтировании компонента
   useEffect(() => {
         dispatch(getandSetHallData((data) => dispatch(setHallData(data))));
+        getPlaceCategory().then((resp)=>{
+          if(resp){
+            setSeatCategories(resp.data)
+          }
+        })
   }, [dispatch]);
 
   // Открытие модалки для добавления/редактирования зала
@@ -87,6 +92,7 @@ function Halls() {
         hallData={selectedHall}
         onSave={handleSaveHall}
         onDelete={handleDeleteHall}
+        seatCategories={seatCategories}
       />
     </div>
   );
