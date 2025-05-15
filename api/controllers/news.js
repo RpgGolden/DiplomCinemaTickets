@@ -156,7 +156,11 @@ export default {
 
             // Удаляем изображение из Pinata, если оно существует и не было удалено ранее
             if (news.image) {
-                await deleteFromPinata(news.image);
+                try {
+                    await deleteFromPinata(news.image);  
+                } catch (error) {
+                    console.error(`Failed to delete image ${news.image} from Pinata:`, error);
+                }
             }
 
             // Удаляем сущность из базы данных
@@ -185,8 +189,14 @@ export default {
             // Удаляем изображения из Pinata
             for (const news of newsList) {
                 if (news.image && !deletedImages.has(news.image)) {
-                    await deleteFromPinata(news.image);
-                    deletedImages.add(news.image);
+                    try {
+                        await deleteFromPinata(news.image);
+                        deletedImages.add(news.image);
+                    } catch (error) {
+                        console.error('Error deleting image from Pinata:', error);
+                        continue;
+                    }
+                    
                 }
             }
 

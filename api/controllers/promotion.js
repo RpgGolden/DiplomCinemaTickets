@@ -54,7 +54,11 @@ export default {
             }
 
             if (image && promotion.image) {
-                await deleteFromPinata(promotion.image);
+                try {
+                    await deleteFromPinata(promotion.image); 
+                } catch (error) {
+                    console.error(error)
+                }
                 const pinataResponse = await uploadToPinata(image, 'promotions', { category: 'Promotion' });
                 promotion.image = pinataResponse.IpfsHash;
             }
@@ -155,7 +159,12 @@ export default {
             }
 
             if (promotion.image) {
-                await deleteFromPinata(promotion.image);
+                try {
+                 await deleteFromPinata(promotion.image);
+                    
+                } catch (error) {
+                    console.error(error)
+                }
             }
 
             await promotion.destroy({ force: true });
@@ -181,7 +190,13 @@ export default {
 
             for (const promotion of promotions) {
                 if (promotion.image && !deletedImages.has(promotion.image)) {
-                    await deleteFromPinata(promotion.image);
+                    try {
+                        await deleteFromPinata(promotion.image);
+                        
+                    } catch (error) {
+                        console.error(error)
+                        continue;
+                    }
                     deletedImages.add(promotion.image);
                 }
             }

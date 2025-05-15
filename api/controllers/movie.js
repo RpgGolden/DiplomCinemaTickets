@@ -223,7 +223,12 @@ export default {
 
             // Delete images from Pinata
             for (const image of movie.images) {
-                await deleteFromPinata(image);
+                try {
+                    await deleteFromPinata(image);
+                } catch (error) {
+                    console.error(`Failed to delete image ${image} from Pinata:`, error);
+                    continue;
+                }
             }
 
             await movie.destroy({ force: true });

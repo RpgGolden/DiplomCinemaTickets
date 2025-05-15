@@ -65,7 +65,12 @@ export default {
             }
 
             if (slider.image) {
+                try {
                 await deleteFromPinata(slider.image);
+                    
+                } catch (error) {
+                    console.error(error)
+                }
             }
 
             await slider.destroy({ force: true });
@@ -87,7 +92,12 @@ export default {
 
             for (const slider of sliders) {
                 if (slider.image) {
+                    try {
                     await deleteFromPinata(slider.image);
+                        
+                    } catch (error) {
+                        console.error(error)
+                    }
                 }
             }
 
@@ -109,7 +119,12 @@ export default {
 
             if (newImage) {
                 if (slider.image) {
+                    try {
                     await deleteFromPinata(slider.image);
+                        
+                    } catch (error) {
+                        console.error(error)
+                    }
                 }
 
                 const pinataResponse = await uploadToPinata(newImage, 'sliders', { category: 'Slider' });

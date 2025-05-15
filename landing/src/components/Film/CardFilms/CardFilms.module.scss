@@ -31,9 +31,11 @@
             justify-content: space-between;
             position: relative;
             gap: 10px;
+            align-items:center;
             h1{
                 font-size: 24px;
                 font-weight: 700;
+                width: 30px;
                 color: #333;
                 text-align: center;
                 margin-bottom: 10px; // Добавлено для отступа между заголовком и описанием

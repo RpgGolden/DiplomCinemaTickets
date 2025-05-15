@@ -124,7 +124,7 @@ function Register() {
                         Зарегистрироваться
                     </button>
                     <div className={styles.cent}>
-                        <p>Уже есть аккаунт? <span className={styles.forgotPassword} onClick={() => navigate('/login')}>Войти</span></p>
+                        <p>Уже есть аккаунт? <span className={styles.forgotPassword} onClick={() => navigate('/')}>Войти</span></p>
                     </div>
                 </form>
             </div>
